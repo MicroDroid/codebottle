@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "description": "Community powered snippets of code",
   "main": "index.js",
+  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "tests": "cross-env NODE_ENV=testing mocha ./tests --recursive",
     "tests:coverage": "cross-env NODE_ENV=testing nyc -x tests -x models --clean mocha ./tests --recursive",
