@@ -1,0 +1,19 @@
+.alert {
+	&.alert-danger {
+		background: $alert-danger-bg;
+		color: $alert-danger-text;
+		border-color: $alert-danger-border;
+	}
+
+	&.alert-warning {
+		background: $alert-warning-bg;
+		color: $alert-warning-text;
+		border-color: $alert-warning-border;
+	}
+
+	&.alert-success {
+		background: $alert-success-bg;
+		color: $alert-success-text;
+		border-color: $alert-success-border;
+	}
+}

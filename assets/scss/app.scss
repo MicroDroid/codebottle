@@ -1,0 +1,122 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400:700);
+
+@import "variables";
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/font-awesome/scss/font-awesome';
+@import 'node_modules/animate.css/animate';
+@import './pace';
+@import './loader';
+@import '~highlight.js/styles/railscasts.css';
+@import './mobile-navbar';
+@import './alerts';
+
+html, body, #app {
+	height: 100%;
+}
+
+body {
+	padding: 84px 4vw 0 4vw;
+}
+
+#app {
+	display: flex;
+	flex-direction: column;
+}
+
+#main-content {
+	flex: 1 0 auto;
+}
+
+footer {
+	padding: 20px;
+	text-align: center;
+
+	.fa-globe {
+		color: #FFEB3B;
+	}
+
+	.fa-heart {
+		color: #E91E63;
+	}
+
+	#discord-invite {
+		color: #7187d2;
+	}
+}
+
+footer * {
+	color: #A0A0A7;
+	font-size: 12px;
+
+	&:hover, &:focus, &:visited {
+		color: #A0A0A7;
+		font-size: 12px;
+	}
+}
+
+@include media-breakpoint-down(md) {
+	body {
+		padding: 128px 4vw 0 4vw !important;
+	}
+}
+
+.navbar {
+	background: lighten($dark, 5%);
+	display: none; // because d-xxs-none doesn't exist
+}
+
+.input-group-addon {
+	color: white;
+}
+
+.btn, .form-control {
+	font-family: $font-family-sans-serif;
+}
+
+.form-control {
+	border-width: 1px;
+}
+
+.code-input {
+	font-family: monospace;
+	tab-size: 4;
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+.dropdown-menu {
+	border-radius: 1px;
+}
+
+.center-text {
+	text-align: center;
+}
+
+.center-block {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.alert-transparent {
+	background: transparent;
+}
+
+hr {
+	width: 100%;
+}
+
+a.nostyle, a.nostyle:hover, a.nostyle:visited {
+	text-decoration: none;
+	color: inherit;
+}
+
+.unselectable {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}

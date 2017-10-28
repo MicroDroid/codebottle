@@ -1,0 +1,66 @@
+.navbar.mobile-navbar {
+
+	padding-bottom: 0;
+	display: block; // because d-xxs-none doesn't exist
+
+	.navbar-nav {
+		flex-direction: row;
+	}
+
+	.navbar-brand {
+		padding: 0;
+		margin: 0;
+
+		i {
+			font-size: 24px;
+			line-height: 40px;
+		}
+	}
+
+	.nav-item {
+		padding: 6px;
+		list-style: none;
+
+		.nav-link {
+			color: white;
+			font-weight: 400;
+			text-align: center;
+		}
+
+		&:hover .nav-link {
+			color: #eee;
+		}
+
+		&.active .nav-link {
+			color: lighten($primary-color, 30%);
+		}
+	}
+
+	input {
+		max-width: none !important;
+		width: 100%;
+	}
+
+	.navbar-menu {
+		position: absolute;
+		top: 56px;
+		left: 0;
+		right: 0;
+		width: 100vw;
+		background: lighten($dark, 5%);
+		padding-left: 0;
+		text-align: left;
+
+		.nav-link {
+			color: white;
+
+			&.active {
+				color: ligthen($primary-color, 30%);
+			}
+
+			&:hover {
+				color: #eee;
+			}
+		}
+	}
+}

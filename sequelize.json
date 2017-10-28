@@ -1,0 +1,13 @@
+{
+	"development": {
+		"use_env_variable": "SEQUELIZE_DB_HOST"
+	},
+
+	"test": {
+		"use_env_variable": "SEQUELIZE_DB_HOST"
+	},
+
+	"production": {
+		"use_env_variable": "SEQUELIZE_DB_HOST"
+	}
+}

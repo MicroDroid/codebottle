@@ -1,0 +1,87 @@
+$dark: #272727;
+$white: #ccc;
+
+$primary-color: #e84c3d;
+$warning-color: #B77513;
+$danger-color: #BC2C1A; // pls
+$success-color: #9BC53D;
+$info-color: #5BC0EB;
+
+$theme-colors: (
+  primary: $primary-color,
+  secondary: #E9ECEF,
+  success: $success-color,
+  info: $info-color,
+  warning: $warning-color,
+  danger: $danger-color,
+  light: $white,
+  dark: $dark
+);
+
+$body-bg: $dark;
+$body-color: $white;
+
+$text-muted: darken($white, 10%);
+
+$btn-border-radius: 1px;
+$input-btn-padding-x: 1rem;
+$input-btn-padding-y: .75rem;
+
+$input-bg: transparent;
+$input-color: $white;
+$input-color-placeholder: darken($white, 20%);
+$input-border-color: lighten($dark, 15%);
+$input-focus-border-color: lighten($primary-color, 5%);
+$input-border-radius: 1px;
+$input-group-addon-bg: lighten($dark, 10%);
+$input-group-addon-border-color: lighten($dark, 10%);
+// $input-padding-x: 1rem;
+// $input-padding-y: 0.75rem;
+
+// $navbar-bg: #222;
+$navbar-light-color: #ddd;
+$navbar-light-hover-color: #eee;
+$navbar-light-active-color: #eee;
+
+$card-bg: lighten($dark, 8.5%);
+$card-cap-bg: lighten($dark, 12%);
+$card-border-radius: 1px;
+
+$font-family-sans-serif: 'Lato', sans-serif;
+
+// ******* alert.scss *******
+$alert-danger-bg:             #2C2222;
+$alert-danger-text:           #EAA;
+$alert-danger-border:         #2A2020;
+
+$alert-warning-bg:            #2C2C22;
+$alert-warning-text:          #EEA;
+$alert-warning-border:        #2A2A20;
+
+$alert-success-bg:            #222C22;
+$alert-success-text:          #AEA;
+$alert-success-border:        #202A20;
+// ******* alert.scss *******
+
+$link-color: lighten($primary-color, 15%);
+
+$dropdown-bg: lighten($dark, 12%);
+$dropdown-link-hover-bg: lighten($dark, 15%);
+
+$hr-border-color: lighten($dark, 7%);
+
+$table-border-color: lighten($dark, 12%);
+
+$code-bg: darken($dark, 3%);
+$code-color: #D6CA63;
+$code-padding-x: .3rem;
+$code-padding-y: .2rem;
+
+$modal-content-bg: lighten($dark, 8.5%);
+$modal-content-border-color: $dark;
+$modal-header-border-color: rgba($dark, .3);
+$modal-footer-border-color: rgba($dark, .3);
+
+// Font Awesome variables
+
+$fa-font-path:        "//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts";
