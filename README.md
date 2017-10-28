@@ -1,4 +1,4 @@
-CodeBottle
+CodeBottle [![CircleCI](https://circleci.com/gh/BFNT/codebottle.svg?style=svg&circle-token=4824c1983ce3bd6ce7add24d05a2986aac7cdb09)](https://circleci.com/gh/BFNT/codebottle)
 ===========
 
 CodeBottle is a simple way to share small reusable snippets of code so that anyone can pull and use easily.
