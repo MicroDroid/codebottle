@@ -22,7 +22,7 @@
 					Sign in with GitHub
 				</router-link>
 			</form>
-			
+			<br/>
 			<p>
 				New user? <router-link :to="{name: 'signup'}">Register now</router-link> <br/>
 				Or, forgot your password? <router-link :to="{name: 'forgot-password'}">No problem</router-link>
@@ -35,7 +35,7 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError, apiUrl} from '../../helpers';
+	import {extractError} from '../../helpers';
 	import store from '../../store';
 
 	export default {
@@ -43,8 +43,8 @@
 			loading: false,
 			error: false,
 
-			username: "",
-			password: "",
+			username: '',
+			password: '',
 		}),
 
 		methods: {
@@ -70,20 +70,20 @@
 
 		head: {
 			title: {
-				inner: "Sign in",
+				inner: 'Sign in',
 			},
 
 			meta: [
 				{name: 'robots', content: 'noindex'},
-                {property: 'og:title', content: 'Sign in'},
-                {property: 'og:description', content: 'Sign in back to your account to get the most out of CodeBottle. Use social buttons for an instantaneous sign in.'},
+				{property: 'og:title', content: 'Sign in'},
+				{property: 'og:description', content: 'Sign in back to your account to get the most out of CodeBottle. Use social buttons for an instantaneous sign in.'},
 			],
 		},
 
 		mounted: function() {
 			this.$refs.usernameInput.focus();
 		}
-	}
+	};
 </script>
 
 <style type="text/css" scoped>
