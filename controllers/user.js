@@ -77,7 +77,6 @@ module.exports = {
 
 		await models.emailVerification.create({
 			user_id: user.id,
-			email: user.email,
 			token: cryptojs.SHA256(token).toString(),
 		});
 
@@ -148,8 +147,9 @@ Time: ${(new Date()).toISOString()}
 			throw new ApiError(422, 'Invalid token');
 
 		const user = verification.getUser();
+		if (verification.email)
+			user.email = verification.email;
 		user.activated = true;
-		user.email = verification.email;
 		user.save();
 
 		verification.destroy();

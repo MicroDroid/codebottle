@@ -264,7 +264,9 @@ describe('User controller', () => {
 	it('Throws error when verifies email with invalid token', sinonTest(async function () {
 		const token = 'some_token';
 		const findOneStub = this.stub(models.emailVerification, 'findOne');
+		const sha256Stub = this.stub(cryptojs, 'SHA256');
 		findOneStub.returns(null);
+		sha256Stub.returns('some_hash');
 
 		let ctx = {
 			status: 200,
@@ -283,7 +285,53 @@ describe('User controller', () => {
 		expect(findOneStub, 'Email verifications should be searched once').to.have.been.calledOnce;
 	}));
 
-	it('Verifies email', sinonTest(async function () {
-		
+	it('Verifies emails', sinonTest(async function () {
+		const token = 'some_token';
+
+		const userSaveStub = this.stub();
+		const verificationDestroyStub = this.stub();
+
+		const notOverCoder = {
+			...overcoder,
+			activated: false,
+			save: userSaveStub,
+		};
+
+		let verification = {
+			getUser: () => notOverCoder,
+			destroy: verificationDestroyStub,
+		};
+
+		const findOneStub = this.stub(models.emailVerification, 'findOne');
+		const sha256Stub = this.stub(cryptojs, 'SHA256');
+		findOneStub.returns(verification);
+		sha256Stub.returns('some_hash');
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {body: {token}},
+		};
+
+		await expect(UserController.verifyEmail(ctx, () => {}))
+			.to.eventually.be.fulfilled;
+		expect(findOneStub).to.have.been.calledOnce;
+		expect(sha256Stub).to.have.been.calledOnce;
+		expect(userSaveStub).to.have.been.calledOnce;
+		expect(verificationDestroyStub).to.have.been.calledOnce;
+		expect(notOverCoder.activated).to.be.true;
+		expect(notOverCoder.email).to.equal(overcoder.email);
+
+		notOverCoder.activated = false;
+		verification.email = 'not@the.same.email';
+
+		await expect(UserController.verifyEmail(ctx, () => {}))
+			.to.eventually.be.fulfilled;
+		expect(findOneStub).to.have.been.calledTwice;
+		expect(sha256Stub).to.have.been.calledTwice;
+		expect(userSaveStub).to.have.been.calledTwice;
+		expect(verificationDestroyStub).to.have.been.calledTwice;
+		expect(notOverCoder.activated).to.be.true;
+		expect(notOverCoder.email).to.equal(verification.email);
 	}));
 });
