@@ -31,7 +31,7 @@ module.exports = {
 				id: user.id,
 				priv: cryptojs.SHA256(user).toString(),
 			}, config.jwt.secret, {expiresIn: '90d'}),
-			expiresIn: Date.now() + 84600 * 90,
+			expiresIn: 84600 * 90,
 		};
 
 		await next();
