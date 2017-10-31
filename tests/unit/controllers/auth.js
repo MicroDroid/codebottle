@@ -139,7 +139,7 @@ describe('Auth controller', () => {
 			});
 	}));
 
-	const resetPassword = (passwordReset, cachedKey, checkCreated) => {
+	const resetPassword = (passwordReset, cachedKey) => {
 		const token = 'some_token';
 
 		const createResetStub = sandbox.stub(models.passwordReset, 'create');
