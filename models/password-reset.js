@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
 	});
 
 	passwordReset.associate = models => {
-		passwordReset.belongsTo(models.user, {foreignKey: 'email'});
+		passwordReset.belongsTo(models.user, {foreignKey: 'email', targetKey: 'email'});
 	};
 
 	return passwordReset;
