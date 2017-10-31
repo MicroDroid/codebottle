@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
 	}, {});
 
 	emailVerification.associate = models => {
-		emailVerification.belongsTo(models.user);
+		emailVerification.belongsTo(models.user, {foreignKey: 'email'});
 	};
 
 	return emailVerification;

@@ -57,6 +57,7 @@ module.exports = (sequelize, DataTypes) => {
 		user.hasMany(models.vote);
 		user.hasMany(models.snippet);
 		user.hasOne(models.emailVerification);
+		user.hasOne(models.passwordReset, {foreignKey: 'email'});
 	};
 
 	user.transform = (user, hideEmail, github) => ({

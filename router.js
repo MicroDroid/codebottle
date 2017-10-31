@@ -34,7 +34,8 @@ module.exports = () => {
 	router.post('/users/email-verifications', throttle(5, 120), UserController.verifyEmail);
 	router.get('/users/:username', throttle(), UserController.get);
 
-	router.post('/login', throttle(5, 120), AuthController.login);
+	router.post('/auth/login', throttle(5, 120), AuthController.login);
+	router.post('/auth/password/reset', throttle(5, 120), AuthController.resetPassword);
 
 	return router;
 };
