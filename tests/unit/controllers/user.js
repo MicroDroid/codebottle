@@ -297,6 +297,7 @@ describe('User controller', () => {
 			save: userSaveStub,
 		};
 
+		// Notice email is undefined here
 		let verification = {
 			getUser: () => notOverCoder,
 			destroy: verificationDestroyStub,
@@ -321,6 +322,8 @@ describe('User controller', () => {
 		expect(verificationDestroyStub).to.have.been.calledOnce;
 		expect(notOverCoder.activated).to.be.true;
 		expect(notOverCoder.email).to.equal(overcoder.email);
+
+		// Try with email set in verification
 
 		notOverCoder.activated = false;
 		verification.email = 'not@the.same.email';
