@@ -1,15 +1,16 @@
 const ApiError = require('../errors/api-error');
 const RateLimitError = require('../errors/rate-limit-error');
-const logger = require('../utils/logger');
 
 module.exports = async (ctx, next) => {
 	try {
 		await next();
 		
-		if (ctx.status === 404)
+		if (ctx.status === 404) {
+			ctx.status = 404;
 			ctx.body = {
 				error: 'Not found',
 			};
+		}
 	} catch(e) {
 		if (e instanceof ApiError || e instanceof RateLimitError) {
 			ctx.status = e.status;
