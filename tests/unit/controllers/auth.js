@@ -273,25 +273,81 @@ describe('Auth controller', () => {
 	it('Throws error when changing password with invalid params', sinonTest(async function () {
 		const findOneStub = this.stub(models.passwordReset, 'findOne');
 
+		findOneStub.returns({
+			email: overcoder.email,
+		});
+
 		const attempt = body => {
 			const ctx = {
 				status: 200,
 				body: {},
 				request: {body},
 			};
+
 			return expect(AuthController.changePassword(ctx, () => {}), 'Should throw error')
 				.to.eventually.be.rejectedWith(ApiError)
 				.then(e => {
-					expect(e.status, 'Status should be 422').to.equal(422)
+					expect(e.status, 'Status should be 422').to.equal(422);
 				});
 		};
 
-		attempt({                                                  });
-		attempt({email: 'some@test.email',                         });
-		attempt({                          password: 'somepassword'});
-		attempt({email: 'some@test.email', password: 'short'       });
+		await attempt({                                             });
+		await attempt({token: 'some_token',                         });
+		await attempt({                     password: 'somepassword'});
+		await attempt({token: 'some_token', password: 'short'       });
 
 		expect(findOneStub, 'Password reset should not be queried')
 			.to.not.have.been.called;
+
+		findOneStub.returns(undefined);
+
+		await attempt({token: 'some_token', password: 'somepassword'});
+
+		expect(findOneStub, 'Password reset should be queried')
+			.to.not.have.been.calledOnce;
+	}));
+
+	it('Changes password given token from password reset', sinonTest(async function () {
+		const findOneStub = this.stub(models.passwordReset, 'findOne');
+		const destroyStub = this.stub();
+		const saveStub = this.stub();
+		const bcryptStub = this.stub(bcrypt, 'hash');
+		const getUserStub = this.stub();
+
+		const overcoderClone = {
+			...overcoder,
+			save: saveStub,
+		};
+
+		const token = 'some_token';
+		const password = 'some_password';
+		const bcrypted = password + '_hashed';
+		const reset = {
+			email: overcoderClone.email,
+			destroy: destroyStub,
+			getUser: getUserStub,
+		};
+
+		findOneStub.returns(reset);
+		bcryptStub.returns(bcrypted);
+		getUserStub.returns(overcoderClone);
+
+		const ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {token, password,}
+			},
+		};
+
+		await expect(AuthController.changePassword(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.fulfilled;
+
+		expect(findOneStub, 'Password reset should be queried').to.be.calledOnce;
+		expect(bcryptStub, 'Password should be bcrypted').to.be.calledOnce;
+		expect(getUserStub, 'User should be queried').to.be.calledOnce;
+		expect(saveStub, 'User should be saved').to.be.calledOnce;
+		expect(overcoderClone.password, 'Password should be set').to.equal(bcrypted);
+		expect(ctx.status, 'Status should be set to 204').to.equal(204);
 	}));
 });

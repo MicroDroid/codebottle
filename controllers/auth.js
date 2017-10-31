@@ -56,7 +56,7 @@ module.exports = {
 
 		const reset = await models.passwordReset.findOne({
 			where: {token: cryptojs.SHA256(token).toString()},
-			attributes: ['id', 'email', 'token'],
+			attributes: ['id', 'email'],
 		});
 
 		if (!reset)
