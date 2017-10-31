@@ -304,7 +304,7 @@ describe('Auth controller', () => {
 		await attempt({token: 'some_token', password: 'somepassword'});
 
 		expect(findOneStub, 'Password reset should be queried')
-			.to.not.have.been.calledOnce;
+			.to.have.been.calledOnce;
 	}));
 
 	it('Changes password given token from password reset', sinonTest(async function () {

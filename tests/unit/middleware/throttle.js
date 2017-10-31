@@ -46,8 +46,17 @@ describe('Throttle middleware', () => {
 		await expect(throttleInstance(ctx, () => {}), 'Should throw RateLimitError')
 			.to.eventually.be.rejectedWith(RateLimitError);
 
-		expect(getAsyncStub, 'Throttling data should be queried twice').to.have.been.calledTwice;
-		expect(setAsyncStub, 'Throttling data should not be updated').to.not.have.been.calledOnce;
+		getAsyncStub.returns(JSON.stringify({
+			requests: 61,
+		}));
+
+		throttleInstance = throttle();
+
+		await expect(throttleInstance(ctx, () => {}), 'Should throw RateLimitError')
+			.to.eventually.be.rejectedWith(RateLimitError);
+
+		expect(getAsyncStub, 'Throttling data should be queried twice').to.have.been.calledThrice;
+		expect(setAsyncStub, 'Throttling data should not be updated').to.not.have.been.called;
 	}));
 
 	it('Passes when not exceeding limit', sinonTest(async function() {
