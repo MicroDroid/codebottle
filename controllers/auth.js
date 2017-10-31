@@ -43,6 +43,36 @@ module.exports = {
 		await next();
 	},
 
+	changePassword: async (ctx, next) => {
+		const token = ctx.request.body.token;
+		const password = ctx.request.body.password;
+
+		if (!token)
+			throw new ApiError(422, 'Token is missing');
+		else if (!password)
+			throw new ApiError(422, 'Password is missing');
+		else if (password.length < 6)
+			throw new ApiError(422, 'Password should be at least 6 characters');
+
+		const reset = await models.passwordReset.findOne({
+			where: {token: cryptojs.SHA256(token).toString()},
+			attributes: ['id', 'email', 'token'],
+		});
+
+		if (!reset)
+			throw new ApiError(422, 'Invalid token');
+
+		const user = await reset.getUser();
+		user.password = await bcrypt.hash(ctx.request.body.password, config.bcrypt.saltRounds);
+		user.save();
+
+		await reset.destroy();
+
+		ctx.status = 204;
+
+		return next();
+	},
+
 	resetPassword: async (ctx, next) => {
 		if (!(await helpers.verifyRecaptcha(ctx.request.body.recaptcha_token)))
 			throw new ApiError(422, 'Invalid reCAPTCHA');

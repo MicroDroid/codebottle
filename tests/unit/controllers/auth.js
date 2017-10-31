@@ -269,4 +269,29 @@ describe('Auth controller', () => {
 		expect(sendEmailStub, 'Email should not be sent')
 			.to.not.have.been.called;
 	}));
+
+	it('Throws error when changing password with invalid params', sinonTest(async function () {
+		const findOneStub = this.stub(models.passwordReset, 'findOne');
+
+		const attempt = body => {
+			const ctx = {
+				status: 200,
+				body: {},
+				request: {body},
+			};
+			return expect(AuthController.changePassword(ctx, () => {}), 'Should throw error')
+				.to.eventually.be.rejectedWith(ApiError)
+				.then(e => {
+					expect(e.status, 'Status should be 422').to.equal(422)
+				});
+		};
+
+		attempt({                                                  });
+		attempt({email: 'some@test.email',                         });
+		attempt({                          password: 'somepassword'});
+		attempt({email: 'some@test.email', password: 'short'       });
+
+		expect(findOneStub, 'Password reset should not be queried')
+			.to.not.have.been.called;
+	}));
 });

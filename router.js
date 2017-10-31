@@ -36,6 +36,7 @@ module.exports = () => {
 
 	router.post('/auth/login', throttle(5, 120), AuthController.login);
 	router.post('/auth/password/reset', throttle(5, 120), AuthController.resetPassword);
+	router.post('/auth/password/change', throttle(5, 120), AuthController.changePassword);
 
 	return router;
 };
