@@ -10,6 +10,11 @@ module.exports = async (ctx, next) => {
 			ctx.body = {
 				error: 'Not found',
 			};
+		} else if (ctx.status === 405) {
+			ctx.status = 405;
+			ctx.body = {
+				error: 'Method not allowed',
+			};
 		}
 	} catch(e) {
 		if (e instanceof ApiError || e instanceof RateLimitError) {

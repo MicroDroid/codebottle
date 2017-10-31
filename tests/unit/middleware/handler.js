@@ -59,6 +59,24 @@ describe('Handler middleware', () => {
 		expect(ctx.body.error, 'Error should be \'Not found\'').to.equal('Not found');
 	}));
 
+	it('Customizes error message for 405', sinonTest(async function() {
+		let ctx = {};
+
+		await handler(ctx, async () => {
+			ctx.status = 405;
+		});
+
+		expect(ctx.status, 'Status should be 405').to.equal(405);
+		expect(ctx.body.error, 'Error should be \'Method not allowed\'').to.equal('Method not allowed');
+
+		ctx.status = 405;
+
+		await handler(ctx, () => {});
+
+		expect(ctx.status, 'Status should be 405').to.equal(405);
+		expect(ctx.body.error, 'Error should be \'Method not allowed\'').to.equal('Method not allowed');
+	}));
+
 	it('Formats ApiError properly', sinonTest(async function() {
 		let error = new ApiError(422, 'Invalid field!');
 
