@@ -64,7 +64,7 @@ module.exports = {
 				await redis.setAsync(cacheKey, 1, 'EX', 8 * 3600);
 				const token = crypto.randomBytes(16).toString('hex');
 
-				const existingReset = user.getPasswordReset();
+				const existingReset = await user.getPasswordReset();
 				if (existingReset) {
 					existingReset.destroy();
 				}
