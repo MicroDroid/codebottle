@@ -56,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
 	user.associate = models => {
 		user.hasMany(models.vote);
 		user.hasMany(models.snippet);
+		user.hasMany(models.socialConnection);
 		user.hasOne(models.emailVerification);
 		user.hasOne(models.passwordReset, {foreignKey: 'email'});
 	};

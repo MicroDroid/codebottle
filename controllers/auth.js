@@ -2,14 +2,29 @@ const config = require('../config');
 const redis = require('../redis');
 const nodemailer = require('../nodemailer');
 const helpers = require('../helpers');
-
 const models = require('../models');
+const ApiError = require('../errors/api-error');
+const Sequelize = require('sequelize');
+
+const logger = require('../utils/logger');
 const jwt = require('jsonwebtoken');
 const cryptojs = require('crypto-js');
 const crypto = require('crypto');
-
 const bcrypt = require('bcrypt');
-const ApiError = require('../errors/api-error');
+const axios = require('axios');
+const simpleOAuth = require('simple-oauth2');
+
+const githubOAuth = simpleOAuth.create({
+	client: {
+		id: '0d1b8a8f60c5e2070c45',
+		secret: '08fe963ff66b25e435d68f33a57148e80c05e794',
+	},
+	auth: {
+		tokenHost: 'https://github.com',
+		tokenPath: '/login/oauth/access_token',
+		authorizePath: '/login/oauth/authorize',
+	}
+});
 
 module.exports = {
 	login: async (ctx, next) => {
@@ -33,6 +48,7 @@ module.exports = {
 			throw new ApiError(401, 'Invalid username or password');
 		
 		ctx.body = {
+			username: user.username,
 			token: jwt.sign({
 				id: user.id,
 				priv: cryptojs.SHA256(user).toString(),
@@ -64,7 +80,7 @@ module.exports = {
 
 		const user = await reset.getUser();
 		user.password = await bcrypt.hash(ctx.request.body.password, config.bcrypt.saltRounds);
-		user.save();
+		await user.save();
 
 		await reset.destroy();
 
@@ -159,5 +175,109 @@ Time: ${(new Date()).toISOString()}
 		ctx.status = 204;
 		
 		return next();
-	}
+	},
+
+	github: async (ctx, next) => {
+		const code = ctx.request.body.code;
+
+		if (!code)
+			throw new ApiError(422, 'Invalid authorization code!');
+
+		const token = await githubOAuth.authorizationCode.getToken({code});
+		const response = await axios.get(`https://api.github.com/user?access_token=${token.access_token}`)
+			.catch(error => {
+				if (error.response && error.response.data)
+					logger.warn(`GitHub OAuth2.0 failed: [${error.response.status}] ${error.response.data.message}`);
+				else
+					logger.err('GitHub OAuth2.0 failed: Network error');
+
+				throw new ApiError(422, 'Error retrieving GitHub data');
+			});
+
+		let socialConnection = 	await models.socialConnection.findOne({
+			where: {service: 'github',  service_id: response.data.id},
+			attributes: ['id', 'user_id', 'service', 'service_id', 'token', 'token_type'],
+		});
+
+		if (socialConnection) {
+			const user = socialConnection.getUser();
+			socialConnection.token = token.access_token;
+			await socialConnection.save();
+
+			ctx.body = {
+				username: user.username,
+				expires_in: 84600 * 90,
+				token_type: 'Bearer',
+				token: jwt.sign({
+					id: user.id,
+					priv: cryptojs.SHA256(user).toString(),
+				}, config.jwt.secret, {expiresIn: '90d'}),
+			};
+		} else {
+			const usernameRegex = /[^0-9A-Za-z]/g;
+			let username = response.data.login.replace(usernameRegex, '')
+				.substr(0,16)
+				.padEnd(3, '0');
+
+			let existingUser = await models.user.findOne({
+				where: {
+					[Sequelize.Op.or]: [
+						{username},
+						{email: response.data.email},
+					]
+				},
+				attributes: ['id', 'username', 'email'],
+			});
+
+			if (existingUser)
+				throw new ApiError(422, 'Username/Email is already taken');
+
+			// This is probably a better solution but it scares me,
+			// It feels like it can be easily broken
+
+			// try {
+			// 	do {
+			// 		existingUser = await models.user.findOne({
+			// 			where: {username},
+			// 			attributes: ['id', 'username', 'email'],
+			// 		});
+					
+			// 		if (existingUser && username.length >= 16)
+			// 			throw new Error('Username exists')
+			// 		if (existingUser && username.length < 16)
+			// 			username += '0';
+			// 	} while (existingUser);
+			// } catch (error) {
+			// 	throw new ApiError(422, 'Username is already taken');
+			// }
+
+			const user = await models.user.create({
+				username,
+				email: response.data.email,
+				bio: response.data.bio,
+				activated: true,
+				password: null,
+			});
+
+			await models.socialConnection.create({
+				user_id: user.id,
+				service_id: response.data.id,
+				service: 'github',
+				token_type: token.token_type,
+				token: token.access_token,
+			});
+
+			ctx.body = {
+				username: user.username,
+				expires_in: 84600 * 90,
+				token_type: 'Bearer',
+				token: jwt.sign({
+					id: user.id,
+					priv: cryptojs.SHA256(user).toString(),
+				}, config.jwt.secret, {expiresIn: '90d'}),
+			};
+		}
+
+		return next();
+	},
 };

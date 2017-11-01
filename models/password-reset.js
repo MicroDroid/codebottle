@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-	var passwordReset = sequelize.define('passwordReset', {
+	const passwordReset = sequelize.define('passwordReset', {
 		id: {
 			type: DataTypes.INTEGER.UNSIGNED,
 			allowNull: false,
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		created_at: {
 			type: DataTypes.TIME,
-			allowNull: true
+			allowNull: false
 		},
 	}, {
 		updatedAt: false,
