@@ -355,6 +355,8 @@ describe('Auth controller', () => {
 		expect(ctx.status, 'Status should be set to 204').to.equal(204);
 	}));
 
+	// TODO: deduplication needed
+
 	it('Throw error on GitHub auth with invalid parameters', sinonTest(async function () {
 		let ctx = {
 			status: 200,
