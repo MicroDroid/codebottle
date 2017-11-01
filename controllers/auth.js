@@ -14,18 +14,6 @@ const bcrypt = require('bcrypt');
 const axios = require('axios');
 const simpleOAuth = require('simple-oauth2');
 
-const githubOAuth = simpleOAuth.create({
-	client: {
-		id: '0d1b8a8f60c5e2070c45',
-		secret: '08fe963ff66b25e435d68f33a57148e80c05e794',
-	},
-	auth: {
-		tokenHost: 'https://github.com',
-		tokenPath: '/login/oauth/access_token',
-		authorizePath: '/login/oauth/authorize',
-	}
-});
-
 module.exports = {
 	login: async (ctx, next) => {
 		const username = ctx.request.body.username;
@@ -183,11 +171,29 @@ Time: ${(new Date()).toISOString()}
 		if (!code)
 			throw new ApiError(422, 'Invalid authorization code!');
 
-		const token = await githubOAuth.authorizationCode.getToken({code});
+		const githubOAuth = simpleOAuth.create({
+			client: {
+				id: '0d1b8a8f60c5e2070c45',
+				secret: '08fe963ff66b25e435d68f33a57148e80c05e794',
+			},
+			auth: {
+				tokenHost: 'https://github.com',
+				tokenPath: '/login/oauth/access_token',
+				authorizePath: '/login/oauth/authorize',
+			}
+		});
+
+		const token = await githubOAuth.authorizationCode.getToken({code})
+			.catch(() => {
+				throw new ApiError(422, 'Error retrieving GitHub data');
+			});
+
 		const response = await axios.get(`https://api.github.com/user?access_token=${token.access_token}`)
 			.catch(error => {
+				/* istanbul ignore next */
 				if (error.response && error.response.data)
 					logger.warn(`GitHub OAuth2.0 failed: [${error.response.status}] ${error.response.data.message}`);
+				/* istanbul ignore next */
 				else
 					logger.err('GitHub OAuth2.0 failed: Network error');
 
@@ -268,7 +274,7 @@ Time: ${(new Date()).toISOString()}
 			});
 
 			ctx.body = {
-				username: user.username,
+				username,
 				expires_in: 84600 * 90,
 				token_type: 'Bearer',
 				token: jwt.sign({

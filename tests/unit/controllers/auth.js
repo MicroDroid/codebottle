@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-const jwt = require('jsonwebtoken');
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
@@ -11,24 +10,28 @@ const sinonTest = sinonTestFactory(sinon);
 const cryptojs = require('crypto-js');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const ApiError = require('../../../errors/api-error');
 const AuthController = require('../../../controllers/auth');
 const models = require('../../../models');
 const redis = require('../../../redis');
 const helpers = require('../../../helpers');
 const nodemailer = require('../../../nodemailer');
+const simpleOAuth = require('simple-oauth2');
+const axios = require('axios');
+const logger = require('../../../utils/logger');
 
 chai.use(sinonChai);
 
 describe('Auth controller', () => {
-	let findOneStub = null;
+	let findUserStub = null;
 	let bcryptStub = null;
 	let recaptchaStub = null;
 	let sandbox = null;
 
 	beforeEach(() => {
 		sandbox = sinon.createSandbox();
-		findOneStub = sinon.stub(models.user, 'findOne');
+		findUserStub = sinon.stub(models.user, 'findOne');
 		bcryptStub = sinon.stub(bcrypt, 'compare');
 		recaptchaStub = sinon.stub(helpers, 'verifyRecaptcha');
 		recaptchaStub.returns(true);
@@ -36,7 +39,7 @@ describe('Auth controller', () => {
 
 	afterEach(() => {
 		sandbox.restore();
-		findOneStub.restore();
+		findUserStub.restore();
 		bcryptStub.restore();
 		recaptchaStub.restore();
 	});
@@ -47,6 +50,7 @@ describe('Auth controller', () => {
 
 	// We will authenticate this weird guy
 	const overcoder = {
+		id: 1,
 		username: 'OverCoder',
 		email: 'some@example.com',
 		bio: 'Enthusiastic developer',
@@ -58,7 +62,7 @@ describe('Auth controller', () => {
 	it('Throws error on incorrect credentials', async () => {
 		// To reduce duplication. Mocks bcrypt
 		const attempt = (credentials, user) => {
-			findOneStub.returns(user);
+			findUserStub.returns(user);
 			bcryptStub.returns(false);
 
 			let ctx = {
@@ -91,7 +95,7 @@ describe('Auth controller', () => {
 	});
 
 	it('Succeeds on correct credentials', sinonTest(async function () {
-		findOneStub.returns(overcoder);
+		findUserStub.returns(overcoder);
 		bcryptStub.returns(true);
 
 		const token = 'some_token';
@@ -156,7 +160,7 @@ describe('Auth controller', () => {
 		cryptoStub.returns(token);
 		sha256Stub.returns(token + '_hashed');
 
-		findOneStub.returns({
+		findUserStub.returns({
 			...overcoder,
 			getPasswordReset,
 		});
@@ -218,7 +222,7 @@ describe('Auth controller', () => {
 	}));
 
 	it('Does nothing when resetting with unmatched user', sinonTest(async function () {
-		findOneStub.returns(null);
+		findUserStub.returns(null);
 
 		const ctx = {
 			status: 200,
@@ -235,7 +239,7 @@ describe('Auth controller', () => {
 	}));
 
 	it('Does nothing when resetting with cached key', sinonTest(async function () {
-		findOneStub.returns(null);
+		findUserStub.returns(null);
 
 		const createResetStub = this.stub(models.passwordReset, 'create');
 		const getAsyncStub = this.stub(redis, 'getAsync');
@@ -244,7 +248,7 @@ describe('Auth controller', () => {
 
 		getAsyncStub.returns(1);
 
-		findOneStub.returns({
+		findUserStub.returns({
 			...overcoder,
 		});
 
@@ -271,9 +275,9 @@ describe('Auth controller', () => {
 	}));
 
 	it('Throws error when changing password with invalid params', sinonTest(async function () {
-		const findOneStub = this.stub(models.passwordReset, 'findOne');
+		const findPasswordStub = this.stub(models.passwordReset, 'findOne');
 
-		findOneStub.returns({
+		findPasswordStub.returns({
 			email: overcoder.email,
 		});
 
@@ -296,19 +300,19 @@ describe('Auth controller', () => {
 		await attempt({                     password: 'somepassword'});
 		await attempt({token: 'some_token', password: 'short'       });
 
-		expect(findOneStub, 'Password reset should not be queried')
+		expect(findPasswordStub, 'Password reset should not be queried')
 			.to.not.have.been.called;
 
-		findOneStub.returns(undefined);
+		findPasswordStub.returns(undefined);
 
 		await attempt({token: 'some_token', password: 'somepassword'});
 
-		expect(findOneStub, 'Password reset should be queried')
+		expect(findPasswordStub, 'Password reset should be queried')
 			.to.have.been.calledOnce;
 	}));
 
 	it('Changes password given token from password reset', sinonTest(async function () {
-		const findOneStub = this.stub(models.passwordReset, 'findOne');
+		const findPasswordStub = this.stub(models.passwordReset, 'findOne');
 		const destroyStub = this.stub();
 		const saveStub = this.stub();
 		const bcryptStub = this.stub(bcrypt, 'hash');
@@ -328,7 +332,7 @@ describe('Auth controller', () => {
 			getUser: getUserStub,
 		};
 
-		findOneStub.returns(reset);
+		findPasswordStub.returns(reset);
 		bcryptStub.returns(bcrypted);
 		getUserStub.returns(overcoderClone);
 
@@ -343,11 +347,323 @@ describe('Auth controller', () => {
 		await expect(AuthController.changePassword(ctx, () => {}), 'Should throw error')
 			.to.eventually.be.fulfilled;
 
-		expect(findOneStub, 'Password reset should be queried').to.be.calledOnce;
+		expect(findPasswordStub, 'Password reset should be queried').to.be.calledOnce;
 		expect(bcryptStub, 'Password should be bcrypted').to.be.calledOnce;
 		expect(getUserStub, 'User should be queried').to.be.calledOnce;
 		expect(saveStub, 'User should be saved').to.be.calledOnce;
 		expect(overcoderClone.password, 'Password should be set').to.equal(bcrypted);
 		expect(ctx.status, 'Status should be set to 204').to.equal(204);
+	}));
+
+	it('Throw error on GitHub auth with invalid parameters', sinonTest(async function () {
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {}
+			},
+		};
+
+		return expect(AuthController.github(ctx, () => {}), 'Should throw error')
+			.to.eventually.to.be.rejectedWith(ApiError)
+			.then(e => {
+				expect(e.status, 'Status should be 422').to.equal(422);
+			});
+	}));
+
+	it('Throws error on GitHub auth failure', sinonTest(async function () {
+		this.stub(logger, 'warn');
+		this.stub(logger, 'err');
+
+		const oauthCreateStub = this.stub(simpleOAuth, 'create');
+		const getTokenStub = this.stub();
+		const axiosStub = this.stub(axios, 'get');
+		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
+
+		const oauthMock = {
+			authorizationCode: {
+				getToken: getTokenStub
+			}
+		};
+
+		oauthCreateStub.returns(oauthMock);
+
+		const token = 'some_token';
+		const code = 'some_code';
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {code}
+			},
+		};
+
+		getTokenStub.rejects(Error);
+		await expect(AuthController.github(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+		expect(getTokenStub, 'Token should be fetched').to.have.been.calledOnce;
+		expect(axiosStub, 'User data should not be fetched').to.not.have.been.called;
+
+		getTokenStub.reset();
+		getTokenStub.resolves({access_token: token});
+		axiosStub.rejects(Error);
+
+		await expect(AuthController.github(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+		expect(getTokenStub, 'Token should be fetched').to.have.been.calledOnce;
+		expect(axiosStub, 'User data should not be fetched').to.have.been.calledOnce;
+		expect(findConnectionStub, 'Social connection should not be fetched').to.not.have.been.called;
+	}));
+
+	it('Logs in on GitHub auth', sinonTest(async function () {
+		const oauthCreateStub = this.stub(simpleOAuth, 'create');
+		const getTokenStub = this.stub();
+		const axiosStub = this.stub(axios, 'get');
+		const jwtStub = this.stub(jwt, 'sign');
+		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
+		const saveConnectionStub = this.stub();
+		const getConnectionUserStub = this.stub();
+		const sha256Stub = this.stub(cryptojs, 'SHA256');
+		sha256Stub.returns('somehash');
+
+		const oauthMock = {
+			authorizationCode: {
+				getToken: getTokenStub
+			}
+		};
+
+		oauthCreateStub.returns(oauthMock);
+
+		const apiToken = 'some_api_token';
+		const token = 'some_token';
+		const code = 'some_code';
+		const githubUser = {
+			id: '12345',
+			login: overcoder.username,
+			email: overcoder.email,
+			bio: overcoder.bio,
+		};
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {code}
+			},
+		};
+
+		getTokenStub.resolves({access_token: token});
+		axiosStub.resolves({
+			data: githubUser
+		});
+		findConnectionStub.resolves({
+			save: saveConnectionStub,
+			getUser: getConnectionUserStub,
+		});
+
+		getConnectionUserStub.returns(overcoder);
+		jwtStub.returns(apiToken);
+
+		await expect(AuthController.github(ctx, () => {}), 'Should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(getTokenStub, 'Token should be fetched').to.have.been.calledOnce;
+		expect(axiosStub, 'User data should be fetched').to.have.been.calledOnce;
+		expect(jwtStub, 'JWT token should be created').to.have.been.calledOnce;
+		expect(saveConnectionStub, 'New token should be saved to connection').to.have.been.calledOnce;
+		expect(getConnectionUserStub, 'Connection\'s user should be queried').to.have.been.calledOnce;
+		
+		expect(ctx.status, 'Status should be 200').to.equal(200);
+		expect(ctx.body.username, 'Username should be set').to.equal(overcoder.username);
+		expect(ctx.body.expires_in, 'Expires in should be set').to.equal(84600 * 90);
+		expect(ctx.body.token_type, 'Token type should be Bearer').to.equal('Bearer');
+		expect(ctx.body.token, 'API token should be set').to.equal(apiToken);
+	}));
+
+	it('Registers new users on GitHub auth', sinonTest(async function () {
+		const oauthCreateStub = this.stub(simpleOAuth, 'create');
+		const getTokenStub = this.stub();
+		const axiosStub = this.stub(axios, 'get');
+		const jwtStub = this.stub(jwt, 'sign');
+		const sha256Stub = this.stub(cryptojs, 'SHA256');
+		sha256Stub.returns('somehash');
+
+		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
+		const createConnectionStub = this.stub(models.socialConnection, 'create');
+
+		const createUserStub = this.stub(models.user, 'create');
+
+		const oauthMock = {
+			authorizationCode: {
+				getToken: getTokenStub
+			}
+		};
+
+		oauthCreateStub.returns(oauthMock);
+
+		const apiToken = 'some_api_token';
+		const token = 'some_token';
+		const code = 'some_code';
+		const githubUser = {
+			id: '12345',
+			login: overcoder.username,
+			email: overcoder.email,
+			bio: overcoder.bio,
+		};
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {code}
+			},
+		};
+
+		getTokenStub.resolves({access_token: token});
+		axiosStub.resolves({
+			data: githubUser
+		});
+
+		createUserStub.returns(overcoder);
+
+		jwtStub.returns(apiToken);
+
+		await expect(AuthController.github(ctx, () => {}), 'Should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(getTokenStub, 'Token should be fetched').to.have.been.calledOnce;
+		expect(axiosStub, 'User data should be fetched').to.have.been.calledOnce;
+		expect(jwtStub, 'JWT token should be created').to.have.been.calledOnce;
+		expect(findConnectionStub, 'Existing connection should be queried').to.have.been.calledOnce;
+		expect(createConnectionStub, 'New connection should be created').to.have.been.calledOnce;
+		expect(createUserStub, 'New user should be created').to.have.been.calledOnce;
+		expect(findUserStub, 'Existing username/email should be checked').to.have.been.calledOnce;
+
+		expect(ctx.status, 'Status should be 200').to.equal(200);
+		expect(ctx.body.username, 'Username should be set').to.equal(overcoder.username);
+		expect(ctx.body.expires_in, 'Expires in should be set').to.equal(84600 * 90);
+		expect(ctx.body.token_type, 'Token type should be Bearer').to.equal('Bearer');
+		expect(ctx.body.token, 'API token should be set').to.equal(apiToken);
+	}));
+
+	it('Creates valid username on creating user with GitHub auth', sinonTest(async function () {
+		const oauthCreateStub = this.stub(simpleOAuth, 'create');
+		const getTokenStub = this.stub();
+		const axiosStub = this.stub(axios, 'get');
+		const jwtStub = this.stub(jwt, 'sign');
+		const sha256Stub = this.stub(cryptojs, 'SHA256');
+		sha256Stub.returns('somehash');
+
+		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
+		const createConnectionStub = this.stub(models.socialConnection, 'create');
+
+		const createUserStub = this.stub(models.user, 'create');
+
+		const oauthMock = {
+			authorizationCode: {
+				getToken: getTokenStub
+			}
+		};
+
+		oauthCreateStub.returns(oauthMock);
+
+		const username = '$!@$  a2';
+		const apiToken = 'some_api_token';
+		const token = 'some_token';
+		const code = 'some_code';
+		const githubUser = {
+			id: '12345',
+			login: username,
+			email: overcoder.email,
+			bio: overcoder.bio,
+		};
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {code}
+			},
+		};
+
+		getTokenStub.resolves({access_token: token});
+		axiosStub.resolves({
+			data: githubUser
+		});
+
+		createUserStub.returns(overcoder);
+
+		jwtStub.returns(apiToken);
+
+		await expect(AuthController.github(ctx, () => {}), 'Should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(getTokenStub, 'Token should be fetched').to.have.been.calledOnce;
+		expect(axiosStub, 'User data should be fetched').to.have.been.calledOnce;
+		expect(jwtStub, 'JWT token should be created').to.have.been.calledOnce;
+		expect(findConnectionStub, 'Existing connection should be queried').to.have.been.calledOnce;
+		expect(createConnectionStub, 'New connection should be created').to.have.been.calledOnce;
+		expect(createUserStub, 'New user should be created').to.have.been.calledOnce;
+		expect(findUserStub, 'Existing username/email should be checked').to.have.been.calledOnce;
+
+		expect(ctx.status, 'Status should be 200').to.equal(200);
+		expect(ctx.body.username, 'Username should be set').to.equal('a20');
+		expect(ctx.body.expires_in, 'Expires in should be set').to.equal(84600 * 90);
+		expect(ctx.body.token_type, 'Token type should be Bearer').to.equal('Bearer');
+		expect(ctx.body.token, 'API token should be set').to.equal(apiToken);
+	}));
+
+	it('Throws error on GitHub auth with existing username/email', sinonTest(async function () {
+		const oauthCreateStub = this.stub(simpleOAuth, 'create');
+		const getTokenStub = this.stub();
+		const axiosStub = this.stub(axios, 'get');
+
+		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
+		const createConnectionStub = this.stub(models.socialConnection, 'create');
+
+		const createUserStub = this.stub(models.user, 'create');
+
+		const oauthMock = {
+			authorizationCode: {
+				getToken: getTokenStub
+			}
+		};
+
+		oauthCreateStub.returns(oauthMock);
+
+		const token = 'some_token';
+		const code = 'some_code';
+		const githubUser = {
+			id: '12345',
+			login: overcoder.username,
+			email: overcoder.email,
+			bio: overcoder.bio,
+		};
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {code}
+			},
+		};
+
+		getTokenStub.resolves({access_token: token});
+		axiosStub.resolves({
+			data: githubUser
+		});
+
+		findUserStub.returns(overcoder);
+
+		await expect(AuthController.github(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(getTokenStub, 'Token should be fetched').to.have.been.calledOnce;
+		expect(axiosStub, 'User data should be fetched').to.have.been.calledOnce;
+		expect(findConnectionStub, 'Existing connection should be queried').to.have.been.calledOnce;
+		expect(createConnectionStub, 'New connection should not be created').to.not.have.been.calledOnce;
+		expect(createUserStub, 'New user should not be created').to.not.have.been.called;
+		expect(findUserStub, 'Existing username/email should be checked').to.have.been.calledOnce;
 	}));
 });
