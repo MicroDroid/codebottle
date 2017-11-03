@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
 			autoIncrement: true
 		},
 		public_id: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(10),
 			allowNull: false,
 			unique: true
 		},
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false
 		},
 		title: {
-			type: DataTypes.STRING(160),
+			type: DataTypes.STRING(70),
 			allowNull: false
 		},
 		code: {

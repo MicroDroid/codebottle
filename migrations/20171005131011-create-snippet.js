@@ -9,7 +9,7 @@ module.exports = {
 				autoIncrement: true
 			},
 			public_id: {
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(10),
 				allowNull: false,
 				unique: true
 			},
@@ -26,7 +26,7 @@ module.exports = {
 				allowNull: false
 			},
 			title: {
-				type: Sequelize.STRING(160),
+				type: Sequelize.STRING(70),
 				allowNull: false
 			},
 			code: {
