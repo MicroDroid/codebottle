@@ -2,6 +2,8 @@ const Sequelize = require('sequelize');
 const models = require('../models');
 const ApiError = require('../errors/api-error');
 const redis = require('../redis');
+const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 const controller = {
 	index: async (ctx, next) => {
@@ -88,6 +90,52 @@ const controller = {
 		});
 
 		ctx.body = snippets.map(s => models.snippet.transform(s));
+
+		return next();
+	},
+
+	create: async (ctx, next) => {
+		const title = ctx.request.body.title;
+		const code = ctx.request.body.code;
+		const description = ctx.request.body.description;
+
+		if (!title)
+			throw new ApiError(422, 'Title field is required');
+		else if (title.length < 20)
+			throw new ApiError(422, 'Title is too short');
+		else if (title.length > 70)
+			throw new ApiError(422, 'Title is too long');
+		else if (!code)
+			throw new ApiError(422, 'Code field is required');
+
+		const language = await models.language.findOne({
+			where: {language: ctx.request.body.language},
+		});
+
+		const category = await models.category.findOne({
+			where: {category: ctx.request.body.category},
+		});
+
+		if (!language)
+			throw new ApiError(422, 'Invalid language selected');
+		else if (!category)
+			throw new ApiError(422, 'Invalid category selected');
+
+		/* istanbul ignore next */
+		if (!ctx.state.user || !ctx.state.user.id) {
+			logger.err('User not found in context on protected route!');
+			throw new ApiError(500, 'Internal error');
+		}
+
+		const snippet = await models.snippet.create({
+			user_id: ctx.state.user.id,
+			public_id: await crypto.randomBytes(5).toString('hex'),
+			title, code, description,
+			language_id: language.id,
+			category_id: category.id,
+		});
+
+		ctx.body = models.snippet.transform(snippet, 0);
 
 		return next();
 	}

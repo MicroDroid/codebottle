@@ -12,6 +12,8 @@ const _ = require('lodash');
 const ApiError = require('../../../errors/api-error');
 const SnippetController = require('../../../controllers/snippet');
 const models = require('../../../models');
+const helpers = require('../../../helpers');
+const crypto = require('crypto');
 
 chai.use(sinonChai);
 
@@ -23,7 +25,7 @@ describe('Snippet controller', () => {
 	//
 	// Probably collapse these in your editor, too
 
-	const user = {
+	const overcoder = {
 		id: 1,
 		username: 'OverCoder',
 		email: 'yousef.su.2000@gmail.com',
@@ -53,7 +55,7 @@ describe('Snippet controller', () => {
 			updated_at: (new Date()).toISOString(),
 			votes: [{
 				id: 1,
-				user_id: user.id,
+				user_id: overcoder.id,
 				snippet_id: 1,
 				vote: 1,
 			}],
@@ -70,7 +72,7 @@ describe('Snippet controller', () => {
 			updated_at: (new Date()).toISOString(),
 			votes: [{
 				id: 2,
-				user_id: user.id,
+				user_id: overcoder.id,
 				snippet_id: 2,
 				vote: -1,
 			}],
@@ -92,7 +94,7 @@ describe('Snippet controller', () => {
 	const votes = [
 		{
 			id: 1,
-			user_id: user.id,
+			user_id: overcoder.id,
 			snippet_id: snippet.id,
 			vote: 1,
 		},
@@ -240,7 +242,7 @@ describe('Snippet controller', () => {
 			params: {
 				id: 'test',
 			},
-			user
+			overcoder
 		};
 
 		return expect(SnippetController.get(ctx, () => {}), 'Should throw error')
@@ -382,5 +384,122 @@ describe('Snippet controller', () => {
 		expect(ctx.body, 'Body should not be changed').to.deep.equal({});
 		expect(searchStub, 'It should not search').to.be.not.calledTwice;
 		expect(getNewStub, 'It should get new snippets').to.be.called;
+	}));
+
+	it('Throws an error on creating snippet with invalid params', sinonTest(async function () {
+		const findLangaugeStub = this.stub(models.language, 'findOne');
+		const findCategoryStub = this.stub(models.category, 'findOne');
+		const createSnippetStub = this.stub(models.snippet, 'create');
+		const transformSnippetsStub = this.stub(models.snippet, 'transform');
+
+		const attempt = (body) => {
+			if (body.category && body.category > 0)
+				findCategoryStub.returns(category);
+			else findCategoryStub.returns(null);
+
+			if (body.language && body.language > 0)
+				findLangaugeStub.returns(language);
+			else findLangaugeStub.returns(null);
+
+			let ctx = {
+				status: 200,
+				body: {},
+				request: {
+					body,
+				},
+				state: {
+					user: overcoder,
+				}
+			};
+
+			return expect(SnippetController.create(ctx, () => {}), 'Should throw error')
+				.to.eventually.be.rejectedWith(ApiError);
+		};
+
+		const combinations = helpers.generateCombinations({
+			title: [
+				undefined,
+				'This is a very good title that fits the length limits',
+				'short',
+				'long'.repeat(18), // 72 characters
+			],
+			code: [
+				undefined,
+				'console.log(\'ES6 ftw!\');'
+			],
+			description: [
+				undefined,
+				'Some whatever description',
+			],
+			language: [
+				undefined,
+				1,
+				-1,
+			],
+			category: [
+				undefined,
+				1,
+				-1,
+			]
+		}).filter(combination => { // Filter out valid combinations
+			return !(combination.title
+				&& combination.title.length > 20
+				&& combination.title.length < 70
+				&& combination.code
+				&& combination.language === 1
+				&& combination.category === 1);
+		});
+
+		for (let combination of combinations)
+			await attempt(combination);
+
+		expect(createSnippetStub, 'Snippet should not be created').to.not.have.been.called;
+		expect(transformSnippetsStub, 'Snippet should not be transformed').to.not.have.been.called;
+	}));
+
+	it('Creates snippets', sinonTest(async function () {
+		const findLangaugeStub = this.stub(models.language, 'findOne');
+		const findCategoryStub = this.stub(models.category, 'findOne');
+		const createSnippetStub = this.stub(models.snippet, 'create');
+		const transformSnippetsStub = this.stub(models.snippet, 'transform');
+		const cryptoStub = this.stub(crypto, 'randomBytes');
+
+		const id = 'abcde12345';
+
+		let input = {
+			title: 'This is a very good title that fits the length limits',
+			code: 'console.log(\'ES6 ftw!\');',
+			language: 1,
+			category: 1,
+		};
+
+		let snippet = {
+			...input,
+			public_id: id,
+			user_id: overcoder.id,
+		};
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: input,
+			},
+			state: {
+				user: overcoder,
+			}
+		};
+
+		findCategoryStub.returns(category);
+		findLangaugeStub.returns(language);
+		cryptoStub.returns(id);
+		transformSnippetsStub.returns(snippet);
+
+		await expect(SnippetController.create(ctx, () => {}), 'Should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(createSnippetStub, 'Snippet should be created').to.have.been.calledOnce;
+		expect(transformSnippetsStub, 'Snippet should be transformed').to.have.been.calledOnce;
+		expect(ctx.body, 'Output snippet data should be same as input').to.deep.equal(snippet);
 	}));
 });

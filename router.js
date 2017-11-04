@@ -39,5 +39,9 @@ module.exports = () => {
 	router.post('/auth/password/reset', throttle(5, 120), AuthController.resetPassword);
 	router.post('/auth/password/change', throttle(5, 120), AuthController.changePassword);
 
+	// Protected end-points
+
+	router.post('/snippets', throttle(5, 900), protect(), SnippetController.create);
+
 	return router;
 };
