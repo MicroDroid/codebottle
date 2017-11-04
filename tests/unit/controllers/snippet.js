@@ -461,6 +461,7 @@ describe('Snippet controller', () => {
 		const findLangaugeStub = this.stub(models.language, 'findOne');
 		const findCategoryStub = this.stub(models.category, 'findOne');
 		const createSnippetStub = this.stub(models.snippet, 'create');
+		const snippetReloadStub = this.stub();
 		const transformSnippetsStub = this.stub(models.snippet, 'transform');
 		const cryptoStub = this.stub(crypto, 'randomBytes');
 
@@ -477,6 +478,7 @@ describe('Snippet controller', () => {
 			...input,
 			public_id: id,
 			user_id: overcoder.id,
+			reload: snippetReloadStub,
 		};
 
 		let ctx = {
@@ -493,11 +495,13 @@ describe('Snippet controller', () => {
 		findCategoryStub.returns(category);
 		findLangaugeStub.returns(language);
 		cryptoStub.returns(id);
+		createSnippetStub.returns(snippet);
 		transformSnippetsStub.returns(snippet);
 
 		await expect(SnippetController.create(ctx, () => {}), 'Should be fulfilled')
 			.to.eventually.be.fulfilled;
 
+		expect(snippetReloadStub, 'Snippet should be reloaded').to.have.been.calledOnce;
 		expect(createSnippetStub, 'Snippet should be created').to.have.been.calledOnce;
 		expect(transformSnippetsStub, 'Snippet should be transformed').to.have.been.calledOnce;
 		expect(ctx.body, 'Output snippet data should be same as input').to.deep.equal(snippet);
