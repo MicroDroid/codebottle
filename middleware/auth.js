@@ -9,7 +9,7 @@ module.exports = (passthrough = false) => async (ctx, next) => {
 			where: {id: ctx.state.user.id},
 		});
 
-		if (!user)
+		if (!user && !passthrough)
 			throw new ApiError(401, 'Authentication token expired');
 
 		const priv = sha256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
