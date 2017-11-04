@@ -12,6 +12,7 @@ const LanguageController = require('./controllers/language');
 const UserController = require('./controllers/user');
 const AuthController = require('./controllers/auth');
 const SnippetController = require('./controllers/snippet');
+const VoteController = require('./controllers/vote');
 
 const protect = (passthrough = false) => {
 	return compose([
