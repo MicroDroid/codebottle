@@ -46,6 +46,7 @@ module.exports = () => {
 
 	router.post('/snippets', throttle(5, 900), protect(), SnippetController.create);
 	router.post('/snippets/:snippet/vote', throttle(), protect(), VoteController.vote);
+	router.post('/self', throttle(), protect(), UserController.getSelf);
 
 	return router;
 };

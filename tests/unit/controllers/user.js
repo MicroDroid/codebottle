@@ -337,4 +337,21 @@ describe('User controller', () => {
 		expect(notOverCoder.activated).to.be.true;
 		expect(notOverCoder.email).to.equal(verification.email);
 	}));
+
+	it('Gets self', sinonTest(async function () {
+		const transformStub = this.stub(models.user, 'transform');
+
+		let ctx = {
+			status: 200,
+			body: {},
+			state: {
+				user: overcoder,
+			}
+		};
+
+		await expect(UserController.getSelf(ctx, () => {}))
+			.to.eventually.be.fulfilled;
+
+		expect(transformStub, 'User should be transformed').to.have.been.called;
+	}));
 });

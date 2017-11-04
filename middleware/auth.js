@@ -6,7 +6,6 @@ module.exports = (passthrough = false) => async (ctx, next) => {
 	if (ctx.state.user) {
 		const user = await models.user.findOne({
 			where: {id: ctx.state.user.id},
-			attributes: ['id', 'username', 'email', 'password', 'banned', 'activated'],
 		});
 
 		if (user && sha256(user).toString() === ctx.state.user.priv)

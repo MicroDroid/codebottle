@@ -156,5 +156,12 @@ Time: ${(new Date()).toISOString()}
 
 		ctx.status = 204;
 		return next();
-	}
+	},
+
+
+	getSelf: async (ctx, next) => {
+		ctx.body = models.user.transform(ctx.state.user, false);
+
+		return next();
+	},
 };
