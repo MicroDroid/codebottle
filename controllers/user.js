@@ -19,7 +19,7 @@ module.exports = {
 		if (!user)
 			throw new ApiError(404, 'Not found');
 		
-		ctx.body = models.user.transform(user, true);
+		ctx.body = models.user.transform(user, true, await helpers.getGitHubUsername(ctx.state.user.id));
 
 		return next();
 	},
@@ -160,14 +160,7 @@ Time: ${(new Date()).toISOString()}
 
 
 	getSelf: async (ctx, next) => {
-		ctx.body = models.user.transform(ctx.state.user, false);
-
-		const githubConnection = await models.socialConnection.findAll({
-			where: {
-				user_id: ctx.state.user.id,
-				service: 'github',
-			}
-		});
+		ctx.body = models.user.transform(ctx.state.user, false, await helpers.getGitHubUsername(ctx.state.user.id));
 
 		return next();
 	},

@@ -1,8 +1,9 @@
 const axios = require('axios');
 const _ = require('lodash');
 const logger = require('./utils/logger');
+const models = require('./models');
 
-module.exports = {
+const helpers = {
 	verifyRecaptcha: async (token) => {
 		const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', {
 			token
@@ -47,5 +48,24 @@ module.exports = {
 			});
 
 		return response.data;
+	},
+
+	getGitHubUsername: async id => {
+		const githubConnection = (await models.socialConnection.findAll({
+			where: {
+				user_id: id,
+				service: 'github',
+			}
+		}))[0];
+
+		if (!githubConnection)
+			return null;
+
+		const githubUser = await helpers.getGitHubUser(githubConnection.token);
+
+		return githubUser.login;
 	}
 };
+
+
+module.exports = helpers;
