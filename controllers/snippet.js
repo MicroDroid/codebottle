@@ -121,12 +121,6 @@ const controller = {
 		else if (!category)
 			throw new ApiError(422, 'Invalid category selected');
 
-		/* istanbul ignore next */
-		if (!ctx.state.user || !ctx.state.user.id) {
-			logger.err('User not found in context on protected route!');
-			throw new ApiError(500, 'Internal error');
-		}
-
 		const snippet = await models.snippet.create({
 			user_id: ctx.state.user.id,
 			public_id: await crypto.randomBytes(5).toString('hex'),
@@ -142,7 +136,7 @@ const controller = {
 		ctx.body = models.snippet.transform(snippet, 0);
 
 		return next();
-	}
+	},
 };
 
 module.exports = controller;
