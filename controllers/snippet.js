@@ -109,11 +109,11 @@ const controller = {
 			throw new ApiError(422, 'Code field is required');
 
 		const language = await models.language.findOne({
-			where: {language: ctx.request.body.language},
+			where: {id: ctx.request.body.language},
 		});
 
 		const category = await models.category.findOne({
-			where: {category: ctx.request.body.category},
+			where: {id: ctx.request.body.category},
 		});
 
 		if (!language)
@@ -133,6 +133,10 @@ const controller = {
 			title, code, description,
 			language_id: language.id,
 			category_id: category.id,
+		});
+
+		await snippet.reload({
+			include: [models.language, models.category, models.vote]
 		});
 
 		ctx.body = models.snippet.transform(snippet, 0);
