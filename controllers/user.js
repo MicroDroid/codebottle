@@ -156,7 +156,7 @@ Time: ${(new Date()).toISOString()}
 		if (!verification)
 			throw new ApiError(422, 'Invalid token');
 
-		const user = verification.getUser();
+		const user = await verification.getUser();
 		if (verification.email)
 			user.email = verification.email;
 		user.activated = true;
