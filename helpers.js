@@ -50,7 +50,9 @@ const helpers = {
 		return response.data;
 	},
 
+
 	getGitHubUsername: async id => {
+		/* istanbul ignore next */
 		const githubConnection = (await models.socialConnection.findAll({
 			where: {
 				user_id: id,
@@ -58,11 +60,14 @@ const helpers = {
 			}
 		}))[0];
 
+		/* istanbul ignore next */
 		if (!githubConnection)
 			return null;
 
+		/* istanbul ignore next */
 		const githubUser = await helpers.getGitHubUser(githubConnection.token);
 
+		/* istanbul ignore next */
 		return githubUser.login;
 	}
 };

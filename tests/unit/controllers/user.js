@@ -336,6 +336,7 @@ describe('User controller', () => {
 
 	it('Gets self', sinonTest(async function () {
 		const transformStub = this.stub(models.user, 'transform');
+		const getGitHubStub = this.stub(helpers, 'getGitHubUsername');
 
 		let ctx = {
 			status: 200,
@@ -348,6 +349,7 @@ describe('User controller', () => {
 		await expect(UserController.getSelf(ctx, () => {}))
 			.to.eventually.be.fulfilled;
 
-		expect(transformStub, 'User should be transformed').to.have.been.called;
+		expect(transformStub, 'User should be transformed').to.have.been.calledOnce;
+		expect(getGitHubStub, 'GitHub username should be queried').to.have.been.calledOnce;
 	}));
 });

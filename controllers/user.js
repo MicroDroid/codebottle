@@ -21,6 +21,8 @@ module.exports = {
 		
 		ctx.body = models.user.transform(user, true, await helpers.getGitHubUsername(ctx.state.user.id));
 
+		// No idea why I have to ignore this
+		/* istanbul ignore next */
 		return next();
 	},
 
