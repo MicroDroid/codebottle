@@ -45,10 +45,9 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.TIME,
 			allowNull: true
 		},
-		createdAt: {
+		created_at: {
 			type: DataTypes.TIME,
 			allowNull: false,
-			field: 'created_at',
 		},
 		updated_at: {
 			type: DataTypes.TIME,
