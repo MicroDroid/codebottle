@@ -20,6 +20,7 @@ const nodemailer = require('../../../nodemailer');
 const simpleOAuth = require('simple-oauth2');
 const axios = require('axios');
 const logger = require('../../../utils/logger');
+const _ = require('lodash');
 
 chai.use(sinonChai);
 
@@ -121,7 +122,9 @@ describe('Auth controller', () => {
 			.to.eventually.be.fulfilled;
 
 		expect(jwtStub, 'JWT should be generated').to.have.been.calledOnce;
-		expect(sha256Stub, 'User should be hashed using SHA256').to.have.been.calledWith(overcoder);
+		expect(sha256Stub, 'User should be hashed using SHA256').to.have.been.calledWith(
+			_.pick(overcoder, ['id', 'username', 'email', 'password', 'banned', 'activated'])
+		);
 
 		expect(ctx.body.token, 'Token should be set properly').to.equal(token);
 		expect(ctx.body.expiresIn, 'Expiry date should be in 90 days').to.equal(Date.now() + 84600 * 90);
