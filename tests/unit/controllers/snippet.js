@@ -28,7 +28,7 @@ describe('Snippet controller', () => {
 	const overcoder = {
 		id: 1,
 		username: 'OverCoder',
-		email: 'yousef.su.2000@gmail.com',
+		email: 'some@email.com',
 		banned: false,
 		activated: true
 	};

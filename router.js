@@ -42,6 +42,7 @@ module.exports = () => {
 	// Protected end-points
 
 	router.post('/snippets', throttle(5, 900), protect(), SnippetController.create);
+	router.post('/snippets/:snippet/vote', throttle(), protect(), VoteController.vote);
 
 	return router;
 };
