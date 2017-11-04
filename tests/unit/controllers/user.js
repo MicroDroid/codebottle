@@ -50,6 +50,7 @@ describe('User controller', () => {
 
 		const findOneStub = this.stub(models.user, 'findOne');
 		const gravatarStub = this.stub(gravatar, 'url');
+		const transformUserStub = this.stub(models.user, 'transform');
 
 		findOneStub.returns(_.pick(overcoder, 'username', 'email', 'bio', 'banned', 'created_at'));
 		gravatarStub.returns(gravatarUrl);
@@ -63,13 +64,8 @@ describe('User controller', () => {
 		await expect(UserController.get(ctx, () => {}), 'Getting a user should be fulfilled')
 			.to.eventually.be.fulfilled;
 
-		expect(ctx.body, 'Returned user should be OverCoder').to.deep.equal({
-			..._.pick(overcoder, 'username', 'email', 'bio', 'banned'),
-			profileImage: gravatarUrl,
-			createdAt: overcoder.created_at,
-		});
-
 		expect(ctx.status, 'Status should be the same').to.equal(200);
+		expect(transformUserStub, 'User should be transformed').to.have.been.calledOnce;
 	}));
 
 	it('Throws error when user is not found', sinonTest(async function() {
