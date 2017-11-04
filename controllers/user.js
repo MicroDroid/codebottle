@@ -1,5 +1,6 @@
 const config = require('../config');
 
+const redis = require('../redis');
 const helpers = require('../helpers');
 const Sequelize = require('sequelize');
 const models = require('../models');
@@ -174,4 +175,111 @@ Time: ${(new Date()).toISOString()}
 
 		return next();
 	},
+
+	setSelf: async (ctx, next) => {
+		const username = ctx.request.body.username;
+		const email = ctx.request.body.email;
+		const bio = ctx.request.body.bio;
+
+		const user = ctx.state.user;
+
+		validateUsername(username);
+		validateEmail(email);
+
+		const existingUser = await models.user.findOne({
+			where: {
+				[Sequelize.Op.or]: [
+					{username: ctx.request.body.username},
+					{email: ctx.request.body.email},
+				]
+			}
+		});
+
+		if (existingUser && existingUser.id !== user.id) {
+			if (existingUser.username === username)
+				throw new ApiError(422, 'Username is in use');
+			else
+				throw new ApiError(422, 'Email is in use');
+		}
+
+		if (ctx.state.user.email !== email) {
+			const cacheKey = `users:${user.id}:email.change`;
+
+			if (!(await redis.getAsync(cacheKey))) {
+				const token = crypto.randomBytes(16).toString('hex');
+				console.log(token);
+
+				await models.emailVerification.upsert({
+					email,
+					user_id: user.id,
+					token: cryptojs.SHA256(token).toString(),
+				});
+
+				nodemailer.sendMail({
+					from: '"CodeBottle" <noreply@codebottle.io>',
+					to: user.email,
+					subject: 'Verify your new email',
+					text: `Hi,
+
+It looks like you have requested changing your email address. Please click the link below to verify the change:
+
+https://codebottle.io/verify-email#${token}
+
+You can safely ignore this email if it was by mistake, and you can also contact us about it.
+
+Regards,
+
+CodeBottle's Team.
+
+-----------------------
+
+Request origin:
+
+IP address: ${ctx.ip}
+Client: ${ctx.get('User-Agent')}
+Time: ${(new Date()).toISOString()}
+`,
+					html: 
+						`<div>
+							<p>
+								Hi,
+							</p>
+							<p>
+								It looks like you have requested changing your email address. Please click the link below to verify the change:
+							</p>
+							<a href="https://codebottle.io/verify-email#${token}">
+								https://codebottle.io/verify-email#${token}
+							</a>
+							<p>
+								You can safely ignore this email if it was by mistake, and you can also contact us about it.
+							</p>
+							<p>
+								Regards,<br/>
+								<br/>
+								CodeBottle's Team.
+							</p>
+							<p>
+								-----------------------<br/>
+								<br/>
+								Request origin:<br/>
+								<br/>
+								IP address: ${ctx.ip}<br/>
+								Client: ${ctx.get('User-Agent')}<br/>
+								Time: ${(new Date()).toISOString()}<br/>
+							</p>
+						</div>`
+				});
+
+				await redis.setAsync(cacheKey, 1, 'EX', 3600 * 24);
+			} else throw new ApiError(422, 'You can only change your email once per 24 hours');
+		}
+
+		user.username = username;
+		user.bio = bio;
+		await user.save();
+
+		ctx.status = 204;
+
+		return next();
+	}
 };
