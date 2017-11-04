@@ -86,7 +86,7 @@ describe('Auth middleware', () => {
 		};
 
 		let authInstance = auth(true);
-		expect(authInstance(ctx, () => {}), 'Should not throw error')
+		await expect(authInstance(ctx, () => {}), 'Should not throw error')
 			.to.eventually.be.fulfilled
 			.then(() => {
 				expect(ctx.state.user).to.deep.equal({id: 1});

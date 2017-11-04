@@ -51,6 +51,7 @@ const helpers = {
 	},
 
 
+	// uhh istanbul
 	getGitHubUsername: async id => {
 		/* istanbul ignore next */
 		const githubConnection = (await models.socialConnection.findAll({

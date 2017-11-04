@@ -50,6 +50,7 @@ describe('User controller', () => {
 
 		const findOneStub = this.stub(models.user, 'findOne');
 		const gravatarStub = this.stub(gravatar, 'url');
+		const getGitHubStub = this.stub(helpers, 'getGitHubUsername');
 		const transformUserStub = this.stub(models.user, 'transform');
 
 		findOneStub.returns(_.pick(overcoder, 'username', 'email', 'bio', 'banned', 'created_at'));
@@ -65,6 +66,7 @@ describe('User controller', () => {
 			.to.eventually.be.fulfilled;
 
 		expect(ctx.status, 'Status should be the same').to.equal(200);
+		expect(getGitHubStub, 'GitHub username should be queried').to.have.been.calledOnce;
 		expect(transformUserStub, 'User should be transformed').to.have.been.calledOnce;
 	}));
 

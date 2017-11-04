@@ -19,7 +19,7 @@ module.exports = {
 		if (!user)
 			throw new ApiError(404, 'Not found');
 		
-		ctx.body = models.user.transform(user, true, await helpers.getGitHubUsername(ctx.state.user.id));
+		ctx.body = models.user.transform(user, true, await helpers.getGitHubUsername(user.id));
 
 		// No idea why I have to ignore this
 		/* istanbul ignore next */
