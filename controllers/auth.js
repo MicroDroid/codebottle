@@ -13,6 +13,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
 const simpleOAuth = require('simple-oauth2');
+const _ = require('lodash');
 
 module.exports = {
 	login: async (ctx, next) => {
@@ -34,12 +35,14 @@ module.exports = {
 
 		if (!verified)
 			throw new ApiError(401, 'Invalid username or password');
+
+		const priv = cryptojs.SHA256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
 		
 		ctx.body = {
 			username: user.username,
 			token: jwt.sign({
 				id: user.id,
-				priv: cryptojs.SHA256(user).toString(),
+				priv,
 			}, config.jwt.secret, {expiresIn: '90d'}),
 			expiresIn: 84600 * 90,
 		};
@@ -206,9 +209,11 @@ Time: ${(new Date()).toISOString()}
 		});
 
 		if (socialConnection) {
-			const user = socialConnection.getUser();
+			const user = await socialConnection.getUser();
 			socialConnection.token = token.access_token;
 			await socialConnection.save();
+
+			const priv = cryptojs.SHA256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
 
 			ctx.body = {
 				username: user.username,
@@ -216,7 +221,7 @@ Time: ${(new Date()).toISOString()}
 				token_type: 'Bearer',
 				token: jwt.sign({
 					id: user.id,
-					priv: cryptojs.SHA256(user).toString(),
+					priv,
 				}, config.jwt.secret, {expiresIn: '90d'}),
 			};
 		} else {
@@ -232,7 +237,7 @@ Time: ${(new Date()).toISOString()}
 						{email: response.data.email},
 					]
 				},
-				attributes: ['id', 'username', 'email'],
+				attributes: ['id', 'username', 'email', 'password', 'banned', 'activated'],
 			});
 
 			if (existingUser)
@@ -273,13 +278,15 @@ Time: ${(new Date()).toISOString()}
 				token: token.access_token,
 			});
 
+			const priv = cryptojs.SHA256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
+
 			ctx.body = {
 				username,
 				expires_in: 84600 * 90,
 				token_type: 'Bearer',
 				token: jwt.sign({
 					id: user.id,
-					priv: cryptojs.SHA256(user).toString(),
+					priv,
 				}, config.jwt.secret, {expiresIn: '90d'}),
 			};
 		}

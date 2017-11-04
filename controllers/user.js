@@ -162,6 +162,11 @@ Time: ${(new Date()).toISOString()}
 	getSelf: async (ctx, next) => {
 		ctx.body = models.user.transform(ctx.state.user, false);
 
+		console.log(await models.user.findOne({
+			where: {username: 'OverCoder'},
+			include: [models.socialConnection],
+		}).socialConnection);
+
 		return next();
 	},
 };
