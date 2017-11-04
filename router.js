@@ -6,6 +6,7 @@ const compose = require('koa-compose');
 const jwt = require('koa-jwt');
 const auth = require('./middleware/auth');
 const throttle = require('./middleware/throttle');
+const denyBanned = require('./middleware/deny-banned');
 
 const CategoryController = require('./controllers/category');
 const LanguageController = require('./controllers/language');
@@ -18,6 +19,7 @@ const protect = (passthrough = false) => {
 	return compose([
 		jwt({secret: config.jwt.secret, passthrough}),
 		auth(passthrough),
+		denyBanned,
 	]);
 };
 
