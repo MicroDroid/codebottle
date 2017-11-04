@@ -9,6 +9,29 @@ const crypto = require('crypto');
 const nodemailer = require('../nodemailer');
 const cryptojs = require('crypto-js');
 
+const validateUsername = username => {
+	const usernameRegex = /^[0-9A-Za-z]{3,16}$/;
+
+	if (!username)
+		throw new ApiError(422, 'Missing username');
+	if (username.length < 2)
+		throw new ApiError(422, 'Username.length < 2');
+	if (username.length > 16)
+		throw new ApiError(422, 'Username.length > 16');
+	if (!username.match(usernameRegex))
+		throw new ApiError(422, 'Username must be alpha-numeric');
+};
+
+const validateEmail = email => {
+	// See: https://stackoverflow.com/a/1373724/2164304
+	const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+
+	if (!email)
+		throw new ApiError(422, 'Email is missing');
+	else if (!email.match(emailRegex)) // At least they put some effort
+		throw new ApiError(422, 'Invalid email');
+};
+
 module.exports = {
 	get: async (ctx, next) => {
 		const user = await models.user.findOne({
@@ -27,26 +50,11 @@ module.exports = {
 	},
 
 	create: async (ctx, next) => {
-		// See: https://stackoverflow.com/a/1373724/2164304
-		const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-		const usernameRegex = /^[0-9A-Za-z]{3,16}$/;
-
 		if (!(await helpers.verifyRecaptcha(ctx.request.body.recaptcha_token)))
 			throw new ApiError(422, 'Invalid reCAPTCHA');
 
-		if (!ctx.request.body.username)
-			throw new ApiError(422, 'Missing username');
-		if (ctx.request.body.username.length < 2)
-			throw new ApiError(422, 'Username.length < 2');
-		if (ctx.request.body.username.length > 16)
-			throw new ApiError(422, 'Username.length > 16');
-		if (!ctx.request.body.username.match(usernameRegex))
-			throw new ApiError(422, 'Username must be alpha-numeric');
-
-		if (!ctx.request.body.email)
-			throw new ApiError(422, 'Email is missing');
-		if (!ctx.request.body.email.match(emailRegex)) // At least they put some effort
-			throw new ApiError(422, 'Invalid email');
+		validateUsername(ctx.request.body.username);
+		validateEmail(ctx.request.body.email);
 		
 		if (!ctx.request.body.password)
 			throw new ApiError(422, 'Missing password');
