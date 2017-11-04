@@ -61,15 +61,17 @@ module.exports = (sequelize, DataTypes) => {
 		user.hasOne(models.passwordReset, {foreignKey: 'email'});
 	};
 
-	user.transform = (user, hideEmail, github) => ({
-		username: user.username,
-		...!hideEmail && {email: user.email},
-		...github && {github},
-		bio: user.bio,
-		profileImage: gravatar.url(user.email, {s: 512, d: 'mm', r: 'g'}, true),
-		banned: user.banned,
-		createdAt: user.created_at
-	});
+	user.transform = (user, hideEmail = true, github) => {
+		return {
+			username: user.username,
+			...!hideEmail && {email: user.email},
+			...github && {github},
+			bio: user.bio,
+			profileImage: gravatar.url(user.email, {s: 512, d: 'mm', r: 'g'}, true),
+			banned: user.banned,
+			createdAt: user.created_at
+		};
+	};
 
 	return user;
 };

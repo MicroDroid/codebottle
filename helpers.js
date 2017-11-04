@@ -1,5 +1,6 @@
 const axios = require('axios');
 const _ = require('lodash');
+const logger = require('./utils/logger');
 
 module.exports = {
 	verifyRecaptcha: async (token) => {
@@ -31,5 +32,20 @@ module.exports = {
 		generate(combinations);
 
 		return results;
+	},
+
+	getGitHubUser: async (token) => {
+		/* istanbul ignore next */
+		const response = await axios.get(`https://api.github.com/user?access_token=${token}`)
+			.catch(error => {
+				if (error.response && error.response.data)
+					logger.warn(`GitHub OAuth2.0 failed: [${error.response.status}] ${error.response.data.message}`);
+				else
+					logger.err('GitHub OAuth2.0 failed: Network error');
+
+				throw error;
+			});
+
+		return response.data;
 	}
 };

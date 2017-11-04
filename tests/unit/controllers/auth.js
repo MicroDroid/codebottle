@@ -382,7 +382,7 @@ describe('Auth controller', () => {
 
 		const oauthCreateStub = this.stub(simpleOAuth, 'create');
 		const getTokenStub = this.stub();
-		const axiosStub = this.stub(axios, 'get');
+		const getGitHubUserStub = this.stub(helpers, 'getGitHubUser');
 		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
 
 		const oauthMock = {
@@ -408,23 +408,23 @@ describe('Auth controller', () => {
 		await expect(AuthController.github(ctx, () => {}), 'Should throw error')
 			.to.eventually.be.rejectedWith(ApiError);
 		expect(getTokenStub, 'Token should be fetched').to.have.been.calledOnce;
-		expect(axiosStub, 'User data should not be fetched').to.not.have.been.called;
+		expect(getGitHubUserStub, 'User data should not be fetched').to.not.have.been.called;
 
 		getTokenStub.reset();
 		getTokenStub.resolves({access_token: token});
-		axiosStub.rejects(Error);
+		getGitHubUserStub.rejects(Error);
 
 		await expect(AuthController.github(ctx, () => {}), 'Should throw error')
 			.to.eventually.be.rejectedWith(ApiError);
 		expect(getTokenStub, 'Token should be fetched').to.have.been.calledOnce;
-		expect(axiosStub, 'User data should not be fetched').to.have.been.calledOnce;
+		expect(getGitHubUserStub, 'User data should not be fetched').to.have.been.calledOnce;
 		expect(findConnectionStub, 'Social connection should not be fetched').to.not.have.been.called;
 	}));
 
 	it('Logs in on GitHub auth', sinonTest(async function () {
 		const oauthCreateStub = this.stub(simpleOAuth, 'create');
 		const getTokenStub = this.stub();
-		const axiosStub = this.stub(axios, 'get');
+		const getGitHubUserStub = this.stub(helpers, 'getGitHubUser');
 		const jwtStub = this.stub(jwt, 'sign');
 		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
 		const saveConnectionStub = this.stub();
@@ -459,7 +459,7 @@ describe('Auth controller', () => {
 		};
 
 		getTokenStub.resolves({access_token: token});
-		axiosStub.resolves({
+		getGitHubUserStub.resolves({
 			data: githubUser
 		});
 		findConnectionStub.resolves({
@@ -474,7 +474,7 @@ describe('Auth controller', () => {
 			.to.eventually.be.fulfilled;
 
 		expect(getTokenStub, 'Token should be fetched').to.have.been.calledOnce;
-		expect(axiosStub, 'User data should be fetched').to.have.been.calledOnce;
+		expect(getGitHubUserStub, 'User data should be fetched').to.have.been.calledOnce;
 		expect(jwtStub, 'JWT token should be created').to.have.been.calledOnce;
 		expect(saveConnectionStub, 'New token should be saved to connection').to.have.been.calledOnce;
 		expect(getConnectionUserStub, 'Connection\'s user should be queried').to.have.been.calledOnce;

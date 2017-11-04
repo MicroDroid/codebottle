@@ -6,12 +6,10 @@ const models = require('../models');
 const ApiError = require('../errors/api-error');
 const Sequelize = require('sequelize');
 
-const logger = require('../utils/logger');
 const jwt = require('jsonwebtoken');
 const cryptojs = require('crypto-js');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const axios = require('axios');
 const simpleOAuth = require('simple-oauth2');
 const _ = require('lodash');
 
@@ -191,20 +189,13 @@ Time: ${(new Date()).toISOString()}
 				throw new ApiError(422, 'Error retrieving GitHub data');
 			});
 
-		const response = await axios.get(`https://api.github.com/user?access_token=${token.access_token}`)
-			.catch(error => {
-				/* istanbul ignore next */
-				if (error.response && error.response.data)
-					logger.warn(`GitHub OAuth2.0 failed: [${error.response.status}] ${error.response.data.message}`);
-				/* istanbul ignore next */
-				else
-					logger.err('GitHub OAuth2.0 failed: Network error');
-
+		const githubUser = await helpers.getGitHubUser(token.access_token)
+			.catch(() => {
 				throw new ApiError(422, 'Error retrieving GitHub data');
 			});
 
 		let socialConnection = 	await models.socialConnection.findOne({
-			where: {service: 'github',  service_id: response.data.id},
+			where: {service: 'github',  service_id: githubUser.id},
 			attributes: ['id', 'user_id', 'service', 'service_id', 'token', 'token_type'],
 		});
 
@@ -226,7 +217,7 @@ Time: ${(new Date()).toISOString()}
 			};
 		} else {
 			const usernameRegex = /[^0-9A-Za-z]/g;
-			let username = response.data.login.replace(usernameRegex, '')
+			let username = githubUser.login.replace(usernameRegex, '')
 				.substr(0,16)
 				.padEnd(3, '0');
 
@@ -234,7 +225,7 @@ Time: ${(new Date()).toISOString()}
 				where: {
 					[Sequelize.Op.or]: [
 						{username},
-						{email: response.data.email},
+						{email: githubUser.email},
 					]
 				},
 				attributes: ['id', 'username', 'email', 'password', 'banned', 'activated'],
@@ -264,15 +255,15 @@ Time: ${(new Date()).toISOString()}
 
 			const user = await models.user.create({
 				username,
-				email: response.data.email,
-				bio: response.data.bio,
+				email: githubUser.email,
+				bio: githubUser.bio,
 				activated: true,
 				password: null,
 			});
 
 			await models.socialConnection.create({
 				user_id: user.id,
-				service_id: response.data.id,
+				service_id: githubUser.id,
 				service: 'github',
 				token_type: token.token_type,
 				token: token.access_token,
