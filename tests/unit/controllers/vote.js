@@ -109,9 +109,7 @@ describe('Vote controller', () => {
 			status: 200,
 			body: {},
 			request: {
-				body: {
-					vote: 1,
-				},
+				body: {},
 			},
 			state: {
 				user: overcoder,
@@ -121,11 +119,21 @@ describe('Vote controller', () => {
 			},
 		};
 
-		await expect(VoteController.vote(ctx, () => {}), 'Should be fulfilled')
-			.to.eventually.be.fulfilled;
+		const attempt = vote => {
+			ctx.request.body.vote = vote;
+			return expect(VoteController.vote(ctx, () => {}), 'Should be fulfilled')
+				.to.eventually.be.fulfilled
+				.then(() => {
+					expect(findSnippetStub, 'Snippet should be queried').to.have.been.calledOnce;
+					expect(voteUpsertStub, 'Vote should be upserted').to.have.been.called;
+					expect(voteUpsertStub.getCall().args[0].vote).to.equal(vote);
 
-		expect(findSnippetStub, 'Snippet should be queried').to.have.been.calledOnce;
-		expect(voteUpsertStub, 'Vote should be upserted').to.have.been.called;
+				});
+		};
+
+		attempt(1);
+		attempt(0);
+		attempt(-1);
 	}));
 
 	it('Stores vote as 0, 1, or -1 only', sinonTest(async function () {
