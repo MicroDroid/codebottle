@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
 		user.hasMany(models.socialConnection);
 		user.hasOne(models.emailVerification);
 		user.hasOne(models.userPreferences);
-		user.hasOne(models.passwordReset, {foreignKey: 'email'});
+		user.hasOne(models.passwordReset, {foreignKey: 'email', targetKey: 'email'});
 		user.hasMany(models.flag, {
 			foreignKey: 'flaggable_id',
 			scope: {

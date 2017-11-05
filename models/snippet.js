@@ -58,6 +58,7 @@ module.exports = (sequelize, DataTypes) => {
 	});
 
 	snippet.associate = models => {
+		snippet.belongsTo(models.user);
 		snippet.belongsTo(models.language);
 		snippet.belongsTo(models.category);
 		snippet.hasMany(models.vote);
