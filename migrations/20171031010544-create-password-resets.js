@@ -1,28 +1,29 @@
 'use strict';
 module.exports = {
 	up: (queryInterface, Sequelize) => {
-		return queryInterface.createTable('categories', {
+		return queryInterface.createTable('password_resets', {
 			id: {
+				type: Sequelize.INTEGER.UNSIGNED,
 				allowNull: false,
-				autoIncrement: true,
 				primaryKey: true,
-				type: Sequelize.INTEGER
+				autoIncrement: true
 			},
-			name: {
+			email: {
+				type: Sequelize.STRING,
+				allowNull: false,
+			},
+			token: {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
 			created_at: {
+				type: Sequelize.TIME,
 				allowNull: false,
-				type: Sequelize.TIME
-			},
-			updated_at: {
-				allowNull: false,
-				type: Sequelize.TIME
 			},
 		});
 	},
+
 	down: (queryInterface, Sequelize) => {
-		return queryInterface.dropTable('categories');
+		return queryInterface.dropTable('password_resets');
 	}
 };

@@ -38,7 +38,7 @@ module.exports = {
 				allowNull: true
 			},
 			views: {
-				type: Sequelize.UNSIGNED,
+				type: Sequelize.INTEGER.UNSIGNED,
 				allowNull: false,
 				defaultValue: 0
 			},

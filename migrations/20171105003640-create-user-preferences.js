@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
 	up: (queryInterface, Sequelize) => {
-		return queryInterface.createTable('userPreferences', {
+		return queryInterface.createTable('user_preferences', {
 			id: {
 				type: Sequelize.INTEGER.UNSIGNED,
 				allowNull: false,
@@ -21,7 +21,7 @@ module.exports = {
 			indentation_size: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
-				defaultValue: '4'
+				defaultValue: 4
 			},
 			convert_tabs_to_spaces: {
 				type: Sequelize.BOOLEAN,
@@ -40,6 +40,6 @@ module.exports = {
 	},
 
 	down: (queryInterface, Sequelize) => {
-		return queryInterface.dropTable('userPreferences');
+		return queryInterface.dropTable('user_preferences');
 	}
 };
