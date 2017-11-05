@@ -195,6 +195,7 @@ describe('User controller', () => {
 
 	it('Creates a user', sinonTest(async function () {
 		const userCreateStub = this.stub(models.user, 'create');
+		const userPrefsCreateStub = this.stub(models.userPreferences, 'create');
 		const userFindOneStub = this.stub(models.user, 'findOne');
 		const emailVerificationCreateStub = this.stub(models.emailVerification, 'create');
 		const bcryptStub = this.stub(bcrypt, 'hash');
@@ -226,6 +227,7 @@ describe('User controller', () => {
 
 		expect(ctx.status, 'Status should be set to 204').to.equal(204);
 		expect(ctx.body, 'Body should be unchanged').to.deep.equal({});
+		expect(userPrefsCreateStub, 'User preferences should be created').to.have.been.calledOnce;
 		expect(userCreateStub, 'User should be created').to.have.been.calledWith(_.pick(overcoder, 'username', 'email', 'password'));
 		expect(emailVerificationCreateStub, 'Email verification should be created').to.have.been.calledOnce;
 		expect(sendEmailStub, 'Email should be sent').to.have.been.calledOnce;

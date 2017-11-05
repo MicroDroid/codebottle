@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
 		indentation_size: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			defaultValue: '4'
+			defaultValue: 4,
 		},
 		convert_tabs_to_spaces: {
 			type: DataTypes.BOOLEAN,

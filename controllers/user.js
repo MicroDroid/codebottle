@@ -141,6 +141,10 @@ Time: ${(new Date()).toISOString()}
 			</div>`
 		});
 
+		await models.userPreferences.create({
+			user_id: user.id,
+		});
+
 		ctx.status = 204;
 
 		return next();
