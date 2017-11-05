@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url>
+		<loc><%= absolute('/') %></loc>
+	</url>
+	<url>
+		<loc><%= absolute('/browse') %></loc>
+		<changefreq>hourly</changefreq>
+	</url>
+	<url>
+		<loc><%= absolute('/signin') %></loc>
+	</url>
+	<url>
+		<loc><%= absolute('/signup') %></loc>
+	</url>
+	<url>
+		<loc><%= absolute('/embedding') %></loc>
+	</url>
+	<url>
+		<loc><%= absolute('/privacy-policy') %></loc>
+	</url>
+	<url>
+		<loc><%= absolute('/forgot-password') %></loc>
+	</url>
+	<url>
+		<loc><%= absolute('/api/docs/getting-started') %></loc>
+	</url>
+	<url>
+		<loc><%= absolute('/api/docs/authentication') %></loc>
+	</url>
+	<url>
+		<loc><%= absolute('/api/docs/languages') %></loc>
+	</url>
+	<url>
+		<loc><%= absolute('/api/docs/categories') %></loc>
+	</url>
+	<url>
+		<loc><%= absolute('/api/docs/snippets') %></loc>
+	</url>
+
+	<% for (let snippet of snippets) { %>
+	<url>
+		<loc><%= absolute(`/s/${snippet.public_id}`) %></loc>
+		<lastmod><%= snippet.updated_at.toISOString() %></lastmod>
+	</url>
+	<% } %>
+
+	<% for (let user of users) { %>
+	<url>
+		<loc><%= absolute(`/users/${user.username}`) %></loc>
+	</url>
+	<% } %>
+</urlset> 

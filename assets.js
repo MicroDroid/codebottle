@@ -5,6 +5,8 @@ const app = new Koa();
 const fs = require('fs');
 const ejs = require('ejs');
 
+const helpers = require('./helpers');
+const models = require('./models');
 const handler = require('./middleware/handler');
 const loggerMiddleware = require('./middleware/logger');
 const logger = require('./utils/logger');
@@ -25,10 +27,23 @@ app.use(koaEtag());
 
 app.use(loggerMiddleware);
 
+
 // Deny usage of static domain as main domain
-app.use((ctx, next) => {
-	if (ctx.url === '/') {
-		if (ctx.origin.startsWith('http://static.') || ctx.origin.startsWith('https://static.')) {
+app.use(async (ctx, next) => {
+	const isStatic = ctx.origin.startsWith('http://static.') || ctx.origin.startsWith('https://static.');
+	if (ctx.url === '/sitemap.xml' && !isStatic) {
+		if (await helpers.isDdgBot(ctx.ip)
+			|| await helpers.isGoogleBot(ctx.ip)
+			|| await helpers.isBingBot(ctx.ip)) {
+			const template = fs.readFileSync('./public/sitemap.ejs', 'utf8');
+			ctx.body = ejs.render(template, {
+				snippets: await models.snippet.findAll(),
+				users: await models.user.findAll(),
+				absolute: relative => ctx.origin + relative,
+			});
+		}
+	} else if (ctx.url === '/') {
+		if (isStatic) {
 			ctx.status = 404;
 			ctx.body = 'Not found';
 			logger.warn(`Access to main static URL by ${ctx.ip}`);
@@ -40,7 +55,7 @@ app.use((ctx, next) => {
 				css: manifest.css,
 			});
 		}
-	} else if (ctx.url === '/index.ejs') {
+	} else if (ctx.url === '/index.ejs' || ctx.url === '/sitemap.ejs') {
 		ctx.status = 404;
 		ctx.body = 'Not found';
 		logger.warn(`Access to .ejs file by ${ctx.ip}`);

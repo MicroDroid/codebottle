@@ -1,6 +1,7 @@
 const axios = require('axios');
 const _ = require('lodash');
 const logger = require('./utils/logger');
+const dns = require('dns');
 const models = require('./models');
 
 const helpers = {
@@ -50,9 +51,7 @@ const helpers = {
 		return response.data;
 	},
 
-
-	// uhh istanbul
-	getGitHubUsername: /* istanbul ignore next */ async id => {
+	getGitHubUsername: async id => {
 		const githubConnection = (await models.socialConnection.findAll({
 			where: {
 				user_id: id,
@@ -66,7 +65,53 @@ const helpers = {
 		const githubUser = await helpers.getGitHubUser(githubConnection.token);
 
 		return githubUser.login;
-	}
+	},
+
+	isDdgBot: async ip => [
+		'72.94.249.34',
+		'72.94.249.35',
+		'72.94.249.36',
+		'72.94.249.37',
+		'72.94.249.38',
+	].indexOf(ip) !== -1,
+
+	isGoogleBot: async ip => new Promise((resolve, reject) => {
+		dns.reverse(ip, (err, hosts) => {
+			if (err)
+				reject(err);
+
+			const host = hosts[0];
+
+			if (!(host.endsWith('.googlebot.com') || host.endsWith('.google.com')))
+				resolve(false);
+
+			else dns.lookup(host, (err, addr) => {
+				if (err)
+					reject(err);
+
+				resolve(addr === ip);
+			});
+		});
+	}),
+
+	isBingBot: async ip => new Promise((resolve, reject) => {
+		dns.reverse(ip, (err, hosts) => {
+			if (err)
+				reject(err);
+
+			const host = hosts[0];
+
+			if (!host.endsWith('search.msn.com'))
+				resolve(false);
+
+			else dns.lookup(host, (err, addr) => {
+				if (err)
+					reject(err);
+
+				resolve(addr === ip);
+			});
+		});
+	}),
 };
 
 
