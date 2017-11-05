@@ -51,6 +51,7 @@ module.exports = () => {
 	router.post('/self', throttle(), protect(), UserController.setSelf);
 
 	router.get('/self/preferences', throttle(), protect(), UserPreferencesController.get);
+	router.post('/self/preferences', throttle(), protect(), UserPreferencesController.set);
 
 	return router;
 };
