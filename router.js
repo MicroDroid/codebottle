@@ -14,6 +14,7 @@ const UserController = require('./controllers/user');
 const AuthController = require('./controllers/auth');
 const SnippetController = require('./controllers/snippet');
 const VoteController = require('./controllers/vote');
+const UserPreferencesController = require('./controllers/user-preferences');
 
 const protect = (passthrough = false) => {
 	return compose([
@@ -48,6 +49,8 @@ module.exports = () => {
 	router.post('/snippets/:snippet/vote', throttle(), protect(), VoteController.vote);
 	router.get('/self', throttle(), protect(), UserController.getSelf);
 	router.post('/self', throttle(), protect(), UserController.setSelf);
+
+	router.get('/self/preferences', throttle(), protect(), UserPreferencesController.get);
 
 	return router;
 };
