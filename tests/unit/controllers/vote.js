@@ -127,4 +127,46 @@ describe('Vote controller', () => {
 		expect(findSnippetStub, 'Snippet should be queried').to.have.been.calledOnce;
 		expect(voteUpsertStub, 'Vote should be upserted').to.have.been.called;
 	}));
+
+	it('Stores vote as 0, 1, or -1 only', sinonTest(async function () {
+		const findSnippetStub = this.stub(models.snippet, 'findOne');
+		const voteUpsertStub = this.stub(models.vote, 'upsert');
+
+		findSnippetStub.returns({
+			...snippet,
+			user_id: 999,
+		});
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {
+					vote: 2,
+				},
+			},
+			state: {
+				user: overcoder,
+			},
+			params: {
+				snippet: snippet.id,
+			},
+		};
+
+		await expect(VoteController.vote(ctx, () => {}), 'Should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(findSnippetStub, 'Snippet should be queried').to.have.been.calledOnce;
+		expect(voteUpsertStub, 'Vote should be upserted').to.have.been.calledOnce;
+		expect(voteUpsertStub.getCall(0).args[0].vote).to.equal(1);
+
+		ctx.request.body.vote = -2;
+
+		await expect(VoteController.vote(ctx, () => {}), 'Should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(findSnippetStub, 'Snippet should be queried').to.have.been.calledTwice;
+		expect(voteUpsertStub, 'Vote should be upserted').to.have.been.calledTwice;
+		expect(voteUpsertStub.getCall(1).args[0].vote).to.equal(-1);
+	}));
 });

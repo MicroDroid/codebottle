@@ -18,11 +18,10 @@ const controller = {
 		else if (snippet.user_id === ctx.state.user.id)
 			throw new ApiError(403, 'You can\'t vote to your snippet');
 
-
 		await models.vote.upsert({
 			snippet_id: snippet.id,
 			user_id: ctx.state.user.id,
-			vote,
+			vote: vote > 0 ? 1 : (vote < 0 ? -1 : 0),
 		});
 
 		ctx.status = 204;
