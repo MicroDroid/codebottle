@@ -270,7 +270,7 @@ Time: ${(new Date()).toISOString()}
 				});
 
 				await redis.setAsync(cacheKey, 1, 'EX', 3600 * 24);
-			} else throw new ApiError(422, 'You can only change your email once per 24 hours');
+			} else throw new ApiError(429, 'You can only change your email once per 24 hours');
 		}
 
 		user.username = username;

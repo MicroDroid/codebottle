@@ -61,6 +61,12 @@ module.exports = (sequelize, DataTypes) => {
 		snippet.belongsTo(models.language);
 		snippet.belongsTo(models.category);
 		snippet.hasMany(models.vote);
+		snippet.hasMany(models.flag, {
+			foreignKey: 'flaggable_id',
+			scope: {
+				flaggable_type: 'snippet',
+			}
+		});
 	};
 
 	snippet.transform = (snippet, currentVote) => ({
