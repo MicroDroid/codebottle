@@ -36,6 +36,7 @@
     "nodemailer": "^4.1.3",
     "nodemailer-mailgun-transport": "^1.3.5",
     "nodemailer-stub-transport": "^1.1.0",
+    "openbadge": "^1.0.4",
     "redis": "^2.8.0",
     "sequelize": "^4.13.7",
     "sequelize-cli": "^3.0.0",

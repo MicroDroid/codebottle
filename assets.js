@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const Sequelize = require('sequelize');
 const Koa = require('koa');
 const app = new Koa();
 const fs = require('fs');
@@ -28,10 +29,10 @@ app.use(koaEtag());
 app.use(loggerMiddleware);
 
 
-// Deny usage of static domain as main domain
+// I am too lazy to split this code anywhere
 app.use(async (ctx, next) => {
 	const isStatic = ctx.origin.startsWith('http://static.') || ctx.origin.startsWith('https://static.');
-	if (ctx.url === '/sitemap.xml' && !isStatic) {
+	if (ctx.path === '/sitemap.xml' && !isStatic) {
 		if (await helpers.isDdgBot(ctx.ip)
 			|| await helpers.isGoogleBot(ctx.ip)
 			|| await helpers.isBingBot(ctx.ip)) {
@@ -42,7 +43,41 @@ app.use(async (ctx, next) => {
 				absolute: relative => ctx.origin + relative,
 			});
 		}
-	} else if (ctx.url === '/') {
+	} else if (ctx.path === '/embed/search-badge' && !isStatic) {
+		ctx.set('Content-Type', 'image/svg+xml');
+
+		if (typeof(ctx.query.keywords) !== 'string' || !ctx.query.keywords)
+			ctx.body = helpers.genBadge('Error', 'Missing keywords', '#f44336');
+		else if (ctx.query.keywords.length < 3)
+			ctx.body = helpers.genBadge('Error', 'Keywords too short', '#f44336');
+		else {
+			if (ctx.query.language) {
+				const language = await models.language.findOne({where: {id: ctx.query.language}});
+				if (!language) {
+					ctx.body = helpers.genBadge('Error', 'Invalid language', '#f44336');
+					return;
+				}
+			}
+
+			let where = {
+				[Sequelize.Op.or]: [
+					{title:       {[Sequelize.Op.like]: '%' + ctx.query.keywords + '%'}},
+					{description: {[Sequelize.Op.like]: '%' + ctx.query.keywords + '%'}},
+				]
+			};
+
+			if (ctx.query.language)
+				where.language_id = ctx.query.language;
+
+			const snippetsCount = await models.snippet.count({
+				where,
+				limit: 10,
+				include: [models.language, models.category, models.vote]
+			});
+
+			ctx.body = helpers.genBadge('CodeBottle', `${snippetsCount} snippets`, '#673ab7');
+		}
+	} else if (ctx.path === '/') {
 		if (isStatic) {
 			ctx.status = 404;
 			ctx.body = 'Not found';
@@ -55,7 +90,7 @@ app.use(async (ctx, next) => {
 				css: manifest.css,
 			});
 		}
-	} else if (ctx.url === '/index.ejs' || ctx.url === '/sitemap.ejs') {
+	} else if (ctx.path === '/index.ejs' || ctx.path === '/sitemap.ejs') {
 		ctx.status = 404;
 		ctx.body = 'Not found';
 		logger.warn(`Access to .ejs file by ${ctx.ip}`);
