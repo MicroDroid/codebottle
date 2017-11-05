@@ -13,6 +13,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const _ = require('lodash');
 const cryptojs = require('crypto-js');
+const redis = require('../../../redis');
 const helpers = require('../../../helpers');
 const nodemailer = require('../../../nodemailer');
 const ApiError = require('../../../errors/api-error');
@@ -353,5 +354,202 @@ describe('User controller', () => {
 
 		expect(transformStub, 'User should be transformed').to.have.been.calledOnce;
 		expect(getGitHubStub, 'GitHub username should be queried').to.have.been.calledOnce;
+	}));
+
+	it('Throws error when setting self with invalid params', sinonTest(async function () {
+		const findUserStub = this.stub(models.user, 'findOne');
+
+		const attempt = (body) => {
+			let ctx = {
+				status: 200,
+				body: {},
+				request: {
+					body,
+				},
+				state: {
+					user: overcoder,
+				}
+			};
+
+			return expect(UserController.setSelf(ctx, () => {}), 'Should throw error')
+				.to.eventually.be.rejectedWith(ApiError);
+		};
+
+		const combinations = helpers.generateCombinations({
+			username: [undefined, 'hello#!', 'a', 'long'.repeat(5), 'OverCoder'],
+			bio: [undefined, 'some bio'],
+			email: [undefined, 'test', 'some@email.com'],
+		}).filter(combination => {
+			return !(combination.username === 'OverCoder'
+				&& combination.email === 'some@email.com');
+		});
+
+		for (let combination of combinations)
+			await attempt(combination);
+
+		expect(findUserStub, 'User should not be queried').to.not.have.been.called;
+	}));
+
+	it('Throws error on conflict setting self', sinonTest(async function () {
+		const findUserStub = this.stub(models.user, 'findOne');
+		const saveUserStub = this.stub();
+		const redisSetAsyncStub = this.stub(redis, 'setAsync');
+		const redisGetAsyncStub = this.stub(redis, 'getAsync');
+		const getHeaderStub = this.stub();
+
+		const notOverCoder = {
+			id: 2,
+			username: 'NotOvercoder',
+			email: 'not.over@coder.com',
+			bio: 'Not a developer',
+		};
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {
+					username: overcoder.username,
+					email: overcoder.email,
+					bio: overcoder.bio,
+				}
+			},
+			state: {
+				user: {
+					...overcoder,
+					id: 1,
+					save: saveUserStub,
+				},
+			},
+			get: getHeaderStub,
+		};
+
+		findUserStub.returns(notOverCoder);
+
+		ctx.request.body.username = notOverCoder.username;
+
+		await expect(UserController.setSelf(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		ctx.request.body.username = overcoder.username;
+		ctx.request.body.email = notOverCoder.email;
+
+		await expect(UserController.setSelf(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(redisGetAsyncStub, 'Redis should not be queried').to.not.have.been.called;
+		expect(redisSetAsyncStub, 'Redis should not be modified').to.not.have.been.called;
+		expect(saveUserStub, 'User should not be saved').to.not.have.been.called;
+		expect(getHeaderStub, 'Headers should not be queried').to.not.have.been.called;
+	}));
+
+	it('Sets self', sinonTest(async function () {
+		const findUserStub = this.stub(models.user, 'findOne');
+		const saveUserStub = this.stub();
+		const redisSetAsyncStub = this.stub(redis, 'setAsync');
+		const redisGetAsyncStub = this.stub(redis, 'getAsync');
+		const verificationUpsertStub = this.stub(models.emailVerification, 'upsert');
+		const getHeaderStub = this.stub();
+		const cryptoStub = this.stub(crypto, 'randomBytes');
+
+		const token = 'some_token';
+		cryptoStub.returns(token);
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {
+					username: overcoder.username,
+					email: overcoder.email,
+					bio: overcoder.bio,
+				}
+			},
+			state: {
+				user: {
+					...overcoder,
+					id: 1,
+					save: saveUserStub,
+				},
+			},
+			get: getHeaderStub,
+		};
+
+		findUserStub.returns(null);
+
+		await expect(UserController.setSelf(ctx, () => {}), 'Should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(verificationUpsertStub, 'Verification should not be upserted').to.not.have.been.called;
+		expect(redisGetAsyncStub, 'Redis should not be queried').to.not.have.been.called;
+		expect(redisSetAsyncStub, 'Redis should not be modified').to.not.have.been.called;
+		expect(getHeaderStub, 'Headers should not be queried').to.not.have.been.called;
+		expect(saveUserStub, 'User should be saved').to.have.been.calledOnce;
+		expect(cryptoStub, 'Token should not be generated').to.not.have.been.called;
+		expect(_.pick(ctx.state.user, ['username', 'email', 'bio']))
+			.to.deep.equal(_.pick(overcoder, ['username', 'email', 'bio']));
+
+		ctx.request.body.username = 'NewUsername';
+		ctx.request.body.email = 'new@email.com';
+		delete ctx.request.body.bio;
+		redisGetAsyncStub.returns(null);
+
+		await expect(UserController.setSelf(ctx, () => {}), 'Should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(redisGetAsyncStub, 'Redis should be queried').to.have.been.calledOnce;
+		expect(verificationUpsertStub, 'Verification should be upserted').to.have.been.calledOnce;
+		expect(redisSetAsyncStub, 'Redis should be modified').to.have.been.calledOnce;
+		expect(getHeaderStub, 'Headers should be queried').to.have.been.called;
+		expect(cryptoStub, 'Token should be generated').to.have.been.called;
+		expect(saveUserStub, 'User should be saved').to.have.been.calledTwice;
+		expect(_.pick(ctx.state.user, ['username', 'email', 'bio']))
+			.to.deep.equal({
+				username: 'NewUsername',
+				email: overcoder.email, // Old email should be still set
+				bio: undefined,
+			});
+	}));
+
+	it('Throttles changing email', sinonTest(async function () {
+		const findUserStub = this.stub(models.user, 'findOne');
+		const saveUserStub = this.stub();
+		const redisSetAsyncStub = this.stub(redis, 'setAsync');
+		const redisGetAsyncStub = this.stub(redis, 'getAsync');
+		const verificationUpsertStub = this.stub(models.emailVerification, 'upsert');
+		const getHeaderStub = this.stub();
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {
+					username: overcoder.username,
+					email: 'new@email.com',
+					bio: overcoder.bio,
+				}
+			},
+			state: {
+				user: {
+					...overcoder,
+					id: 1,
+					save: saveUserStub,
+				},
+			},
+			get: getHeaderStub,
+		};
+
+		findUserStub.returns(null);
+
+		redisGetAsyncStub.returns(1);
+
+		await expect(UserController.setSelf(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(verificationUpsertStub, 'Verification should not be upserted').to.not.have.been.called;
+		expect(redisGetAsyncStub, 'Redis should be queried').to.have.been.calledOnce;
+		expect(redisSetAsyncStub, 'Redis should not be modified').to.not.have.been.called;
+		expect(getHeaderStub, 'Headers should not be queried').to.not.have.been.called;
+		expect(saveUserStub, 'User should not be saved').to.not.have.been.called;
 	}));
 });

@@ -207,7 +207,6 @@ Time: ${(new Date()).toISOString()}
 
 			if (!(await redis.getAsync(cacheKey))) {
 				const token = crypto.randomBytes(16).toString('hex');
-				console.log(token);
 
 				await models.emailVerification.upsert({
 					email,
