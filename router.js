@@ -14,6 +14,7 @@ const UserController = require('./controllers/user');
 const AuthController = require('./controllers/auth');
 const SnippetController = require('./controllers/snippet');
 const VoteController = require('./controllers/vote');
+const FlagController = require('./controllers/flag');
 const UserPreferencesController = require('./controllers/user-preferences');
 
 const protect = (passthrough = false) => {
@@ -34,7 +35,7 @@ module.exports = () => {
 	router.get('/snippets', throttle(), SnippetController.index);
 	router.get('/snippets/:id', throttle(), protect(true), SnippetController.get);
 
-	router.post('/users', throttle(1, 900), UserController.create);
+	router.post('/users', throttle(1, 900, true), UserController.create);
 	router.post('/users/email-verifications', throttle(5, 120), UserController.verifyEmail);
 	router.get('/users/:username', throttle(), UserController.get);
 
@@ -45,7 +46,7 @@ module.exports = () => {
 
 	// Protected end-points
 
-	router.post('/snippets', throttle(5, 900), protect(), SnippetController.create);
+	router.post('/snippets', throttle(5, 900, true), protect(), SnippetController.create);
 	router.post('/snippets/:snippet/vote', throttle(), protect(), VoteController.vote);
 	router.get('/self', throttle(), protect(), UserController.getSelf);
 	router.post('/self', throttle(), protect(), UserController.setSelf);
