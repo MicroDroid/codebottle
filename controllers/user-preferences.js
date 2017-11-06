@@ -24,7 +24,7 @@ module.exports = {
 		else if (indentationSize > 8 || indentationSize < 2)
 			throw new ApiError(422, 'Indentation size must be between 2 and 8');
 
-		const prefs = ctx.state.user.getUserPreferences();
+		const prefs = await ctx.state.user.getUserPreferences();
 		prefs.private_email = !!privateEmail;
 		prefs.convert_tabs_to_spaces = !!convertTabsToSpaces;
 		prefs.indentation_size = indentationSize;
