@@ -34,6 +34,9 @@ module.exports = {
 		if (!verified)
 			throw new ApiError(401, 'Invalid username or password');
 
+		if (!user.activated)
+			throw new ApiError(401, 'Verify your email first');
+
 		const priv = cryptojs.SHA256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
 		
 		ctx.body = {
