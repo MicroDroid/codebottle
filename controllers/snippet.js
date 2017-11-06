@@ -3,7 +3,6 @@ const models = require('../models');
 const ApiError = require('../errors/api-error');
 const redis = require('../redis');
 const crypto = require('crypto');
-const logger = require('../utils/logger');
 
 const controller = {
 	index: async (ctx, next) => {
@@ -16,7 +15,7 @@ const controller = {
 	get: async (ctx, next) => {
 		const snippet = await models.snippet.findOne({
 			where: {'public_id': ctx.params.id},
-			include: [models.language, models.category, models.vote]
+			include: [models.language, models.category, models.vote, models.user]
 		});
 
 		if (!snippet)
@@ -72,7 +71,7 @@ const controller = {
 		const snippets = await models.snippet.findAll({
 			where,
 			limit: 10,
-			include: [models.language, models.category, models.vote]
+			include: [models.language, models.category, models.vote, models.user]
 		});
 
 		ctx.body = snippets.map(s => models.snippet.transform(s));
@@ -86,7 +85,7 @@ const controller = {
 			order: [
 				['created_at', 'DESC'],
 			],
-			include: [models.language, models.category, models.vote],
+			include: [models.language, models.category, models.vote, models.user],
 		});
 
 		ctx.body = snippets.map(s => models.snippet.transform(s));

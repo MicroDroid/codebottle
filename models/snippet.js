@@ -85,9 +85,10 @@ module.exports = (sequelize, DataTypes) => {
 			name: snippet.category.name,
 		},
 		votes: snippet.votes.reduce((p, c) => p + c.vote, 0),
+		...snippet.user && {username: snippet.user.username},
+		...typeof(currentVote) !== 'undefined' && {currentVote},
 		createdAt: snippet.created_at,
 		updatedAt: snippet.updated_at,
-		...typeof(currentVote) !== 'undefined' && {currentVote},
 	});
 
 	return snippet;
