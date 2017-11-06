@@ -3,11 +3,15 @@ const _ = require('lodash');
 const logger = require('./utils/logger');
 const dns = require('dns');
 const models = require('./models');
+const config = require('./config');
 
 const helpers = {
 	verifyRecaptcha: async (token) => {
-		const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', {
-			token
+		const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', {}, {
+			params: {
+				secret: config.recaptcha.secret,
+				response: token,
+			}
 		});
 
 		return !!response.data.success;

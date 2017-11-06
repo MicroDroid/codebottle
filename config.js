@@ -38,5 +38,9 @@ module.exports = {
 	mailgun: {
 		domain: process.env.MAILGUN_DOMAIN,
 		apiKey: process.env.MAILGUN_API_KEY,
+	},
+
+	recaptcha: {
+		secret: process.env.RECAPTCHA_SECRET,
 	}
 };
