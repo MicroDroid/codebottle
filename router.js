@@ -52,7 +52,7 @@ module.exports = () => {
 	router.post('/self', throttle(), protect(), UserController.setSelf);
 
 	router.get('/self/preferences', throttle(), protect(), UserPreferencesController.get);
-	router.post('/self/preferences', throttle(), protect(), UserPreferencesController.set);
+	router.put('/self/preferences', throttle(), protect(), UserPreferencesController.set);
 
 	router.post('/snippets/:id/flag', throttle(5, 900, true), protect(), FlagController.flagSnippet);
 	router.post('/users/:username/flag', throttle(5, 900, true), protect(), FlagController.flagUser);
