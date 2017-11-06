@@ -38,12 +38,13 @@ module.exports = {
 		const user = await models.user.findOne({
 			where: {username: ctx.params.username},
 			attributes: ['username', 'email', 'bio', 'banned', 'created_at'],
+			include: [models.userPreferences]
 		});
 
 		if (!user)
 			throw new ApiError(404, 'Not found');
 		
-		ctx.body = models.user.transform(user, true, await helpers.getGitHubUsername(user.id));
+		ctx.body = models.user.transform(user, user.userPreferences.hideEmail, await helpers.getGitHubUsername(user.id));
 
 		// No idea why I have to ignore this
 		/* istanbul ignore next */
