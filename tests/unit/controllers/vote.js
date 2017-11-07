@@ -54,13 +54,21 @@ describe('Vote controller', () => {
 
 		expect(findSnippetStub, 'Snippet should not be queried').to.have.not.been.called;
 
-		ctx.params.snippet = 1;
 		ctx.request.body.vote = 1;
 
 		await expect(VoteController.vote(ctx, () => {}), 'Should throw error')
 			.to.eventually.be.rejectedWith(ApiError);
 
 		expect(findSnippetStub, 'Snippet should be queried').to.have.been.calledOnce;
+		expect(voteUpsertStub, 'Vote should never be upserted').to.have.not.been.called;
+
+		ctx.params.snippet = 'some_id';
+		delete ctx.request.body.vote;
+
+		await expect(VoteController.vote(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(findSnippetStub, 'Snippet should not be queried').to.not.have.been.calledTwice;
 		expect(voteUpsertStub, 'Vote should never be upserted').to.have.not.been.called;
 	}));
 
@@ -100,11 +108,6 @@ describe('Vote controller', () => {
 		const findSnippetStub = this.stub(models.snippet, 'findOne');
 		const voteUpsertStub = this.stub(models.vote, 'upsert');
 
-		findSnippetStub.returns({
-			...snippet,
-			user_id: 999,
-		});
-
 		let ctx = {
 			status: 200,
 			body: {},
@@ -120,20 +123,25 @@ describe('Vote controller', () => {
 		};
 
 		const attempt = vote => {
+			findSnippetStub.reset();
+			voteUpsertStub.reset();
+			findSnippetStub.returns({
+				...snippet,
+				user_id: 999,
+			});
 			ctx.request.body.vote = vote;
 			return expect(VoteController.vote(ctx, () => {}), 'Should be fulfilled')
 				.to.eventually.be.fulfilled
 				.then(() => {
 					expect(findSnippetStub, 'Snippet should be queried').to.have.been.calledOnce;
-					expect(voteUpsertStub, 'Vote should be upserted').to.have.been.called;
-					expect(voteUpsertStub.getCall().args[0].vote).to.equal(vote);
-
+					expect(voteUpsertStub, 'Vote should be upserted').to.have.been.calledOnce;
+					expect(voteUpsertStub.getCall(0).args[0].vote).to.equal(vote);
 				});
 		};
 
-		attempt(1);
-		attempt(0);
-		attempt(-1);
+		await attempt(1);
+		await attempt(0);
+		await attempt(-1);
 	}));
 
 	it('Stores vote as 0, 1, or -1 only', sinonTest(async function () {
