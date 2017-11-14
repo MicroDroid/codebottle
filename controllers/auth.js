@@ -264,6 +264,10 @@ Time: ${(new Date()).toISOString()}
 				password: null,
 			});
 
+			await models.userPreferences.create({
+				user_id: user.id,
+			});
+
 			await models.socialConnection.create({
 				user_id: user.id,
 				service_id: githubUser.id,

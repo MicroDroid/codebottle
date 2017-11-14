@@ -514,8 +514,8 @@ describe('Auth controller', () => {
 		
 		expect(ctx.status, 'Status should be 200').to.equal(200);
 		expect(ctx.body.username, 'Username should be set').to.equal(overcoder.username);
-		expect(ctx.body.expires_in, 'Expires in should be set').to.equal(84600 * 90);
-		expect(ctx.body.token_type, 'Token type should be Bearer').to.equal('Bearer');
+		expect(ctx.body.expiresIn, 'Expires in should be set').to.equal(84600 * 90);
+		expect(ctx.body.tokenType, 'Token type should be Bearer').to.equal('Bearer');
 		expect(ctx.body.token, 'API token should be set').to.equal(apiToken);
 	}));
 
@@ -529,6 +529,7 @@ describe('Auth controller', () => {
 
 		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
 		const createConnectionStub = this.stub(models.socialConnection, 'create');
+		const createPrefsStub = this.stub(models.userPreferences, 'create');
 
 		const createUserStub = this.stub(models.user, 'create');
 
@@ -576,12 +577,13 @@ describe('Auth controller', () => {
 		expect(findConnectionStub, 'Existing connection should be queried').to.have.been.calledOnce;
 		expect(createConnectionStub, 'New connection should be created').to.have.been.calledOnce;
 		expect(createUserStub, 'New user should be created').to.have.been.calledOnce;
+		expect(createPrefsStub, 'User preferences should be created').to.have.been.calledOnce;
 		expect(findUserStub, 'Existing username/email should be checked').to.have.been.calledOnce;
 
 		expect(ctx.status, 'Status should be 200').to.equal(200);
 		expect(ctx.body.username, 'Username should be set').to.equal(overcoder.username);
-		expect(ctx.body.expires_in, 'Expires in should be set').to.equal(84600 * 90);
-		expect(ctx.body.token_type, 'Token type should be Bearer').to.equal('Bearer');
+		expect(ctx.body.expiresIn, 'Expires in should be set').to.equal(84600 * 90);
+		expect(ctx.body.tokenType, 'Token type should be Bearer').to.equal('Bearer');
 		expect(ctx.body.token, 'API token should be set').to.equal(apiToken);
 	}));
 
@@ -595,6 +597,7 @@ describe('Auth controller', () => {
 
 		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
 		const createConnectionStub = this.stub(models.socialConnection, 'create');
+		const createPrefsStub = this.stub(models.userPreferences, 'create');
 
 		const createUserStub = this.stub(models.user, 'create');
 
@@ -643,12 +646,13 @@ describe('Auth controller', () => {
 		expect(findConnectionStub, 'Existing connection should be queried').to.have.been.calledOnce;
 		expect(createConnectionStub, 'New connection should be created').to.have.been.calledOnce;
 		expect(createUserStub, 'New user should be created').to.have.been.calledOnce;
+		expect(createPrefsStub, 'User preferences should be created').to.have.been.calledOnce;
 		expect(findUserStub, 'Existing username/email should be checked').to.have.been.calledOnce;
 
 		expect(ctx.status, 'Status should be 200').to.equal(200);
 		expect(ctx.body.username, 'Username should be set').to.equal('a20');
-		expect(ctx.body.expires_in, 'Expires in should be set').to.equal(84600 * 90);
-		expect(ctx.body.token_type, 'Token type should be Bearer').to.equal('Bearer');
+		expect(ctx.body.expiresIn, 'Expires in should be set').to.equal(84600 * 90);
+		expect(ctx.body.tokenType, 'Token type should be Bearer').to.equal('Bearer');
 		expect(ctx.body.token, 'API token should be set').to.equal(apiToken);
 	}));
 
@@ -659,6 +663,7 @@ describe('Auth controller', () => {
 
 		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
 		const createConnectionStub = this.stub(models.socialConnection, 'create');
+		const createPrefsStub = this.stub(models.userPreferences, 'create');
 
 		const createUserStub = this.stub(models.user, 'create');
 
@@ -702,6 +707,7 @@ describe('Auth controller', () => {
 		expect(findConnectionStub, 'Existing connection should be queried').to.have.been.calledOnce;
 		expect(createConnectionStub, 'New connection should not be created').to.not.have.been.calledOnce;
 		expect(createUserStub, 'New user should not be created').to.not.have.been.called;
+		expect(createPrefsStub, 'User preferences should not be created').to.not.have.been.calledOnce;
 		expect(findUserStub, 'Existing username/email should be checked').to.have.been.calledOnce;
 	}));
 });
