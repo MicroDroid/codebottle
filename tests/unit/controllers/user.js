@@ -51,17 +51,12 @@ describe('User controller', () => {
 		},
 	};
 
-
 	it('Gets user properly', sinonTest(async function() {
-		const gravatarUrl = 'https://www.gravatar.com/avatar/s=200&r=g&d=mm';
-
 		const findOneStub = this.stub(models.user, 'findOne');
-		const gravatarStub = this.stub(gravatar, 'url');
 		const getGitHubStub = this.stub(helpers, 'getGitHubUsername');
 		const transformUserStub = this.stub(models.user, 'transform');
 
 		findOneStub.returns(_.pick(overcoder, 'username', 'email', 'bio', 'banned', 'created_at', 'userPreferences'));
-		gravatarStub.returns(gravatarUrl);
 
 		let ctx = {
 			status: 200,
@@ -75,6 +70,41 @@ describe('User controller', () => {
 		expect(ctx.status, 'Status should be the same').to.equal(200);
 		expect(getGitHubStub, 'GitHub username should be queried').to.have.been.calledOnce;
 		expect(transformUserStub, 'User should be transformed').to.have.been.calledOnce;
+	}));
+
+	it('Shows/Hides email based on preferences', sinonTest(async function () {
+		const findOneStub = this.stub(models.user, 'findOne');
+		const getGitHubStub = this.stub(helpers, 'getGitHubUsername');
+		const transformUserStub = this.stub(models.user, 'transform');
+
+		const overcoderClone = _.pick(overcoder, 'username', 'email', 'bio', 'banned', 'created_at', 'userPreferences');
+
+		findOneStub.returns(overcoderClone);
+
+		let ctx = {
+			status: 200,
+			body: {},
+			params: {username: 'OverCoder'},
+		};
+
+		// Integer because that's what's stored in DB
+		overcoderClone.userPreferences.private_email = '1';
+
+		await expect(UserController.get(ctx, () => {}), 'Getting a user should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(ctx.status, 'Status should be the same').to.equal(200);
+		expect(transformUserStub, 'User should be transformed').to.have.been.calledWith(sinon.match.any, true, sinon.match.any);
+
+		overcoderClone.userPreferences.private_email = '0';
+
+		await expect(UserController.get(ctx, () => {}), 'Getting a user should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(ctx.status, 'Status should be the same').to.equal(200);
+		expect(getGitHubStub, 'GitHub username should be queried').to.have.been.calledTwice;
+		expect(transformUserStub, 'User should be transformed').to.have.been.calledWith(sinon.match.any, false, sinon.match.any);
+		
 	}));
 
 	it('Throws error when user is not found', sinonTest(async function() {
