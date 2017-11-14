@@ -17,7 +17,7 @@
 				<button type="submit" class="btn btn-primary">Generate</button>
 			</div>
 		</form>
-		<img :src="searchBadgeImg" class="mb-2"></img>
+		<img :src="searchBadgeImg" v-if="searchBadgeImg !== ''" class="mb-2"></img>
 		<br/>
 		<code v-if="searchBadgeResult">{{searchBadgeResult}}</code>
 	</div>

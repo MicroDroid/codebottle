@@ -5,7 +5,7 @@
 				Preferences
 			</router-link>
 		</li>
-		<li class="nav-item">
+		<!-- <li class="nav-item">
 			<router-link :to="{name: 'settings.oauth2'}" class="nav-link">
 				OAuth 2.0 Applications
 			</router-link>
@@ -14,7 +14,7 @@
 			<router-link :to="{name: 'settings.personal-access-tokens'}" class="nav-link">
 				Personal access tokens
 			</router-link>
-		</li>
+		</li> -->
 	</ul>
 </template>
 

@@ -90,7 +90,7 @@
 					category: this.category,
 				}).then(response => {
 					this.$router.push({name: 'view-snippet', params: {
-						id: response.data.data.id
+						id: response.data.id
 					}});
 				}).catch(error => {
 					this.loading = false;

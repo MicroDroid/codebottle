@@ -1,60 +1,60 @@
 <template>
 	<div class="container">
-		<div class="row" v-if="snippet.data" itemscope itemtype="http://schema.org/SoftwareSourceCode">
+		<div class="row" v-if="snippet" itemscope itemtype="http://schema.org/SoftwareSourceCode">
 			<div class="col-xs-12 col-auto">
 				<h1>
 					<span :class="'fa fa-chevron-up clickable'
-							+ ((snippet.data.current_vote && snippet.data.current_vote == 1) ?
+							+ ((snippet.current_vote && snippet.current_vote == 1) ?
 								' voted' : '')" @click="vote(1)"></span> <br/>
 					<span class="ml-2" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 						<span itemprop="ratingValue">{{votes}}</span>
 					</span> <br/>
 					<span :class="'fa fa-chevron-down clickable'
-							+ ((snippet.data.current_vote && snippet.data.current_vote == -1) ?
+							+ ((snippet.current_vote && snippet.current_vote == -1) ?
 								' voted' : '')" @click="vote(-1)"></span>
 				</h1>
 			</div>
 			<div class="col-xs-12 col" id="data-container">
 				<h2 itemprop="about">
-					{{snippet.data.title}}
+					{{snippet.title}}
 					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fa fa-flag"></span></a>
 				</h2>
 				<p>
 					<span>
 						<span class="fa fa-bullseye"></span>
-						<span itemprop="codeSampleType">{{snippet.data.category.name}}</span>
+						<span itemprop="codeSampleType">{{snippet.category.name}}</span>
 					</span>
 					<span class="ml-2">
 						<span class="fa fa-code"></span>
-						<span itemprop="programmingLanguage">{{snippet.data.language.name}}</span>
+						<span itemprop="programmingLanguage">{{snippet.language.name}}</span>
 					</span>
 					<span class="ml-2">
 						<span class="fa fa-user-o"></span>
-						<router-link :to="{name: 'view-user', params: {username: snippet.data.username}}" itemprop="author">
-							{{snippet.data.username}}
+						<router-link :to="{name: 'view-user', params: {username: snippet.username}}" itemprop="author">
+							{{snippet.username}}
 						</router-link>
 					</span>
 					<span class="ml-2">
 						<span class="fa fa-eye"></span>
-						<span>{{snippet.data.views}}</span>
+						<span>{{snippet.views}}</span>
 					</span>
 					<span class="ml-2">
 						<span class="fa fa-code-fork"></span>
-						<span itemprop="version">{{snippet.data.updates}}</span>
+						<span itemprop="version">{{snippet.updates}}</span>
 					</span>
 					<span class="ml-2">
 						<span class="fa fa-clock-o"></span>
-						<span itemprop="dateCreated">{{moment(snippet.data.created_at).fromNow()}}</span>
+						<span itemprop="dateCreated">{{moment(snippet.createdAt).fromNow()}}</span>
 					</span>
 					<span class="ml-2">
 						<span class="fa fa-edit"></span>
-						<span itemprop="dateModified">{{moment(snippet.data.updated_at).fromNow()}}</span>
+						<span itemprop="dateModified">{{moment(snippet.updatedAt).fromNow()}}</span>
 					</span>
 				</p>
 				<pre><code itemprop="text" :class="codeLanguage" :style="{'tab-size': preferences.indentation_size}">{{ computedCode }}</code></pre>
-				<div class="card" v-if="snippet.data.description">
+				<div class="card" v-if="snippet.description">
 					<div class="card-body">
-						<div class="card-text" v-html="marked(snippet.data.description)" itemprop="description">
+						<div class="card-text" v-html="marked(snippet.description)" itemprop="description">
 						</div>
 					</div>
 				</div>
@@ -74,7 +74,7 @@
 
 	export default {
 		data: () => ({
-			snippet: {},
+			snippet: null,
 			originalCurrentVote: 0,
 
 			flagModalShown: false,
@@ -85,12 +85,12 @@
 				if (!this.isAuthenticated)
 					return this.$router.push({name: 'signin'});
 
-				if (vote === this.snippet.data.current_vote)
+				if (vote === this.snippet.current_vote)
 					vote = 0;
 
 				axios.post(apiUrl('/snippets/' + this.$route.params.id + '/vote'), {vote})
 					.then(response => {
-						this.snippet.data.current_vote = vote;
+						this.snippet.current_vote = vote;
 					}).catch(error => {
 						// pls
 					});
@@ -135,22 +135,22 @@
 			]),
 
 			votes: function() {
-				if (typeof(this.snippet.data.current_vote) === 'number')
-					return this.snippet.data.votes + (this.snippet.data.current_vote - this.originalCurrentVote)
-				return this.snippet.data.votes;
+				if (typeof(this.snippet.current_vote) === 'number')
+					return this.snippet.votes + (this.snippet.current_vote - this.originalCurrentVote)
+				return this.snippet.votes;
 			},
 
 			computedCode: function() {
 				if (this.preferences.convert_tabs_to_spaces || !('tab-size' in document.body.style))
-					return this.snippet.data.code.replace(/\t/g, Array(this.preferences.indentation_size + 1).join(' '));
-				return this.snippet.data.code;
+					return this.snippet.code.replace(/\t/g, Array(this.preferences.indentation_size + 1).join(' '));
+				return this.snippet.code;
 			},
 
 			codeLanguage: function() {
-				if (!this.snippet.data || !this.snippet.data.language)
+				if (!this.snippet || !this.snippet.language)
 					return '';
 
-				switch(this.snippet.data.language.id) {
+				switch(this.snippet.language.id) {
 					case 1:  return 'java';
 					case 2:  return 'cpp';
 					case 3:  return 'cs';
@@ -171,7 +171,7 @@
 				.then(response => {
 					next(vm => {
 						vm.snippet = response.data;
-						vm.originalCurrentVote = response.data.data.current_vote;
+						vm.originalCurrentVote = response.data.current_vote;
 					});
 				}).catch(error => {
 					cookToast('Snippet not found', 2000);
@@ -189,25 +189,25 @@
 		head: {
 			title: function() {
 				return {
-					inner: this.snippet.data
-						? this.snippet.data.language.name + " - " + this.snippet.data.title
+					inner: this.snippet
+						? this.snippet.language.name + " - " + this.snippet.title
 						: 'View snippet'
 				};
 			},
 
 			meta: function() {
 				const div = $("<div></div>");
-				div.html(marked(this.snippet.data ? this.snippet.data.description : 'No description provided.'));
+				div.html(marked(this.snippet ? this.snippet.description : 'No description provided.'));
 				div.children('pre').remove();
 				const description = div.text();
 
 				return [
 					{name: 'description', content: description ? description : "No description provided."},
 					{property: 'og:description', content: description ? description : "No description provided."},
-	                {property: 'og:title', content: this.snippet.data
-						? this.snippet.data.language.name + " - " + this.snippet.data.title
+					{property: 'og:title', content: this.snippet
+						? this.snippet.language.name + " - " + this.snippet.title
 						: 'View snippet'},
-	                {property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
+					{property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
 				];
 			},
 		},

@@ -50,7 +50,7 @@
         beforeRouteEnter: function(to, from, next) {
             axios.get(apiUrl('/self'))
                 .then(response => {
-                	const user = response.data.data;
+                	const user = response.data;
                     
                     if (!user) {
                         cookToast('Error!', 2000);
@@ -70,6 +70,7 @@
 		methods: {
 			save: function() {
 				this.error = false;
+				this.message = false;
 				this.loading = true;
 
 				axios.put(apiUrl('/self'), {

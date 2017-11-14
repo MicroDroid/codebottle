@@ -1,34 +1,34 @@
 <template>
 	<div class="container">
-		<div class="row" v-if="user.data" itemscope itemtype="http://schema.org/Person">
+		<div class="row" v-if="user" itemscope itemtype="http://schema.org/Person">
 			<div class="col center-text">
-				<img :src="user.data.profile_image" id="profile-img" class="center-block">
+				<img :src="user.profileImage" id="profile-img" class="center-block">
 				<h1 id="username">
-					<strong itemprop="additionalName">{{user.data.username}}</strong>
+					<strong itemprop="additionalName">{{user.username}}</strong>
 					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fa fa-flag"></span></a>
 				</h1>
 				<p id="stats-bar">
 					<span>
 						<span class="fa fa-calendar fa-fw"></span>
-						Joined {{moment(user.data.created_at).fromNow()}}
+						Joined {{moment(user.createdAt).fromNow()}}
 					</span> <br/>
 					<span>
 						<span class="fa fa-envelope fa-fw"></span>
-						<span itemprop="email">{{user.data.email || 'Private email'}}</span>
+						<span itemprop="email">{{user.email || 'Private email'}}</span>
 					</span> <br/>
-					<span v-if="user.data.github_username">
+					<span v-if="user.github_username">
 						<span class="fa fa-github fa-fw"></span>
-						<a itemprop="email" class="nostyle" :href="'https://github.com/' + user.data.github_username">
-							{{user.data.github_username}}
+						<a itemprop="email" class="nostyle" :href="'https://github.com/' + user.github_username">
+							{{user.github_username}}
 						</a>
 					</span> <br/>
-					<span v-if="user.data.banned">
+					<span v-if="user.banned">
 						<span class="fa fa-exclamation-triangle fa-fw"></span>
 						This user is banned
 					</span> <br/>
 				</p>
 				<p id="bio" itemprop="description">
-					{{user.data.bio}}
+					{{user.bio}}
 				</p>
 				<modal :show="flagModalShown" title="Why are you flagging him?" :onDismiss="onFlagDismiss">
 					<textarea class="form-control" id="flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
@@ -106,15 +106,15 @@
 		head: {
 			title: function() {
 				return {
-					inner: this.user.data ? "User " + this.user.data.username : "View user"
+					inner: this.user ? "User " + this.user.username : "View user"
 				};
 			},
 
 			meta: function() {
 				return [
-					{name: 'description', content: this.user.data ? this.user.data.bio || "No bio provided." : "No bio provided."},
-					{property: 'og:description', content: this.user.data ? this.user.data.bio || "No bio provided." : "No bio provided."},
-	                {property: 'og:title', content: this.user.data ? "User " + this.user.data.username : "View user"},
+					{name: 'description', content: this.user ? this.user.bio || "No bio provided." : "No bio provided."},
+					{property: 'og:description', content: this.user ? this.user.bio || "No bio provided." : "No bio provided."},
+	                {property: 'og:title', content: this.user ? "User " + this.user.username : "View user"},
 	                {property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
 				];
 			},

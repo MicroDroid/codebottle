@@ -9,20 +9,20 @@
 					<h4 class="mb-4">Code format</h4>
 					<label for="indentation-size">Preferred indentation size</label>
 					<input type="number" id="indentation-size" class="form-control form-control-sm ml-2" max="8" min="2"
-						 v-model="preferences.indentation_size">
+						 v-model="preferences.indentationSize">
 					<br/>
 					<label class="custom-control custom-checkbox mt-2">
-						<input type="checkbox" class="custom-control-input" v-model="preferences.convert_tabs_to_spaces">
+						<input type="checkbox" class="custom-control-input" v-model="preferences.convertTabsToSpaces">
 						<span class="custom-control-indicator"></span>
 						<span class="custom-control-description">Auto-convert tabs to spaces</span>
 					</label>
 					<h4 class="mb-4 mt-4">Privacy</h4>
 					<label class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" v-model="preferences.private_email">
+						<input type="checkbox" class="custom-control-input" v-model="preferences.privateEmail">
 						<span class="custom-control-indicator"></span>
 						<span class="custom-control-description">Hide email from profile</span>
 					</label>
-					<p class="text-muted mt-4" id="last-changed">Last changed {{moment(preferences.updated_at).fromNow()}}</p>
+					<p class="text-muted mt-4" id="last-changed">Last changed {{moment(preferences.updatedAt).fromNow()}}</p>
 					<button class="btn btn-primary" type="submit" :disabled="loading">Save</button>
 				</form>
 
@@ -51,7 +51,7 @@
 		beforeRouteEnter: function(to, from, next) {
 			axios.get(apiUrl('/self/preferences'))
 				.then(response => {
-					next(vm => vm.preferences = response.data.data);
+					next(vm => vm.preferences = response.data);
 				}).catch(error => {
 					cookToast('Error!', 2000);
 				});
@@ -63,19 +63,24 @@
 				this.message = false;
 				this.loading = true;
 
-				axios.put(apiUrl('/self/preferences'), this.preferences)
-					.then(response => {
-						this.loading = false;
-						this.preferences.updated_at = Date.now();
-						this.message = "Saved!";
-						this.$store.dispatch('fetchPreferences')
-							.catch(error => {
-								cookToast('Error reloading preferences!', 3000);
-							});
-					}).catch(error => {
-						this.loading = false;
-						this.error = extractError(error);
-					})
+				axios.put(apiUrl('/self/preferences'), {
+					convert_tabs_to_spaces: this.preferences.convertTabsToSpaces,
+					private_email: this.preferences.privateEmail,
+					indentation_size: this.preferences.indentationSize,
+
+				})
+				.then(response => {
+					this.loading = false;
+					this.preferences.updatedAt = Date.now();
+					this.message = "Saved!";
+					this.$store.dispatch('fetchPreferences')
+						.catch(error => {
+							cookToast('Error reloading preferences!', 3000);
+						});
+				}).catch(error => {
+					this.loading = false;
+					this.error = extractError(error);
+				})
 			},
 
 			moment: moment.utc,
