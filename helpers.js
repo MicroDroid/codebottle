@@ -5,6 +5,7 @@ const dns = require('dns');
 const models = require('./models');
 const config = require('./config');
 
+/* istanbul ignore next */
 const helpers = {
 	verifyRecaptcha: async (token) => {
 		const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', {}, {
