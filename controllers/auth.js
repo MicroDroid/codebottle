@@ -211,8 +211,8 @@ Time: ${(new Date()).toISOString()}
 
 			ctx.body = {
 				username: user.username,
-				expires_in: 84600 * 90,
-				token_type: 'Bearer',
+				expiresIn: 84600 * 90,
+				tokenType: 'Bearer',
 				token: jwt.sign({
 					id: user.id,
 					priv,
@@ -276,8 +276,8 @@ Time: ${(new Date()).toISOString()}
 
 			ctx.body = {
 				username,
-				expires_in: 84600 * 90,
-				token_type: 'Bearer',
+				expiresIn: 84600 * 90,
+				tokenType: 'Bearer',
 				token: jwt.sign({
 					id: user.id,
 					priv,
