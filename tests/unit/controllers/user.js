@@ -43,6 +43,12 @@ describe('User controller', () => {
 		password: 'password',
 		banned: false, // no you cant ban me
 		created_at: (new Date()).toISOString(),
+
+		userPreferences: {
+			private_email: true,
+			convert_tabs_to_spaces: true,
+			indentation_size: 4
+		},
 	};
 
 
@@ -54,7 +60,7 @@ describe('User controller', () => {
 		const getGitHubStub = this.stub(helpers, 'getGitHubUsername');
 		const transformUserStub = this.stub(models.user, 'transform');
 
-		findOneStub.returns(_.pick(overcoder, 'username', 'email', 'bio', 'banned', 'created_at'));
+		findOneStub.returns(_.pick(overcoder, 'username', 'email', 'bio', 'banned', 'created_at', 'userPreferences'));
 		gravatarStub.returns(gravatarUrl);
 
 		let ctx = {
