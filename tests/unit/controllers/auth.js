@@ -57,6 +57,7 @@ describe('Auth controller', () => {
 		bio: 'Enthusiastic developer',
 		banned: false, // no you cant
 		created_at: (new Date()).toISOString(),
+		activated: true,
 		password: 'blah',
 	};
 
@@ -97,6 +98,7 @@ describe('Auth controller', () => {
 
 	it('Succeeds on correct credentials', sinonTest(async function () {
 		findUserStub.returns(overcoder);
+
 		bcryptStub.returns(true);
 
 		const token = 'some_token';
@@ -128,6 +130,37 @@ describe('Auth controller', () => {
 
 		expect(ctx.body.token, 'Token should be set properly').to.equal(token);
 		expect(ctx.body.expiresIn, 'Expiry date should be in 90 days').to.equal(Date.now() + 84600 * 90);
+	}));
+
+	it('Throws error when email not verified', sinonTest(async function () {
+		findUserStub.returns({
+			...overcoder,
+			activated: false,
+		});
+
+		bcryptStub.returns(true);
+
+		const jwtStub = this.stub(jwt, 'sign');
+		const sha256Stub = this.stub(cryptojs, 'SHA256');
+
+		let ctx = {
+			status: 200,
+			body: {},
+			request: {
+				body: {
+					username: 'OverCoder',
+					password: 'password',
+				},
+			}
+		};
+
+		await expect(AuthController.login(ctx, () => {}), 'Should not throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(jwtStub, 'JWT should not be generated').to.not.have.been.called;
+		expect(sha256Stub, 'User should not be hashed using SHA256').to.not.have.been.called;
+
+		expect(ctx.body.token, 'Token should not be set').to.be.undefined;
 	}));
 
 	it('Throws error on invalid password reset', sinonTest(async function () {
