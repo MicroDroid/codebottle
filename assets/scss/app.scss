@@ -54,7 +54,7 @@ footer * {
 	}
 }
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(sm) {
 	body {
 		padding: 128px 4vw 0 4vw !important;
 	}
