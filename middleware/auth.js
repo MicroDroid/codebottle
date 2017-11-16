@@ -1,6 +1,6 @@
 const ApiError = require('../errors/api-error');
 const models = require('../models');
-const sha256 = require('crypto-js/sha256');
+const cryptojs = require('crypto-js');
 const _ = require('lodash');
 
 module.exports = (passthrough = false) => async (ctx, next) => {
@@ -9,16 +9,19 @@ module.exports = (passthrough = false) => async (ctx, next) => {
 			where: {id: ctx.state.user.id},
 		});
 
-		if (!user && !passthrough)
-			throw new ApiError(401, 'Authentication token expired');
+		if (!user)
+			if (passthrough)
+				ctx.state.user = null;
+			else throw new ApiError(401, 'Authentication token expired');
 
-		const priv = sha256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
+		const priv = cryptojs.SHA256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
 
 		if (user && priv === ctx.state.user.priv)
 			ctx.state.user = user;
-		else if (passthrough)
+		else if (passthrough) {
+			ctx.state.user = null;
 			return next();
-		else throw new ApiError(401, 'Authentication token expired');
+		} else throw new ApiError(401, 'Authentication token expired');
 	}
 
 	return next();

@@ -7,7 +7,7 @@ const sinonChai = require('sinon-chai');
 const sinonTestFactory = require('sinon-test');
 const sinonTest = sinonTestFactory(sinon);
 
-const sha256 = require('crypto-js/sha256');
+const cryptojs = require('crypto-js');
 const ApiError = require('../../../errors/api-error');
 const auth = require('../../../middleware/auth');
 const models = require('../../../models');
@@ -89,7 +89,7 @@ describe('Auth middleware', () => {
 		await expect(authInstance(ctx, () => {}), 'Should not throw error')
 			.to.eventually.be.fulfilled
 			.then(() => {
-				expect(ctx.state.user).to.deep.equal({id: 1});
+				expect(ctx.state.user, 'User should be set to null').to.be.null;
 			});
 	}));
 
@@ -110,24 +110,26 @@ describe('Auth middleware', () => {
 		return expect(authInstance(ctx, () => {}), 'Should not throw error')
 			.to.eventually.be.fulfilled
 			.then(() => {
-				expect(ctx.state.user).to.deep.equal({
-					id: 1,
-					priv: 'blah',
-				});
+				expect(ctx.state.user, 'User should be set to null').to.be.null;
 			});
 	}));
 
 	it('Sets user if correct', sinonTest(async function() {
 		const findOneStub = this.stub(models.user, 'findOne');
+		const sha256Stub = this.stub(cryptojs, 'SHA256');
+
+		const priv = 'some_priv';
+
 		findOneStub.returns(overcoder);
+		sha256Stub.returns(priv);
+
+		const user = {
+			id: 1,
+			priv,
+		};
 
 		let ctx = {
-			state: {
-				user: {
-					id: 1,
-					priv: sha256(overcoder).toString(),
-				}
-			}
+			state: {user}
 		};
 
 		let authInstance = auth();
@@ -135,6 +137,7 @@ describe('Auth middleware', () => {
 			.to.eventually.be.fulfilled
 			.then(() => {
 				expect(ctx.state.user, 'User should be set properly').to.deep.equal(overcoder);
+				ctx.state.user = user;
 				const authInstance = auth(true);
 				return expect(authInstance(ctx, () => {}), 'Should not throw error')
 					.to.eventually.be.fulfilled
