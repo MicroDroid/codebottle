@@ -1,3 +1,4 @@
+window._ = require('lodash');
 window.hljs = require('highlight.js/lib/highlight');
 
 const hljsLanguages = ['java', 'cpp', 'cs', 'python', 'php', 'javascript', 'perl', 'ruby', 'powershell', 'lua', 'json'];
