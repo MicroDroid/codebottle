@@ -174,7 +174,9 @@
 						vm.originalCurrentVote = response.data.current_vote;
 					});
 				}).catch(error => {
-					cookToast('Snippet not found', 2000);
+					if (error.response && error.response.status === 404)
+						cookToast('Snippet not found', 2000);
+					else cookToast('Error!', 2000);
 					next(false);
 				});
 		},
