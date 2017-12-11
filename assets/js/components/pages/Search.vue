@@ -2,28 +2,11 @@
 	<div class="container">
 		<div class="row">
 			<div>
-				<div :class="{
-					'col-xs-12': true,
-					'col-sm-10': true,
-					'col-md-9': searching,
-					'col-lg-7': searching,
-					'col-md-8': !searching,
-					'col-lg-6': !searching,
-					'ml-auto': !searching,
-					'mr-auto': !searching,
-				}" id="form-wrapper">
-					<div id="logo-wrapper" v-if="!searching">
-						<img :src="staticUrl('/images/bottle.png')" id="logo" class="img-fluid">
-					</div>
-
-					<form @submit.prevent="search" :id="searching ? 'searching-form' : 'not-searching-form'">
+				<div class="col-xs-12 col-sm-10 col-md-9 col-lg-7" id="form-wrapper">
+					<form @submit.prevent="search" id="search-form">
 						<input type="text" v-model="keywords" 
-							id="searchbox" placeholder="Search code" ref="searchbox" autofocus
-							:class="{
-								'form-control': true,
-								'stretched': searching,
-								'center-text': !searching,
-							}">
+							id="searchbox" placeholder="Search snippets" ref="searchbox" autofocus
+							class="form-control stretched">
 
 						<div class="btn-group" role="group" id="btns">
 							<dropdown label="Language" :options="languageOptions"
@@ -34,8 +17,8 @@
 						</div>
 					</form>
 				</div>
-				<hr v-if="searching">
-				<div v-if="searching" id="results-container">
+				<hr>
+				<div id="results-container">
 					<div class="alert alert-danger" v-if="error">{{error}}</div>
 					<div class="alert alert-warning alert-transparent" v-if="!loading && !error && (!results || results.length < 1)">
 						No results
@@ -67,7 +50,6 @@
 			return {
 				loading: false,
 				error: false,
-				searching: false,
 				keywords: '',
 				language: -1,
 				results: {},
@@ -85,8 +67,6 @@
 			},
 
 			keywords: function() {
-				this.searching = true;
-
 				if (this.searchDebounce)
 					this.searchDebounce.cancel();
 
@@ -102,7 +82,6 @@
 
 			search: function() {
 				this.$router.replace({name: 'search', query: {q: this.keywords}});
-				this.searching = true;
 				this.error = false;
 				this.loading = true;
 
@@ -154,17 +133,14 @@
 		mounted: function() {
 			this.keywords = this.$route.query.q ? this.$route.query.q : '';
 
-			if (this.keywords)
-				this.search();
-
 			this.$refs.searchbox.focus();
 		},
 
 		head: {
 			meta: [
-				{name: 'description', content: 'Quickly drag-and-drop snippets to your application. Entirely free, community-powered. Stop reinventing the wheel and build better software.'},
+				{name: 'description', content: 'Search modular code + code examples made by developers from around the world'},
 				{property: 'og:title', content: 'CodeBottle'},
-				{property: 'og:description', content: 'Quickly drag-and-drop snippets to your application. Entirely free, community-powered. Stop reinventing the wheel and build better software.'},
+				{property: 'og:description', content: 'Search modular code + code examples made by developers from around the world'},
 			],
 		},
 
@@ -185,28 +161,16 @@
 		position: relative;
 	}
 
-	#not-searching-form #searchbox {
-		margin-top: 16px;
-	}
-
-	#not-searching-form #btns {
-		margin-top: 18px;
-	}
-
-	#not-searching-form {
-		text-align: center;
-	}
-
-	#searching-form {
+	#search-form {
 		display: flex;
 		margin-bottom: 16px;
 	}
 
-	#searching-form #btns {
+	#search-form #btns {
 		margin-left: 8px;
 	}
 
-	#searching-form #searchbox {
+	#search-form #searchbox {
 		flex: 2;
 	}
 

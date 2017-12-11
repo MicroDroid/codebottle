@@ -64,7 +64,7 @@ router.beforeEach((to, from, next) => {
 		cookToast('Sign in first', 2000);
 	} else if (to.name === 'signin' && store.getters.isAuthenticated) {
 		next({
-			name: 'search'});
+			name: 'discover'});
 		cookToast('You are already signed in!', 2000);
 	} else next();
 });

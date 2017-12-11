@@ -2,14 +2,14 @@ require('./bootstrap');
 
 export default [
 	{
-		name: 'search',
+		name: 'discover',
 		path: '/',
-		component: require('./components/pages/Search.vue'),
+		component: require('./components/pages/Discover.vue'),
 	},
 	{
-		name: 'browse',
-		path: '/browse',
-		component: require('./components/pages/Browse.vue'),
+		name: 'search',
+		path: '/search',
+		component: require('./components/pages/Search.vue'),
 	},
 	{
 		name: 'view-snippet',
@@ -22,8 +22,8 @@ export default [
 		component: require('./components/pages/ViewUser.vue'),
 	},
 	{
-		name: 'new',
-		path: '/new',
+		name: 'create',
+		path: '/create',
 		component: require('./components/pages/CreateSnippet.vue'),
 		meta: {
 			requiresAuth: true

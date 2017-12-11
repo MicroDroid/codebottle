@@ -59,7 +59,7 @@
 
 				this.$store.dispatch('login', credentials)
 					.then(() => {
-						this.$router.push({name: 'search'});
+						this.$router.push({name: 'discover'});
 						store.dispatch('fetchPreferences');
 					}).catch(error => {
 						this.loading = false;

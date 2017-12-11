@@ -38,7 +38,7 @@
 					state: originalState,
 					code
 				}).then(() => {
-					this.$router.push({name: 'search'});
+					this.$router.push({name: 'discover'});
 				}).catch(error => {
 					cookToast(extractError(error), 3000);
 					this.$router.push({name: 'signin'});

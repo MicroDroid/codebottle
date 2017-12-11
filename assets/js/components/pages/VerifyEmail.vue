@@ -13,7 +13,7 @@
 				token: window.location.hash.substr(1),
 			}).then(response => {
 				cookToast('Email has been verified!', 3000);
-				this.$router.push({name: 'search'});
+				this.$router.push({name: 'discover'});
 			}).catch(error => {
 				// idk, show something up
 			});

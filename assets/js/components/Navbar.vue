@@ -4,23 +4,20 @@
 					d-xs-none d-sm-none d-md-block d-lg-block d-xl-block
 					navbar-expand-md navbar-expand-lg navbar-expand-xl">
 			<div class="container">
-				<router-link :to="{name: 'search'}" class="navbar-brand">
+				<router-link :to="{name: 'discover'}" class="navbar-brand">
 					<img :src="staticUrl('/images/bottle_square.png')">
 				</router-link>
 
 				<form @submit.prevent="search">
-					<input type="text" class="form-control" placeholder="Search code" v-model="keywords">
+					<input type="text" class="form-control" placeholder="Search" v-model="keywords">
 				</form>
 
 				<ul class="nav navbar-nav ml-3 mr-auto">
-					<router-link :to="{name: 'search'}" tag="li" class="nav-item">
-						<a class="nav-link">Search</a>
+					<router-link :to="{name: 'discover'}" tag="li" class="nav-item">
+						<a class="nav-link">Discover</a>
 					</router-link>
-					<router-link :to="{name: 'browse'}" tag="li" class="nav-item">
-						<a class="nav-link">Browse</a>
-					</router-link>
-					<router-link :to="{name: 'new'}" tag="li" class="nav-item">
-						<a class="nav-link">New</a>
+					<router-link :to="{name: 'create'}" tag="li" class="nav-item">
+						<a class="nav-link">Create</a>
 					</router-link>
 				</ul>
 
@@ -54,20 +51,17 @@
 					</div>
 					<div class="col">
 						<form @submit.prevent="search">
-							<input type="text" class="form-control" placeholder="Search code" v-model="keywords">
+							<input type="text" class="form-control" placeholder="Search" v-model="keywords">
 						</form>
 					</div>
 				</div>
 
 				<div class="row nav">
-					<router-link :to="{name: 'search'}" tag="div" class="nav-item col" exact>
-						<a class="nav-link">Search</a>
+					<router-link :to="{name: 'discover'}" tag="div" class="nav-item col" exact>
+						<a class="nav-link">Discover</a>
 					</router-link>
-					<router-link :to="{name: 'browse'}" tag="div" class="nav-item col">
-						<a class="nav-link">Browse</a>
-					</router-link>
-					<router-link :to="{name: 'new'}" tag="div" class="nav-item col">
-						<a class="nav-link">New</a>
+					<router-link :to="{name: 'create'}" tag="div" class="nav-item col">
+						<a class="nav-link">Create</a>
 					</router-link>
 				</div>
 

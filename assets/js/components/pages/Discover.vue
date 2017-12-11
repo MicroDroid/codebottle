@@ -2,8 +2,9 @@
 	<div class="container">
 		<div class="row">
 			<div class="center-text col">
-				<h1>What's new?</h1>
-				<p>We need more!</p>
+				<h2>Amplified Productivity</h2>
+				<h4 class="text-muted">Modular reusable code <span class="green-text">+</span> code examples.</h4>
+				<h4 class="text-muted">By the awesome community.</h4>
 			</div>
 			<hr>
 
@@ -102,13 +103,13 @@
 
 		head: {
 			title: {
-				inner: "Latest snippets",
+				inner: 'Discover the awesome and the new',
 			},
 
 			meta: [
-				{name: 'description', content: 'Browse and discover the latest snippets that are created just recently by different developers from around the world, just like you.'},
-                {property: 'og:title', content: 'Browse the latest code snippets'},
-                {property: 'og:description', content: 'Browse and discover the latest snippets that are created just recently by different developers from around the world, just like you.'},
+				{name: 'description', content: 'Discover new and cool snippets made by developers just like you, from around the entire world.'},
+                {property: 'og:title', content: 'Discover the awesome and the new'},
+                {property: 'og:description', content: 'Discover new and cool snippets made by developers just like you, from around the entire world.'},
 			],
 		},
 	}
@@ -132,5 +133,9 @@
 
 	.card-subtitle span:first-child {
 		margin-left: 0;
+	}
+
+	.green-text {
+		color: #4caf50;
 	}
 </style>
