@@ -5,18 +5,18 @@
 </template>
 
 <script type="text/javascript">
-	import {apiUrl, extractError, findGetParameter, genRandomString, cookGetParameters, cookToast} from '../../helpers';
+	import {extractError, findGetParameter, genRandomString, cookGetParameters, cookToast} from '../../helpers';
 
 	export default {
 		data: function() {
 			return {
 				GITHUB_CLIENT_ID: process.env.NODE_ENV === 'production' ? '621e357ad57133607c33' : '0d1b8a8f60c5e2070c45',
-			}
+			};
 		},
 
 		head: {
 			title: {
-				inner: "Please wait..",
+				inner: 'Please wait..',
 			},
 
 			meta: [
@@ -53,5 +53,5 @@
 				});
 			}
 		}
-	}
+	};
 </script>

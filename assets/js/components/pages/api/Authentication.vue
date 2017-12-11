@@ -16,8 +16,7 @@
 	export default {
 		data: function() {
 			return {
-				parsed: marked(
-`
+				parsed: marked(`
 Authentication
 ================
 
@@ -40,9 +39,8 @@ If you happen to access a protected route while being unauthenticated, you'll ge
 \`\`\`
 
 Nothing special, we've all done this before. Move on to the next section.
-`
-)
-			}
+				`)
+			};
 		},
 
 		components: {
@@ -51,7 +49,7 @@ Nothing special, we've all done this before. Move on to the next section.
 
 		head: {
 			title: {
-				inner: "Authentication - API",
+				inner: 'Authentication - API',
 			},
 
 			meta: [
@@ -62,9 +60,9 @@ Nothing special, we've all done this before. Move on to the next section.
 		},
 
 		mounted: function() {
-			$("pre code:not(.hljs)").each((i, b) => {
+			$('pre code:not(.hljs)').each((i, b) => {
 				hljs.highlightBlock(b);
 			});
 		},
-	}
+	};
 </script>

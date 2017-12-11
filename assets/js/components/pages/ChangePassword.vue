@@ -23,14 +23,13 @@
 
 <script type="text/javascript">
 	import {extractError, apiUrl} from '../../helpers';
-	import store from '../../store';
 
 	export default {
 		data: () => ({
 			loading: false,
 			error: false,
 
-			password: "",
+			password: '',
 		}),
 
 		methods: {
@@ -53,7 +52,7 @@
 
 		head: {
 			title: {
-				inner: "Change password",
+				inner: 'Change password',
 			},
 
 			meta: [
@@ -64,7 +63,7 @@
 		mounted: function() {
 			this.$refs.passwordInput.focus();
 		}
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

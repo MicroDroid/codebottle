@@ -16,8 +16,7 @@
 	export default {
 		data: function() {
 			return {
-				parsed: marked(
-`
+				parsed: marked(`
 Getting Started
 ===============
 
@@ -67,9 +66,8 @@ If the response however, happens to be an error, the response will look like:
 \`\`\`
 
 Good read! Now head to the next section.
-`
-)
-			}
+				`)
+			};
 		},
 
 		components: {
@@ -78,20 +76,20 @@ Good read! Now head to the next section.
 
 		head: {
 			title: {
-				inner: "Getting Started - API",
+				inner: 'Getting Started - API',
 			},
 
 			meta: [
 				{name: 'description', content: 'Get started quickly into using our quota-less free API and integrate it with your application'},
-                {property: 'og:title', content: 'Getting started in CodeBottle\'s API'},
-                {property: 'og:description', content: 'Get started quickly into using our quota-less free API and integrate it with your application'},
+				{property: 'og:title', content: 'Getting started in CodeBottle\'s API'},
+				{property: 'og:description', content: 'Get started quickly into using our quota-less free API and integrate it with your application'},
 			],
 		},
 
 		mounted: function() {
-			$("pre code:not(.hljs)").each((i, b) => {
+			$('pre code:not(.hljs)').each((i, b) => {
 				hljs.highlightBlock(b);
 			});
 		},
-	}
+	};
 </script>

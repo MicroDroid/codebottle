@@ -45,14 +45,14 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError, apiUrl, cookToast} from '../../../helpers';
+	import {cookToast} from '../../../helpers';
 	import Sidenav from './Sidenav';
 
 	export default {
 		data: function () {
 			return {
 				tokens: [],
-			}
+			};
 		},
 
 		beforeRouteEnter: function(to, from, next) {
@@ -67,21 +67,21 @@
 		methods: {
 			revokeToken: function(token) {
 				cookToast('Deleting token..', 3000);
-                axios.delete('/oauth/personal-access-tokens/' + token.id)
-	                .then(response => {
+				axios.delete('/oauth/personal-access-tokens/' + token.id)
+					.then(response => {
 						cookToast('Deleted!', 3000);
 						axios.get('/oauth/personal-access-tokens').then(response => {
 							this.tokens = response.data;
 						});
-	                }).catch(error => {
+					}).catch(error => {
 						cookToast('Failed to delete!', 3000);
-	                });
+					});
 			},
 		},
 
 		head: {
 			title: {
-				inner: "Manage personal access tokens",
+				inner: 'Manage personal access tokens',
 			},
 
 			meta: [
@@ -92,5 +92,5 @@
 		components: {
 			'sidenav': Sidenav,
 		},
-	}
+	};
 </script>

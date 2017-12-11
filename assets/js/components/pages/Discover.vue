@@ -33,7 +33,7 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError, shorten, apiUrl, cookToast} from '../../helpers';
+	import {shorten, apiUrl, cookToast} from '../../helpers';
 	import summarize from 'summarize-markdown';
 
 	export default {
@@ -42,7 +42,7 @@
 				loading: true,
 				error: false,
 				snippets: {},
-			}
+			};
 		},
 
 		beforeRouteEnter: function(to, from, next) {
@@ -108,11 +108,11 @@
 
 			meta: [
 				{name: 'description', content: 'Discover new and cool snippets made by developers just like you, from around the entire world.'},
-                {property: 'og:title', content: 'Discover the awesome and the new'},
-                {property: 'og:description', content: 'Discover new and cool snippets made by developers just like you, from around the entire world.'},
+				{property: 'og:title', content: 'Discover the awesome and the new'},
+				{property: 'og:description', content: 'Discover new and cool snippets made by developers just like you, from around the entire world.'},
 			],
 		},
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

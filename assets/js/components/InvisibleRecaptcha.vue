@@ -47,30 +47,30 @@
 			return {
 				widgetId: false,
 				loaded: false,
-			}
+			};
 		},
 
 		methods: {
 			render: function() {
 				this.widgetId = grecaptcha.render(this.id || this._uid, {
-                    sitekey: this.sitekey,
-                    size: 'invisible',
-                    badge: this.badge || 'bottomright',
-                    theme: "dark",
-                    callback: token => {
-                    	this.callback(token);
+					sitekey: this.sitekey,
+					size: 'invisible',
+					badge: this.badge || 'bottomright',
+					theme: 'dark',
+					callback: token => {
+						this.callback(token);
 						grecaptcha.reset(this.widgetId);
-                    }
-                });
+					}
+				});
 				this.loaded = true;
 			},
 
 			renderWait: function() {
-				const self = this
+				const self = this;
 				setTimeout(function() {
-					if (typeof grecaptcha !== "undefined")
-						self.render()
-					else self.renderWait()
+					if (typeof grecaptcha !== 'undefined')
+						self.render();
+					else self.renderWait();
 				}, 200);
 			},
 
@@ -83,24 +83,23 @@
 
 		computed: {
 			computedClass: function() {
-                 var classArray = this.class ? this.class.split(' ') : [];
+				let classArray = this.class ? this.class.split(' ') : [];
 
-                 if (this.value) {
-                     classArray.push('invisible-recaptcha');
-                 }            
+				if (this.value)
+					classArray.push('invisible-recaptcha');
 
-                 return classArray;
+				return classArray;
 			}
 		},
 
 		mounted: function() {
-			if (typeof grecaptcha === "undefined") {
+			if (typeof grecaptcha === 'undefined') {
 				var script = document.createElement('script');
-				script.src = "https://www.google.com/recaptcha/api.js?render=explicit";
+				script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
 				script.onload = this.renderWait;
 
 				document.head.appendChild(script);
 			} else this.render();
 		}
-	}
+	};
 </script>

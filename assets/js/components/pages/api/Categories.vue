@@ -1,23 +1,22 @@
 <template>
 	<div class="container">
-	    <div class="row">
-	        <div class="col-xs-12 col-4 order-xs-1 order-2">
-	            <sidenav></sidenav>
-	        </div>
-	        <div class="col-xs-12 col-8 order-xs-2 order-1" v-html="parsed">
-	        </div>
-	    </div>
+		<div class="row">
+			<div class="col-xs-12 col-4 order-xs-1 order-2">
+				<sidenav></sidenav>
+			</div>
+			<div class="col-xs-12 col-8 order-xs-2 order-1" v-html="parsed">
+			</div>
+		</div>
 	</div>
 </template>
 
 <script type="text/javascript">
-    import Sidenav from './Sidenav.vue';
+	import Sidenav from './Sidenav.vue';
 
-    export default {
-        data: function() {
-            return {
-                parsed: marked(
-`
+	export default {
+		data: function() {
+			return {
+				parsed: marked(`
 Categories
 ================
 
@@ -65,31 +64,30 @@ You can also retrieve a single category by its ID with \`GET /categories/{catego
     }
 }
 \`\`\`
-`
-)
-            }
-        },
+				`)
+			};
+		},
 
-        components: {
-            'sidenav': Sidenav,
-        },
+		components: {
+			'sidenav': Sidenav,
+		},
 
-        head: {
-            title: {
-                inner: "Categories - API",
-            },
+		head: {
+			title: {
+				inner: 'Categories - API',
+			},
 
-            meta: [
-                {name: 'description', content: 'Categories make it easy for plugins and scripts to determine the type of the snippet and import it properly'},
-                {property: 'og:title', content: 'Categories in CodeBottle\'s API'},
-                {property: 'og:description', content: 'Categories make it easy for plugins and scripts to determine the type of the snippet and import it properly'},
-            ],
-        },
+			meta: [
+				{name: 'description', content: 'Categories make it easy for plugins and scripts to determine the type of the snippet and import it properly'},
+				{property: 'og:title', content: 'Categories in CodeBottle\'s API'},
+				{property: 'og:description', content: 'Categories make it easy for plugins and scripts to determine the type of the snippet and import it properly'},
+			],
+		},
 
-        mounted: function() {
-            $("pre code:not(.hljs)").each((i, b) => {
-                hljs.highlightBlock(b);
-            });
-        },
-    }
+		mounted: function() {
+			$('pre code:not(.hljs)').each((i, b) => {
+				hljs.highlightBlock(b);
+			});
+		},
+	};
 </script>

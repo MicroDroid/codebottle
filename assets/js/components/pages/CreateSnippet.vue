@@ -57,7 +57,7 @@
 				category: -1,
 				loading: false,
 				error: false,
-			}
+			};
 		},
 
 		computed: mapState([
@@ -95,20 +95,20 @@
 				}).catch(error => {
 					this.loading = false;
 					this.error = extractError(error);
-				})
+				});
 			}
 		},
 
 		head: {
 			title: {
-				inner: "Create a new snippet",
+				inner: 'Create a new snippet',
 			},
 
 			meta: [
 				{name: 'robots', content: 'noindex'},
 			],
 		},
-	}
+	};
 </script>
 
 <style type="text/css">

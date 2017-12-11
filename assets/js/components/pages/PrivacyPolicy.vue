@@ -39,10 +39,10 @@
 			meta: [
 				{name: 'description', content: 'We have compiled this privacy policy to make you learn more on how we collect your data, how we use it, and why do it'},
 				{property: 'og:description', content: 'We have compiled this privacy policy to make you learn more on how we collect your data, how we use it, and why do it'},
-                {property: 'og:title', content: 'Privacy Policy'},
+				{property: 'og:title', content: 'Privacy Policy'},
 			],
 		},
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

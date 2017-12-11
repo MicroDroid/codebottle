@@ -29,6 +29,15 @@ module.exports = {
             "error",
             "always"
         ]
+    },
+    "globals": {
+        "axios": false,
+        "marked": false,
+        "moment": false,
+        "$": false,
+        "hljs": false,
+        "process": false,
+        "_": false,
     }
 };
 

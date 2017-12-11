@@ -44,7 +44,7 @@
 					{id: 8, name: 'Image URL', format: (img, url) => img},
 				],
 				searchBadgeFormat: false,
-			}
+			};
 		},
 
 		computed: {
@@ -84,20 +84,20 @@
 
 		head: {
 			title: {
-				inner: "Embedding",
+				inner: 'Embedding',
 			},
 
 			meta: [
 				{name: 'description', content: 'Create elegant CodeBottle embeds that integrate seamlessly with your content in seconds.'},
-                {property: 'og:title', content: 'Create CodeBottle embeds'},
-                {property: 'og:description', content: 'Create elegant CodeBottle embeds that integrate seamlessly with your content in seconds.'},
+				{property: 'og:title', content: 'Create CodeBottle embeds'},
+				{property: 'og:description', content: 'Create elegant CodeBottle embeds that integrate seamlessly with your content in seconds.'},
 			],
 		},
 
 		components: {
 			'dropdown': Dropdown,
 		}
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

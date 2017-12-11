@@ -9,7 +9,7 @@
 	export default {
 		head: {
 			title: {
-				inner: "Not found!",
+				inner: 'Not found!',
 			},
 
 			meta: [
@@ -17,7 +17,7 @@
 				{name: 'prerender-status-code', content: '404'},
 			],
 		},
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

@@ -1,23 +1,22 @@
 <template>
 	<div class="container">
-	    <div class="row">
-	        <div class="col-xs-12 col-4 order-xs-1 order-2">
-	            <sidenav></sidenav>
-	        </div>
-	        <div class="col-xs-12 col-8 order-xs-2 order-1" v-html="parsed">
-	        </div>
-	    </div>
+		<div class="row">
+			<div class="col-xs-12 col-4 order-xs-1 order-2">
+				<sidenav></sidenav>
+			</div>
+			<div class="col-xs-12 col-8 order-xs-2 order-1" v-html="parsed">
+			</div>
+		</div>
 	</div>
 </template>
 
 <script type="text/javascript">
-    import Sidenav from './Sidenav.vue';
+	import Sidenav from './Sidenav.vue';
 
-    export default {
-        data: function() {
-            return {
-                parsed: marked(
-`
+	export default {
+		data: function() {
+			return {
+				parsed: marked(`
 Snippets
 ===============
 
@@ -194,33 +193,32 @@ Returns an empty response with \`204\` when succeeds.
 ## Updates
 
 This feature hasn't been fully implemented and thus basically will stay undocumented for a while.
-`
-)
-            }
-        },
+				`)
+			};
+		},
 
-        components: {
-            'sidenav': Sidenav,
-        },
+		components: {
+			'sidenav': Sidenav,
+		},
 
-        head: {
-            title: {
-                inner: "Snippets - API",
-            },
+		head: {
+			title: {
+				inner: 'Snippets - API',
+			},
 
-            meta: [
-                {name: 'description', content: 'Snippets are at the core of the website, yet see how quickly and easily you can get started with them with our simple API'},
-                {property: 'og:title', content: 'Snippets in CodeBotte\'s API'},
-                {property: 'og:description', content: 'Snippets are at the core of the website, yet see how quickly and easily you can get started with them with our simple API'},
-            ],
-        },
+			meta: [
+				{name: 'description', content: 'Snippets are at the core of the website, yet see how quickly and easily you can get started with them with our simple API'},
+				{property: 'og:title', content: 'Snippets in CodeBotte\'s API'},
+				{property: 'og:description', content: 'Snippets are at the core of the website, yet see how quickly and easily you can get started with them with our simple API'},
+			],
+		},
 
-        mounted: function() {
-            $("pre code:not(.hljs)").each((i, b) => {
-                hljs.highlightBlock(b);
-            });
+		mounted: function() {
+			$('pre code:not(.hljs)').each((i, b) => {
+				hljs.highlightBlock(b);
+			});
 
-            $("table").addClass("table");
-        },
-    }
+			$('table').addClass('table');
+		},
+	};
 </script>

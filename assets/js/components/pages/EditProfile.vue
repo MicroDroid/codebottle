@@ -29,9 +29,7 @@
 </template>
 
 <script type="text/javascript">
-	import Dropdown from '../bootstrap/Dropdown';
-	import {mapState} from 'vuex';
-	import {extractError, apiUrl, cookToast, cookGetParameters} from '../../helpers';
+	import {extractError, apiUrl, cookToast} from '../../helpers';
 
 	export default {
 		data: function() {
@@ -43,29 +41,29 @@
 				message: false,
 				loading: false,
 				error: false,
-			}
+			};
 		},
 
 
-        beforeRouteEnter: function(to, from, next) {
-            axios.get(apiUrl('/self'))
-                .then(response => {
-                	const user = response.data;
-                    
-                    if (!user) {
-                        cookToast('Error!', 2000);
-                    } else {
-                        next(vm => {
-                            vm.username = user.username;
-                            vm.email = user.email;
-                            vm.originalEmail = user.email;
-                            vm.bio = user.bio;
-                        });
-                    }
-                }).catch(error => {
-                    cookToast('Error!', 2000);
-                });
-        },
+		beforeRouteEnter: function(to, from, next) {
+			axios.get(apiUrl('/self'))
+				.then(response => {
+					const user = response.data;
+					
+					if (!user) {
+						cookToast('Error!', 2000);
+					} else {
+						next(vm => {
+							vm.username = user.username;
+							vm.email = user.email;
+							vm.originalEmail = user.email;
+							vm.bio = user.bio;
+						});
+					}
+				}).catch(error => {
+					cookToast('Error!', 2000);
+				});
+		},
 
 		methods: {
 			save: function() {
@@ -80,7 +78,7 @@
 				}).then(response => {
 					this.loading = false;
 					if (this.originalEmail !== this.email)
-						this.message = "Saved! We've sent a verification email to your new email";
+						this.message = 'Saved! We\'ve sent a verification email to your new email';
 					else
 						this.$router.push({name: 'view-user', params: {
 							username: this.username
@@ -89,20 +87,20 @@
 				}).catch(error => {
 					this.loading = false;
 					this.error = extractError(error);
-				})
+				});
 			}
 		},
 
 		head: {
 			title: {
-				inner: "Edit your profile",
+				inner: 'Edit your profile',
 			},
 
 			meta: [
 				{name: 'robots', content: 'noindex'},
 			],
 		},
-	}
+	};
 </script>
 
 <style type="text/css">

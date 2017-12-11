@@ -88,7 +88,6 @@
 
 <script type="text/javascript">
 	import {mapGetters} from 'vuex';
-	import {LOGOUT} from '../store/mutation-types';
 	import NavbarDropdown from './bootstrap/NavbarDropdown';
 	import {staticUrl} from '../helpers';
 
@@ -146,7 +145,7 @@
 		components: {
 			'navbar-dropdown': NavbarDropdown,
 		}
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

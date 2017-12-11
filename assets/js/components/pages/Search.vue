@@ -55,7 +55,7 @@
 				results: {},
 				axiosSource: null,
 				searchDebounce: null,
-			}
+			};
 		},
 
 		watch: {

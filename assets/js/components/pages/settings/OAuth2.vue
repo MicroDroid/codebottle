@@ -54,14 +54,14 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError, apiUrl, cookToast} from '../../../helpers';
+	import {cookToast} from '../../../helpers';
 	import Sidenav from './Sidenav';
 
 	export default {
 		data: function () {
 			return {
 				clients: [],
-			}
+			};
 		},
 
 		beforeRouteEnter: function(to, from, next) {
@@ -73,15 +73,15 @@
 		methods: {
 			deleteClient: function(client) {
 				cookToast('Deleting client..', 3000);
-                axios.delete('/oauth/clients/' + client.id)
-	                .then(response => {
+				axios.delete('/oauth/clients/' + client.id)
+					.then(response => {
 						cookToast('Deleted!', 3000);
 						axios.get('/oauth/clients').then(response => {
 							this.clients = response.data;
 						});
-	                }).catch(error => {
+					}).catch(error => {
 						cookToast('Failed to delete!', 3000);
-	                });
+					});
 			},
 
 			editClient: function(client) {
@@ -91,7 +91,7 @@
 
 		head: {
 			title: {
-				inner: "Manage OAuth 2.0 applications",
+				inner: 'Manage OAuth 2.0 applications',
 			},
 
 			meta: [
@@ -102,5 +102,5 @@
 		components: {
 			'sidenav': Sidenav,
 		},
-	}
+	};
 </script>

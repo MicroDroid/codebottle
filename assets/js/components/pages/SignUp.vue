@@ -56,9 +56,9 @@
 			message: false,
 			created: false,
 
-			username: "",
-			email: "",
-			password: "",
+			username: '',
+			email: '',
+			password: '',
 		}),
 
 		beforeRouteEnter: function(to, from, next) {
@@ -82,7 +82,7 @@
 				}).then(response => {
 					this.created = true;
 					this.loading = false;
-					this.message = "Great! Now go to your inbox and verify your email.";
+					this.message = 'Great! Now go to your inbox and verify your email.';
 				}).catch(error => {
 					this.loading = false;
 					this.error = extractError(error);
@@ -92,20 +92,20 @@
 
 		head: {
 			title: {
-				inner: "Create a new account",
+				inner: 'Create a new account',
 			},
 
 			meta: [
 				{name: 'description', content: 'Sign up now to get the most out of CodeBottle. The community needs you and it only takes few seconds to get started.'},
-                {property: 'og:title', content: 'Create a new account'},
-                {property: 'og:description', content: 'Sign up now to get the most out of CodeBottle. The community needs you and it only takes few seconds to get started.'},
+				{property: 'og:title', content: 'Create a new account'},
+				{property: 'og:description', content: 'Sign up now to get the most out of CodeBottle. The community needs you and it only takes few seconds to get started.'},
 			],
 		},
 
 		components: {
 			InvisibleRecaptcha,
 		},
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

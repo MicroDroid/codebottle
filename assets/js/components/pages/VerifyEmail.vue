@@ -21,14 +21,14 @@
 
 		head: {
 			title: {
-				inner: "Verifying email..",
+				inner: 'Verifying email..',
 			},
 
 			meta: [
 				{name: 'robots', content: 'noindex'},
 			],
 		},
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

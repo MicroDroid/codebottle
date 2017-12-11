@@ -41,7 +41,7 @@
 					this.onDismiss();
 			}
 		}
-	}
+	};
 </script>
 
 <style scoped>

@@ -51,8 +51,6 @@
 		}),
 
 		methods: {
-			moment,
-
 			flag: function() {
 				if (!this.isAuthenticated)
 					return this.$router.push({name: 'signin'});
@@ -77,8 +75,10 @@
 					cookToast('Sent!', 2000);
 				}).catch(error => {
 					cookToast(extractError(error), 3000);
-				})
-			}
+				});
+			},
+
+			moment: moment.utc
 		},
 
 		computed: {
@@ -106,16 +106,16 @@
 		head: {
 			title: function() {
 				return {
-					inner: this.user ? "User " + this.user.username : "View user"
+					inner: this.user ? 'User ' + this.user.username : 'View user'
 				};
 			},
 
 			meta: function() {
 				return [
-					{name: 'description', content: this.user ? this.user.bio || "No bio provided." : "No bio provided."},
-					{property: 'og:description', content: this.user ? this.user.bio || "No bio provided." : "No bio provided."},
-	                {property: 'og:title', content: this.user ? "User " + this.user.username : "View user"},
-	                {property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
+					{name: 'description', content: this.user ? this.user.bio || 'No bio provided.' : 'No bio provided.'},
+					{property: 'og:description', content: this.user ? this.user.bio || 'No bio provided.' : 'No bio provided.'},
+					{property: 'og:title', content: this.user ? 'User ' + this.user.username : 'View user'},
+					{property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
 				];
 			},
 		},
@@ -123,7 +123,7 @@
 		components: {
 			'modal': Modal,
 		},
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

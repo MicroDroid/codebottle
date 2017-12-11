@@ -42,5 +42,5 @@
 					this.onSelect(item);
 			},
 		}
-	}
+	};
 </script>

@@ -36,7 +36,6 @@
 <script type="text/javascript">
 	import InvisibleRecaptcha from '../InvisibleRecaptcha.vue';
 	import {extractError, apiUrl} from '../../helpers';
-	import store from '../../store';
 
 	export default {
 		data: () => ({
@@ -44,7 +43,7 @@
 			error: false,
 			sent: false,
 
-			email: "",
+			email: '',
 		}),
 
 		methods: {
@@ -73,7 +72,7 @@
 
 		head: {
 			title: {
-				inner: "Forgot password",
+				inner: 'Forgot password',
 			},
 
 			meta: [
@@ -84,7 +83,7 @@
 		components: {
 			InvisibleRecaptcha,
 		},
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

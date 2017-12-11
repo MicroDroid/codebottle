@@ -121,7 +121,7 @@
 					cookToast('Sent!', 2000);
 				}).catch(error => {
 					cookToast(extractError(error), 3000);
-				})
+				});
 			},
 
 			marked,
@@ -182,7 +182,7 @@
 		},
 
 		updated: function() {
-			$("pre code:not(.hljs)").each((i, b) => {
+			$('pre code:not(.hljs)').each((i, b) => {
 				hljs.highlightBlock(b);
 			});
 			this.$emit('updateHead');
@@ -192,22 +192,22 @@
 			title: function() {
 				return {
 					inner: this.snippet
-						? this.snippet.language.name + " - " + this.snippet.title
+						? this.snippet.language.name + ' - ' + this.snippet.title
 						: 'View snippet'
 				};
 			},
 
 			meta: function() {
-				const div = $("<div></div>");
+				const div = $('<div></div>');
 				div.html(marked(this.snippet ? this.snippet.description : 'No description provided.'));
 				div.children('pre').remove();
 				const description = div.text();
 
 				return [
-					{name: 'description', content: description ? description : "No description provided."},
-					{property: 'og:description', content: description ? description : "No description provided."},
+					{name: 'description', content: description ? description : 'No description provided.'},
+					{property: 'og:description', content: description ? description : 'No description provided.'},
 					{property: 'og:title', content: this.snippet
-						? this.snippet.language.name + " - " + this.snippet.title
+						? this.snippet.language.name + ' - ' + this.snippet.title
 						: 'View snippet'},
 					{property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
 				];
@@ -217,7 +217,7 @@
 		components: {
 			'modal': Modal,
 		},
-	}
+	};
 </script>
 
 <style type="text/css" scoped>

@@ -45,7 +45,7 @@
 				loading: false,
 				error: false,
 				message: false,
-			}
+			};
 		},
 
 		beforeRouteEnter: function(to, from, next) {
@@ -72,7 +72,7 @@
 				.then(response => {
 					this.loading = false;
 					this.preferences.updatedAt = Date.now();
-					this.message = "Saved!";
+					this.message = 'Saved!';
 					this.$store.dispatch('fetchPreferences')
 						.catch(error => {
 							cookToast('Error reloading preferences!', 3000);
@@ -80,7 +80,7 @@
 				}).catch(error => {
 					this.loading = false;
 					this.error = extractError(error);
-				})
+				});
 			},
 
 			moment: moment.utc,
@@ -88,7 +88,7 @@
 
 		head: {
 			title: {
-				inner: "Site preferences",
+				inner: 'Site preferences',
 			},
 
 			meta: [
@@ -99,7 +99,7 @@
 		components: {
 			'sidenav': Sidenav,
 		},
-	}
+	};
 </script>
 
 <style type="text/css">
