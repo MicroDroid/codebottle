@@ -5,7 +5,7 @@
 					navbar-expand-md navbar-expand-lg navbar-expand-xl">
 			<div class="container">
 				<router-link :to="{name: 'discover'}" class="navbar-brand">
-					<img :src="staticUrl('/images/bottle_square.png')">
+					<img :src="staticUrl('/images/bottle_square.png')" alt="CB" title="CodeBottle">
 				</router-link>
 
 				<form @submit.prevent="search">
