@@ -7,10 +7,8 @@
 
 <script type="text/javascript">
 	export default {
-		head: {
-			title: {
-				inner: 'Not found!',
-			},
+		meta: {
+			title: 'Not found!',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},

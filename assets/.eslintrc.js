@@ -13,10 +13,6 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
         "linebreak-style": [
             "error",
             "unix"
@@ -28,7 +24,12 @@ module.exports = {
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "vue/script-indent": [
+            "error",
+            "tab",
+            {"baseIndent": 1}
+        ],
     },
     "globals": {
         "axios": false,

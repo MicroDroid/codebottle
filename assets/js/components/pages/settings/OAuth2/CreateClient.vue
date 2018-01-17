@@ -65,10 +65,8 @@
 			}
 		},
 
-		head: {
-			title: {
-				inner: 'Create a new OAuth 2.0 client',
-			},
+		meta: {
+			title: 'Create a new OAuth 2.0 client',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},

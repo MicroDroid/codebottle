@@ -72,10 +72,8 @@ You can also retrieve a single category by its ID with \`GET /categories/{catego
 			'sidenav': Sidenav,
 		},
 
-		head: {
-			title: {
-				inner: 'Categories - API',
-			},
+		meta: {
+			title: 'Categories - API',
 
 			meta: [
 				{name: 'description', content: 'Categories make it easy for plugins and scripts to determine the type of the snippet and import it properly'},
@@ -85,7 +83,7 @@ You can also retrieve a single category by its ID with \`GET /categories/{catego
 		},
 
 		mounted: function() {
-			$('pre code:not(.hljs)').each((i, b) => {
+			document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
 				hljs.highlightBlock(b);
 			});
 		},

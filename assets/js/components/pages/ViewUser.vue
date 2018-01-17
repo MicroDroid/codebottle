@@ -46,7 +46,6 @@
 
 	export default {
 		data: () => ({
-			user: {},
 			flagModalShown: false,
 		}),
 
@@ -82,42 +81,31 @@
 		},
 
 		computed: {
-			...mapGetters([
-				'isAuthenticated',
-				'preferences',
-			]),
-		},
+			...mapGetters({
+				isAuthenticated: 'auth/isAuthenticated',
+				preferences: 'auth/preferences',
+				userByUsername: 'users/getByUsername',
+			}),
 
-		beforeRouteEnter: function(to, from, next) {
-			axios.get(apiUrl('/users/' + to.params.username))
-				.then(response => {
-					next(vm => {
-						vm.user = response.data;
-					});
-				}).catch(error => {
-					next(false);
-				});
-		},
-
-		updated: function() {
-			this.$emit('updateHead');
-		},
-
-		head: {
-			title: function() {
-				return {
-					inner: this.user ? 'User ' + this.user.username : 'View user'
-				};
+			user: function() {
+				return this.userByUsername(this.$route.params.username);
 			},
+		},
 
-			meta: function() {
-				return [
+		asyncData: function(store, route) {
+			return store.dispatch('users/fetch', route.params.username);
+		},
+
+		meta: function() {
+			return {
+				title: this.user ? 'User ' + this.user.username : 'View user',
+				meta: [
 					{name: 'description', content: this.user ? this.user.bio || 'No bio provided.' : 'No bio provided.'},
 					{property: 'og:description', content: this.user ? this.user.bio || 'No bio provided.' : 'No bio provided.'},
 					{property: 'og:title', content: this.user ? 'User ' + this.user.username : 'View user'},
 					{property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
-				];
-			},
+				],
+			};
 		},
 
 		components: {

@@ -82,10 +82,8 @@
 			}
 		},
 
-		head: {
-			title: {
-				inner: 'Embedding',
-			},
+		meta: {
+			title: 'Embedding',
 
 			meta: [
 				{name: 'description', content: 'Create elegant CodeBottle embeds that integrate seamlessly with your content in seconds.'},

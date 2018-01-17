@@ -90,7 +90,7 @@ export default [
 	// {
 	// 	name: 'settings.oauth2',
 	// 	path: '/settings/oauth2',
-	// 	component: require('./components/pages/settings/OAuth2.vue'),
+	// 	component: import('./components/pages/settings/OAuth2.vue'),
 	// 	meta: {
 	// 		requiresAuth: true
 	// 	},
@@ -98,7 +98,7 @@ export default [
 	// {
 	// 	name: 'settings.oauth2.create-client',
 	// 	path: '/settings/oauth2/create',
-	// 	component: require('./components/pages/settings/OAuth2/CreateClient.vue'),
+	// 	component: import('./components/pages/settings/OAuth2/CreateClient.vue'),
 	// 	meta: {
 	// 		requiresAuth: true
 	// 	},
@@ -106,7 +106,7 @@ export default [
 	// {
 	// 	name: 'settings.oauth2.edit-client',
 	// 	path: '/settings/oauth2/:id/edit',
-	// 	component: require('./components/pages/settings/OAuth2/EditClient.vue'),
+	// 	component: import('./components/pages/settings/OAuth2/EditClient.vue'),
 	// 	meta: {
 	// 		requiresAuth: true
 	// 	},
@@ -115,7 +115,7 @@ export default [
 	// {
 	// 	name: 'settings.personal-access-tokens',
 	// 	path: '/settings/personal-access-tokens',
-	// 	component: require('./components/pages/settings/PersonalAccessTokens.vue'),
+	// 	component: import('./components/pages/settings/PersonalAccessTokens.vue'),
 	// 	meta: {
 	// 		requiresAuth: true
 	// 	},
@@ -123,7 +123,7 @@ export default [
 	// {
 	// 	name: 'settings.personal-access-tokens.create-token',
 	// 	path: '/settings/personal-access-tokens/create',
-	// 	component: require('./components/pages/settings/PersonalAccessTokens/CreateToken.vue'),
+	// 	component: import('./components/pages/settings/PersonalAccessTokens/CreateToken.vue'),
 	// 	meta: {
 	// 		requiresAuth: true
 	// 	},
@@ -137,7 +137,7 @@ export default [
 	// {
 	// 	name: 'api.authentication',
 	// 	path: '/api/docs/authentication',
-	// 	component: require('./components/pages/api/Authentication.vue'),
+	// 	component: import('./components/pages/api/Authentication.vue'),
 	// },
 	{
 		name: 'api.languages',

@@ -1,23 +1,26 @@
-window._ = require('lodash');
-window.hljs = require('highlight.js/lib/highlight');
+import root from 'window-or-global';
+
+// Will be replaced by server entry later, just to prevent undef errors
+if (typeof(window) === 'undefined')
+	root.location = {
+		protocol: 'https:',
+		hostname: 'codebottle.io'
+	};
+
+root.hljs = require('highlight.js/lib/highlight');
 
 const hljsLanguages = ['java', 'cpp', 'cs', 'python', 'php', 'javascript', 'perl', 'ruby', 'powershell', 'lua', 'json'];
 
 hljsLanguages.forEach((langName) => {
 	const langModule = require(`highlight.js/lib/languages/${langName}`);
-	window.hljs.registerLanguage(langName, langModule);
+	root.hljs.registerLanguage(langName, langModule);
 });
 
-window.marked = require('marked');
+root.marked = require('marked');
 
-window.$ = window.jQuery = require('jquery');
+root.moment = require('moment-mini');
 
-window.pace = require('pace-progress');
-window.pace.start();
-
-window.moment = require('moment-mini');
-
-window.axios = require('axios');
-window.axios.defaults.headers.common = {
+root.axios = require('axios');
+root.axios.defaults.headers.common = {
 	'Accept': 'application/vnd.codebottle.v1+json',
 };

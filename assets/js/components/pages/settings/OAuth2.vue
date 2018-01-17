@@ -89,10 +89,8 @@
 			},
 		},
 
-		head: {
-			title: {
-				inner: 'Manage OAuth 2.0 applications',
-			},
+		meta: {
+			title: 'Manage OAuth 2.0 applications',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},

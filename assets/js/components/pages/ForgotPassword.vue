@@ -70,10 +70,8 @@
 			this.$refs.emailInput.focus();
 		},
 
-		head: {
-			title: {
-				inner: 'Forgot password',
-			},
+		meta: {
+			title: 'Forgot password',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},

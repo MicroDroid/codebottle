@@ -31,10 +31,8 @@
 
 <script type="text/javascript">
 	export default {
-		head: {
-			title: {
-				inner: 'Privacy Policy',
-			},
+		meta: {
+			title: 'Privacy Policy',
 
 			meta: [
 				{name: 'description', content: 'We have compiled this privacy policy to make you learn more on how we collect your data, how we use it, and why do it'},

@@ -85,10 +85,8 @@
 			}
 		},
 
-		head: {
-			title: {
-				inner: 'Edit OAuth 2.0 client',
-			},
+		meta: {
+			title: 'Edit OAuth 2.0 client',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},

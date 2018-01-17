@@ -14,12 +14,12 @@
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">{{snippet.title}}</h5>
-							    <h6 class="card-subtitle mb-2 text-muted">
-							    	<span class="fa fa-star"></span> {{snippet.votes}}
-							    	<span class="fa fa-code"></span> {{snippet.language.name}}
-							    	<span class="fa fa-eye"></span> {{snippet.views}}
-							    	<span class="fa fa-clock-o"></span> {{moment(snippet.updated_at).fromNow()}}
-							    </h6>
+								<h6 class="card-subtitle mb-2 text-muted">
+									<span class="fa fa-star"></span> {{snippet.votes}}
+									<span class="fa fa-code"></span> {{snippet.language.name}}
+									<span class="fa fa-eye"></span> {{snippet.views}}
+									<span class="fa fa-clock-o"></span> {{moment(snippet.updated_at).fromNow()}}
+								</h6>
 								<div class="card-text">
 									{{snippet.description ? shorten(summarize(snippet.description), 200) : 'No description provided.'}}
 								</div>
@@ -33,31 +33,25 @@
 </template>
 
 <script type="text/javascript">
-	import {shorten, apiUrl, cookToast} from '../../helpers';
+	import {shorten} from '../../helpers';
+	import {mapState} from 'vuex';
 	import summarize from 'summarize-markdown';
 
 	export default {
+		asyncData: function(store, route) {
+			return store.dispatch('snippets/fetchNew');
+		},
+		
 		data: function () {
 			return {
 				loading: true,
 				error: false,
-				snippets: {},
 			};
 		},
 
-		beforeRouteEnter: function(to, from, next) {
-			axios.get(apiUrl('/snippets'))
-				.then(response => {
-					next(vm => vm.snippets = response.data);
-				}).catch(error => {
-					cookToast('Error!', 2000);
-				});
-		},
-
-		methods: {
-			moment: moment.utc,
-			shorten, summarize
-		},
+		computed: mapState({
+			snippets: state => state.snippets.new,
+		}),
 
 		mounted: function() {
 			moment.updateLocale('en', {
@@ -101,10 +95,13 @@
 			});
 		},
 
-		head: {
-			title: {
-				inner: 'Discover the awesome and the new',
-			},
+		methods: {
+			moment: moment.utc,
+			shorten, summarize,
+		},
+
+		meta: {
+			title:'Discover the awesome and the new',
 
 			meta: [
 				{name: 'description', content: 'Discover new and cool snippets made by developers just like you, from around the entire world.'},

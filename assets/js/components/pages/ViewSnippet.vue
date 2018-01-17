@@ -3,14 +3,17 @@
 		<div class="row" v-if="snippet" itemscope itemtype="http://schema.org/SoftwareSourceCode">
 			<div class="col-xs-12 col-auto">
 				<h1>
-					<span :class="'fa fa-chevron-up clickable'
-							+ ((snippet.current_vote && snippet.current_vote == 1) ?
-								' voted' : '')" @click="vote(1)"></span> <br/>
+					<span :class="{
+							'fa': true,
+							'fa-chevron-up': true,
+							'clickable': true,
+							'voted': snippet.currentVote && snippet.currentVote == 1
+						}" @click="vote(1)"></span> <br/>
 					<span class="ml-2" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 						<span itemprop="ratingValue">{{votes}}</span>
 					</span> <br/>
 					<span :class="'fa fa-chevron-down clickable'
-							+ ((snippet.current_vote && snippet.current_vote == -1) ?
+							+ ((snippet.currentVote && snippet.currentVote == -1) ?
 								' voted' : '')" @click="vote(-1)"></span>
 				</h1>
 			</div>
@@ -51,7 +54,7 @@
 						<span itemprop="dateModified">{{moment(snippet.updatedAt).fromNow()}}</span>
 					</span>
 				</p>
-				<pre><code itemprop="text" :class="codeLanguage" :style="{'tab-size': preferences.indentation_size}">{{ computedCode }}</code></pre>
+				<pre><code itemprop="text" :class="codeLanguage" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
 				<div class="card" v-if="snippet.description">
 					<div class="card-body">
 						<div class="card-text" v-html="marked(snippet.description)" itemprop="description">
@@ -68,29 +71,30 @@
 </template>
 
 <script type="text/javascript">
+	import striptags from 'striptags';
 	import {mapGetters} from 'vuex';
 	import {apiUrl, getAbsoluteUrl, cookToast, extractError} from '../../helpers';
 	import Modal from '../bootstrap/Modal';
 
 	export default {
-		data: () => ({
-			snippet: null,
-			originalCurrentVote: 0,
-
-			flagModalShown: false,
-		}),
+		data: function() {
+			return {
+				flagModalShown: false,
+				originalCurrentVote: false,
+			};
+		},
 
 		methods: {
 			vote: function(vote) {
 				if (!this.isAuthenticated)
 					return this.$router.push({name: 'signin'});
 
-				if (vote === this.snippet.current_vote)
+				if (vote === this.snippet.currentVote)
 					vote = 0;
 
 				axios.post(apiUrl('/snippets/' + this.$route.params.id + '/vote'), {vote})
 					.then(response => {
-						this.snippet.current_vote = vote;
+						this.snippet.currentVote = vote;
 					}).catch(error => {
 						// pls
 					});
@@ -129,20 +133,25 @@
 		},
 
 		computed: {
-			...mapGetters([
-				'isAuthenticated',
-				'preferences',
-			]),
+			...mapGetters({
+				isAuthenticated: 'auth/isAuthenticated',
+				preferences: 'auth/preferences',
+				snippetById: 'snippets/getById',
+			}),
+
+			snippet: function() {
+				return this.snippetById(this.$route.params.id);
+			},
 
 			votes: function() {
-				if (typeof(this.snippet.current_vote) === 'number')
-					return this.snippet.votes + (this.snippet.current_vote - this.originalCurrentVote)
+				if (typeof(this.snippet.currentVote) === 'number')
+					return this.snippet.votes + (this.snippet.currentVote - this.originalCurrentVote);
 				return this.snippet.votes;
 			},
 
 			computedCode: function() {
-				if (this.preferences.convert_tabs_to_spaces || !('tab-size' in document.body.style))
-					return this.snippet.code.replace(/\t/g, Array(this.preferences.indentation_size + 1).join(' '));
+				if (this.preferences.convertTabsToSpaces)
+					return this.snippet.code.replace(/\t/g, Array(this.preferences.indentationSize + 1).join(' '));
 				return this.snippet.code;
 			},
 
@@ -166,52 +175,35 @@
 			}
 		},
 
-		beforeRouteEnter: function(to, from, next) {
-			axios.get(apiUrl('/snippets/' + to.params.id))
-				.then(response => {
-					next(vm => {
-						vm.snippet = response.data;
-						vm.originalCurrentVote = response.data.current_vote;
-					});
-				}).catch(error => {
-					if (error.response && error.response.status === 404)
-						cookToast('Snippet not found', 2000);
-					else cookToast('Error!', 2000);
-					next(false);
-				});
+		asyncData: function(store, route) {
+			return store.dispatch('snippets/fetch', route.params.id);
 		},
 
 		updated: function() {
-			$('pre code:not(.hljs)').each((i, b) => {
+			document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
 				hljs.highlightBlock(b);
 			});
-			this.$emit('updateHead');
 		},
 
-		head: {
-			title: function() {
-				return {
-					inner: this.snippet
+		mounted: function() {
+			this.originalCurrentVote = this.snippet.currentVote;
+		},
+
+		meta: function() {
+			const description = striptags(marked(this.snippet ? this.snippet.description : 'No description provided.'), '<pre>');
+			return {
+				title: this.snippet
 						? this.snippet.language.name + ' - ' + this.snippet.title
-						: 'View snippet'
-				};
-			},
-
-			meta: function() {
-				const div = $('<div></div>');
-				div.html(marked(this.snippet ? this.snippet.description : 'No description provided.'));
-				div.children('pre').remove();
-				const description = div.text();
-
-				return [
+						: 'View snippet',
+				meta: [
 					{name: 'description', content: description ? description : 'No description provided.'},
 					{property: 'og:description', content: description ? description : 'No description provided.'},
 					{property: 'og:title', content: this.snippet
 						? this.snippet.language.name + ' - ' + this.snippet.title
 						: 'View snippet'},
 					{property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
-				];
-			},
+				]
+			};
 		},
 
 		components: {

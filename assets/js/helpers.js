@@ -1,3 +1,5 @@
+import root from 'window-or-global';
+
 let store;
 
 export function extractError(error) {
@@ -44,36 +46,33 @@ export function cookGetParameters(obj) {
 
 export function updateUrlParameter(param, value) {
 	const regExp = new RegExp(param + '(.+?)(&|$)', 'g');
-	const newUrl = window.location.href.replace(regExp, param + '=' + value + '$2');
-	window.history.pushState('', '', newUrl);
+	const newUrl = root.location.href.replace(regExp, param + '=' + value + '$2');
+	root.history.pushState('', '', newUrl);
 }
 
 export function apiUrl(url) {
-	return window.location.protocol
+	return root.location.protocol
 		+ '//api.'
-		+ window.location.hostname
+		+ root.location.hostname
 		+ '/'
 		+ (url.indexOf('/') === 0 ? url.substr(1) : url);
 }
 
 export function staticUrl(url) {
-	return window.location.protocol
+	return root.location.protocol
 		+ '//static.'
-		+ window.location.hostname
+		+ root.location.hostname
 		+ '/'
 		+ (url.indexOf('/') === 0 ? url.substr(1) : url);
 }
 
-export const getAbsoluteUrl = (function() {
-	var a;
-
-	return function(url) {
-		if(!a) a = document.createElement('a');
-		a.href = url;
-
-		return a.href;
-	};
-})();
+export function getAbsoluteUrl(url) {
+	return root.location.protocol
+		+ '//'
+		+ root.location.hostname
+		+ '/'
+		+ (url.indexOf('/') === 0 ? url.substr(1) : url);
+}
 
 export function setStore(theStoreToBeSet) {
 	store = theStoreToBeSet;

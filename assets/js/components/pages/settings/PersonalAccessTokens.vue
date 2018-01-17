@@ -79,10 +79,8 @@
 			},
 		},
 
-		head: {
-			title: {
-				inner: 'Manage personal access tokens',
-			},
+		meta: {
+			title: 'Manage personal access tokens',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},

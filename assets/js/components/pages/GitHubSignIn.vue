@@ -14,10 +14,8 @@
 			};
 		},
 
-		head: {
-			title: {
-				inner: 'Please wait..',
-			},
+		meta: {
+			title: 'Please wait..',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},
@@ -34,7 +32,7 @@
 
 				localStorage.removeItem('github_oauth_state');
 
-				this.$store.dispatch('githubLogin', {
+				this.$store.dispatch('auth/githubLogin', {
 					state: originalState,
 					code
 				}).then(() => {

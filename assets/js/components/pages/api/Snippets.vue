@@ -201,10 +201,8 @@ This feature hasn't been fully implemented and thus basically will stay undocume
 			'sidenav': Sidenav,
 		},
 
-		head: {
-			title: {
-				inner: 'Snippets - API',
-			},
+		meta: {
+			title: 'Snippets - API',
 
 			meta: [
 				{name: 'description', content: 'Snippets are at the core of the website, yet see how quickly and easily you can get started with them with our simple API'},
@@ -214,7 +212,7 @@ This feature hasn't been fully implemented and thus basically will stay undocume
 		},
 
 		mounted: function() {
-			$('pre code:not(.hljs)').each((i, b) => {
+			document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
 				hljs.highlightBlock(b);
 			});
 

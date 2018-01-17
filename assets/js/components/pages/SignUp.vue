@@ -47,7 +47,6 @@
 <script type="text/javascript">
 	import InvisibleRecaptcha from '../InvisibleRecaptcha.vue';
 	import {extractError, apiUrl} from '../../helpers';
-	import store from '../../store';
 
 	export default {
 		data: () => ({
@@ -60,12 +59,6 @@
 			email: '',
 			password: '',
 		}),
-
-		beforeRouteEnter: function(to, from, next) {
-			if (store.state.user.isAuthenticated)
-				next(false);
-			else next();
-		},
 
 		methods: {
 			submit: function() {
@@ -90,10 +83,8 @@
 			}
 		},
 
-		head: {
-			title: {
-				inner: 'Create a new account',
-			},
+		meta: {
+			title: 'Create a new account',
 
 			meta: [
 				{name: 'description', content: 'Sign up now to get the most out of CodeBottle. The community needs you and it only takes few seconds to get started.'},

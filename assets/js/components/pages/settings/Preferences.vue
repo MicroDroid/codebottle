@@ -36,25 +36,26 @@
 
 <script type="text/javascript">
 	import {extractError, apiUrl, cookToast} from '../../../helpers';
+	import {mapGetters} from 'vuex';
 	import Sidenav from './Sidenav';
 
 	export default {
 		data: function () {
 			return {
-				preferences: [],
 				loading: false,
 				error: false,
 				message: false,
 			};
 		},
 
-		beforeRouteEnter: function(to, from, next) {
-			axios.get(apiUrl('/self/preferences'))
-				.then(response => {
-					next(vm => vm.preferences = response.data);
-				}).catch(error => {
-					cookToast('Error!', 2000);
-				});
+		asyncData: function(store, route) {
+			return store.dispatch('auth/fetchPreferences');
+		},
+
+		computed: {
+			...mapGetters({
+				preferences: 'auth/preferences',
+			}),
 		},
 
 		methods: {
@@ -73,7 +74,7 @@
 					this.loading = false;
 					this.preferences.updatedAt = Date.now();
 					this.message = 'Saved!';
-					this.$store.dispatch('fetchPreferences')
+					this.$store.dispatch('auth/fetchPreferences')
 						.catch(error => {
 							cookToast('Error reloading preferences!', 3000);
 						});
@@ -86,10 +87,8 @@
 			moment: moment.utc,
 		},
 
-		head: {
-			title: {
-				inner: 'Site preferences',
-			},
+		meta: {
+			title: 'Site preferences',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},
@@ -102,7 +101,7 @@
 	};
 </script>
 
-<style type="text/css">
+<style type="text/css" scoped>
 	#last-changed {
 		font-size: 14px;
 	}

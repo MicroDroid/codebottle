@@ -1,11 +1,9 @@
 <template>
 	<div>
-		<nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top
-					d-xs-none d-sm-none d-md-block d-lg-block d-xl-block
-					navbar-expand-md navbar-expand-lg navbar-expand-xl">
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top d-xs-none d-sm-none d-md-block d-lg-block d-xl-block navbar-expand-md navbar-expand-lg navbar-expand-xl">
 			<div class="container">
 				<router-link :to="{name: 'discover'}" class="navbar-brand">
-					<img :src="staticUrl('/images/bottle_square.png')" alt="CB" title="CodeBottle">
+					<img :src="staticUrl('/images/bottle_square.png')" alt="CB" height="34" title="CodeBottle">
 				</router-link>
 
 				<form @submit.prevent="search">
@@ -33,15 +31,14 @@
 
 				<!-- Protected links -->
 				<ul class="nav navbar-nav" v-if="isAuthenticated">
-					<navbar-dropdown :label="'Hey ' + $store.state.user.username + '!'"
+					<navbar-dropdown :label="'Hey ' + username + '!'"
 						:options="userOptions"
 						:onSelect="onUserAction"></navbar-dropdown>
 				</ul>
 			</div>
 		</nav>
 
-		<nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top mobile-navbar
-					d-xs-block d-sm-block d-md-none d-lg-none d-xl-none">
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top mobile-navbar d-xs-block d-sm-block d-md-none d-lg-none d-xl-none">
 			<div>
 				<div class="row">
 					<div class="col-auto">
@@ -77,7 +74,7 @@
 
 				<!-- Protected links -->
 				<ul class="navbar-menu" v-if="showMenu && isAuthenticated">
-					<navbar-dropdown :label="'Hey ' + $store.state.user.username + '!'"
+					<navbar-dropdown :label="'Hey ' + username + '!'"
 						:options="userOptions"
 						:onSelect="onUserAction"></navbar-dropdown>
 				</ul>
@@ -87,7 +84,7 @@
 </template>
 
 <script type="text/javascript">
-	import {mapGetters} from 'vuex';
+	import {mapGetters, mapState} from 'vuex';
 	import NavbarDropdown from './bootstrap/NavbarDropdown';
 	import {staticUrl} from '../helpers';
 
@@ -103,9 +100,13 @@
 		}),
 
 		computed: {
-			...mapGetters([
-				'isAuthenticated'
-			])
+			...mapGetters({
+				isAuthenticated: 'auth/isAuthenticated',
+			}),
+
+			...mapState({
+				username: state => state.auth.username,
+			}),
 		},
 
 		methods: {
@@ -120,7 +121,7 @@
 			onUserAction: function(item) {
 				switch(item.key) {
 					case 'sign-out':
-						this.$store.dispatch('logout');
+						this.$store.dispatch('auth/logout');
 						if (this.$route.meta.requiresAuth)
 							this.$router.push({name: 'search'});
 						break;
@@ -152,10 +153,6 @@
 	.form-control {
 		max-width: 320px;
 		padding: .5rem .75rem;
-	}
-
-	img {
-		height: 34px;
 	}
 
 	form {

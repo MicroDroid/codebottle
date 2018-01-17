@@ -47,10 +47,8 @@ Nothing special, we've all done this before. Move on to the next section.
 			'sidenav': Sidenav,
 		},
 
-		head: {
-			title: {
-				inner: 'Authentication - API',
-			},
+		meta: {
+			title: 'Authentication - API',
 
 			meta: [
 				{name: 'description', content: 'Learn how to easily authenticate to our API using personal access tokens or OAuth 2.0 application tokens'},
@@ -60,7 +58,7 @@ Nothing special, we've all done this before. Move on to the next section.
 		},
 
 		mounted: function() {
-			$('pre code:not(.hljs)').each((i, b) => {
+			document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
 				hljs.highlightBlock(b);
 			});
 		},

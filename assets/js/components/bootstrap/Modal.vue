@@ -1,24 +1,22 @@
 <template>
 	<div :class="{'modal': true, show}">
-		<transition enter-active-class="animated pulse">
-			<div class="modal-dialog" v-if="show">
-				<div class="modal-content">
-					<div class="modal-header">
-						<slot name="header"></slot>
-						<h5 class="modal-title" v-if="title">{{title}}</h5>
-						<button type="button" class="close" @click="dismiss">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<slot></slot>
-					</div>
-					<div class="modal-footer">
-						<slot name="footer"></slot>
-					</div>
+		<div class="modal-dialog" v-if="show">
+			<div class="modal-content">
+				<div class="modal-header">
+					<slot name="header"></slot>
+					<h5 class="modal-title" v-if="title">{{title}}</h5>
+					<button type="button" class="close" @click="dismiss">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<slot></slot>
+				</div>
+				<div class="modal-footer">
+					<slot name="footer"></slot>
 				</div>
 			</div>
-		</transition>
+		</div>
 	</div>
 </template>
 

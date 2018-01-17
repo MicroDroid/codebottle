@@ -101,10 +101,8 @@
 			}
 		},
 
-		head: {
-			title: {
-				inner: 'Create a personal access token',
-			},
+		meta: {
+			title: 'Create a personal access token',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},
@@ -112,7 +110,7 @@
 		},
 
 		updated: function() {
-			$('pre code:not(.hljs)').each((i, b) => {
+			document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
 				hljs.highlightBlock(b);
 			});
 		}

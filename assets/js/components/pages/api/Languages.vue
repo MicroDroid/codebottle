@@ -73,10 +73,8 @@ You can also get a single language by its ID with \`GET /languages/{language_id}
 			'sidenav': Sidenav,
 		},
 
-		head: {
-			title: {
-				inner: 'Languages - API',
-			},
+		meta: {
+			title: 'Languages - API',
 
 			meta: [
 				{name: 'description', content: 'Languages classify snippets, making it easy to reach the snippet that speaks the language of your project\'s'},
@@ -86,7 +84,7 @@ You can also get a single language by its ID with \`GET /languages/{language_id}
 		},
 
 		mounted: function() {
-			$('pre code:not(.hljs)').each((i, b) => {
+			document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
 				hljs.highlightBlock(b);
 			});
 		},

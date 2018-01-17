@@ -19,10 +19,8 @@
 			});
 		},
 
-		head: {
-			title: {
-				inner: 'Verifying email..',
-			},
+		meta: {
+			title: 'Verifying email..',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},

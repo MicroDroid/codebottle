@@ -5,3 +5,7 @@ export const STORE_LANGUAGES = 'STORE_LANGUAGES';
 export const STORE_CATEGORIES = 'STORE_CATEGORIES';
 export const COOK_TOAST = 'COOK_TOAST';
 export const EAT_TOAST = 'EAT_TOAST';
+export const STORE_NEW_SNIPPETS = 'STORE_NEW_SNIPPETS';
+export const STORE_SNIPPET = 'STORE_SNIPPET';
+export const STORE_USER = 'STORE_USER';
+export const STORE_SELF = 'STORE_SELF';

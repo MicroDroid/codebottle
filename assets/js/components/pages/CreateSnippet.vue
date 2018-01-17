@@ -99,10 +99,8 @@
 			}
 		},
 
-		head: {
-			title: {
-				inner: 'Create a new snippet',
-			},
+		meta: {
+			title: 'Create a new snippet',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},
@@ -111,7 +109,7 @@
 	};
 </script>
 
-<style type="text/css">
+<style type="text/css" scoped>
 	#code {
 		height: 30vh;
 	}

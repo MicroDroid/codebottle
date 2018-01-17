@@ -17,6 +17,8 @@ const koaEtag = require('koa-etag');
 const koaStatic = require('koa-static');
 const koaCompress = require('koa-compress');
 
+const {createBundleRenderer} = require('vue-server-renderer');
+
 app.use(handler);
 app.use(koaCompress({
 	threshold: 2048,
@@ -27,6 +29,29 @@ app.use(koaConditional());
 app.use(koaEtag());
 
 app.use(loggerMiddleware);
+
+const renderApp = async ctx => {
+	const template = fs.readFileSync('./public/index.ejs', 'utf8');
+	const manifest = JSON.parse(fs.readFileSync('./build/webpack-manifest.json', 'utf8'));
+	const ssrManifest = JSON.parse(fs.readFileSync('./build/vue-ssr-server-bundle.json', 'utf8'));
+
+	const renderer = createBundleRenderer(ssrManifest, {
+		runInNewContext: false,
+		template: ejs.render(template, {
+			js: '/' + manifest.js,
+			css: '/' + manifest.css,
+		}),
+	});
+
+	const context = {
+		url: ctx.url.endsWith('?') ? ctx.url.slice(0, -1) : ctx.url, // It crashes otherwise
+		hostname: ctx.hostname,
+		protocol: ctx.protocol,
+		authCookie: ctx.cookies.get('auth'),
+	};
+
+	return await renderer.renderToStream(context);
+};
 
 
 // I am too lazy to split this code anywhere
@@ -83,12 +108,8 @@ app.use(async (ctx, next) => {
 			ctx.body = 'Not found';
 			logger.warn(`Access to main static URL by ${ctx.ip}`);
 		} else {
-			const template = fs.readFileSync('./public/index.ejs', 'utf8');
-			const manifest = JSON.parse(fs.readFileSync('./public/webpack-manifest.json', 'utf8'));
-			ctx.body = ejs.render(template, {
-				js: manifest.js,
-				css: manifest.css,
-			});
+			ctx.type = 'text/html; charset=utf-8';
+			ctx.body = await renderApp(ctx);
 		}
 	} else if (ctx.path === '/index.ejs' || ctx.path === '/sitemap.ejs') {
 		ctx.status = 404;
@@ -103,13 +124,10 @@ app.use(koaStatic('./public', {
 
 app.use(async (ctx, next) => {
 	await next();
-	if (ctx.status === 404) {
-		const template = fs.readFileSync('./public/index.ejs', 'utf8');
-		const manifest = JSON.parse(fs.readFileSync('./public/webpack-manifest.json', 'utf8'));
-		ctx.body = ejs.render(template, {
-			js: '/' + manifest.js,
-			css: '/' + manifest.css,
-		});
+	const isStatic = ctx.origin.startsWith('http://static.') || ctx.origin.startsWith('https://static.');
+	if (ctx.status === 404 && !isStatic) {
+		ctx.type = 'text/html; charset=utf-8';
+		ctx.body = await renderApp(ctx);
 	}
 });
 

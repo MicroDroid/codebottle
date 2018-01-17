@@ -50,10 +50,8 @@
 			}
 		},
 
-		head: {
-			title: {
-				inner: 'Change password',
-			},
+		meta: {
+			title: 'Change password',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},

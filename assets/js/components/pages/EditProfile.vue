@@ -5,18 +5,13 @@
 			<br/>
 			<form @submit.prevent="save">
 				<div class="form-group">
-					<label for="username">Username</label>
-					<input type="text" class="form-control" id="username" v-model="username" placeholder="Username" autofocus required>
-				</div>
-
-				<div class="form-group">
 					<label for="email">Email</label>
-					<input type="email" class="form-control" id="email" v-model="email" placeholder="Email" required>
+					<input type="email" class="form-control" id="email" v-model="user.email" placeholder="Email" required>
 				</div>
 
 				<div class="form-group">
 					<label for="bio">Bio</label>
-					<textarea type="text" class="form-control" id="bio" v-model="bio" placeholder="A short bio about yourself"></textarea>
+					<textarea type="text" class="form-control" id="bio" v-model="user.bio" placeholder="A short bio about yourself"></textarea>
 				</div>
 				<button class="btn btn-primary" type="submit" :disabled="loading">Save</button>
 			</form>
@@ -30,39 +25,30 @@
 
 <script type="text/javascript">
 	import {extractError, apiUrl, cookToast} from '../../helpers';
+	import {mapState} from 'vuex';
 
 	export default {
 		data: function() {
 			return {
-				username: '',
-				email: '',
-				bio: '',
-				originalEmail: '',
+				originalEmail: false,
 				message: false,
 				loading: false,
 				error: false,
 			};
 		},
 
+		asyncData: function(store, route) {
+			return store.dispatch('users/fetchSelf');
+		},
 
-		beforeRouteEnter: function(to, from, next) {
-			axios.get(apiUrl('/self'))
-				.then(response => {
-					const user = response.data;
-					
-					if (!user) {
-						cookToast('Error!', 2000);
-					} else {
-						next(vm => {
-							vm.username = user.username;
-							vm.email = user.email;
-							vm.originalEmail = user.email;
-							vm.bio = user.bio;
-						});
-					}
-				}).catch(error => {
-					cookToast('Error!', 2000);
-				});
+		computed: {
+			...mapState({
+				user: state => state.users.self,
+			}),
+		},
+
+		mounted: function() {
+			this.originalEmail = this.user.email;
 		},
 
 		methods: {
@@ -91,10 +77,8 @@
 			}
 		},
 
-		head: {
-			title: {
-				inner: 'Edit your profile',
-			},
+		meta: {
+			title: 'Edit your profile',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},
@@ -103,7 +87,7 @@
 	};
 </script>
 
-<style type="text/css">
+<style type="text/css" scoped>
 	form {
 		margin-bottom: 42px;
 	}

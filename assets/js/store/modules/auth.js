@@ -19,7 +19,7 @@ const actions = {
 			password: credentials.password,
 		}).then(response => {
 			const auth = {
-				username: credentials.username,
+				username: response.data.username,
 				token: response.data.token,
 				expiresIn: response.data.expiresIn * 1000,
 				obtainedAt: Date.now(),
@@ -30,7 +30,7 @@ const actions = {
 				...window.axios.defaults.headers.common,
 			};
 
-			window.localStorage.setItem('auth', JSON.stringify(auth));
+			document.cookie = `auth=${JSON.stringify(auth)}; path=/`;
 			
 			commit(types.LOGIN, auth);
 		});
@@ -58,14 +58,15 @@ const actions = {
 					...window.axios.defaults.headers.common,
 				};
 
-				window.localStorage.setItem('auth', JSON.stringify(auth));
+
+				document.cookie = `auth=${JSON.stringify(auth)}; path=/`;
 				
 				commit(types.LOGIN, auth);
 			});
 	},
 
 	logout: ({commit}) => {
-		window.localStorage.removeItem('auth');
+		document.cookie = 'auth=; path=/';
 		commit(types.LOGOUT);
 	}
 };
@@ -103,5 +104,6 @@ const getters = {
 };
 
 export default {
+	namespaced: true,
 	state, mutations, actions, getters
 };

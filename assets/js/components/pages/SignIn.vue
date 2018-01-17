@@ -57,10 +57,10 @@
 					password: this.password,
 				};
 
-				this.$store.dispatch('login', credentials)
+				this.$store.dispatch('auth/login', credentials)
 					.then(() => {
 						this.$router.push({name: 'discover'});
-						store.dispatch('fetchPreferences');
+						store.dispatch('auth/fetchPreferences');
 					}).catch(error => {
 						this.loading = false;
 						this.error = extractError(error);
@@ -68,10 +68,8 @@
 			},
 		},
 
-		head: {
-			title: {
-				inner: 'Sign in',
-			},
+		meta: {
+			title: 'Sign in',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},

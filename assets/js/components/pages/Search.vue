@@ -44,6 +44,7 @@
 	import {mapState} from 'vuex';
 	import Dropdown from '../bootstrap/Dropdown';
 	import summarize from 'summarize-markdown';
+	import debounce from 'lodash.debounce';
 
 	export default {
 		data: function () {
@@ -70,7 +71,7 @@
 				if (this.searchDebounce)
 					this.searchDebounce.cancel();
 
-				this.searchDebounce = _.debounce(this.search, 250);
+				this.searchDebounce = debounce(this.search, 250);
 				this.searchDebounce();
 			}
 		},
@@ -136,7 +137,7 @@
 			this.$refs.searchbox.focus();
 		},
 
-		head: {
+		meta: {
 			meta: [
 				{name: 'description', content: 'Search modular code + code examples made by developers from around the world'},
 				{property: 'og:title', content: 'CodeBottle'},

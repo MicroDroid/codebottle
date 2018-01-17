@@ -74,10 +74,8 @@ Good read! Now head to the next section.
 			'sidenav': Sidenav,
 		},
 
-		head: {
-			title: {
-				inner: 'Getting Started - API',
-			},
+		meta: {
+			title: 'Getting Started - API',
 
 			meta: [
 				{name: 'description', content: 'Get started quickly into using our quota-less free API and integrate it with your application'},
@@ -87,7 +85,7 @@ Good read! Now head to the next section.
 		},
 
 		mounted: function() {
-			$('pre code:not(.hljs)').each((i, b) => {
+			document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
 				hljs.highlightBlock(b);
 			});
 		},
