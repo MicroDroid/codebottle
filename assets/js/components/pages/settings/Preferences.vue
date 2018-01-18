@@ -25,7 +25,7 @@
 					<p class="text-muted mt-4" id="last-changed">Last changed {{moment(preferences.updatedAt).fromNow()}}</p>
 					<button class="btn btn-primary" type="submit" :disabled="loading">Save</button>
 				</form>
-
+				<br>
 				<loader v-if="loading" />
 				<div class="alert alert-success center-text" v-if="message">{{message}}</div>
 				<div class="alert alert-danger center-text" v-if="error">{{error}}</div>
