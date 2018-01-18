@@ -12,7 +12,6 @@ import Loader from './components/Loader';
 import Navbar from './components/Navbar';
 import root from 'window-or-global';
 
-import {LOGIN, LOGOUT} from './store/mutation-types';
 import routes from './routes';
 import store from './store';
 import {setStore, cookToast} from './helpers';
@@ -29,13 +28,13 @@ Vue.use(Vuex);
 Vue.component('navbar', Navbar);
 Vue.component('loader', Loader);
 
-root.axios.interceptors.response.use(function (response) {
-	return response;
-}, function (error) {
-	if (error.response.status === 401) {
+root.axios.interceptors.response.use(response => response, error => {
+	if (error.response.status === 401 && store.getters['auth/isAuthenticated']) {
 		cookToast('You\'ve been logged out!', 1500);
-		store.state.auth.commit(LOGOUT);
+		store.commit('auth/LOGOUT');
 	}
+
+	return Promise.reject(error);
 });
 
 const router = new VueRouter({
