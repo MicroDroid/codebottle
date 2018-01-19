@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
 	};
 
 	userPreferences.transform = prefs => ({
-		privateEmail: prefs.private_email ? true : false, // TODO: ?: should be removed later
+		privateEmail: !prefs.private_email || prefs.private_email === '0' ? false : true, // TODO: ?: should be removed later
 		indentationSize: prefs.indentation_size,
 		convertTabsToSpaces: prefs.convert_tabs_to_spaces,
 		updatedAt: prefs.updated_at,
