@@ -36,7 +36,6 @@
 
 <script type="text/javascript">
 	import {extractError, apiUrl, cookToast} from '../../../helpers';
-	import {mapGetters} from 'vuex';
 	import Sidenav from './Sidenav';
 
 	export default {
@@ -45,6 +44,7 @@
 				loading: false,
 				error: false,
 				message: false,
+				preferences: {},
 			};
 		},
 
@@ -52,10 +52,8 @@
 			return store.dispatch('auth/fetchPreferences');
 		},
 
-		computed: {
-			...mapGetters({
-				preferences: 'auth/preferences',
-			}),
+		mounted: function() {
+			this.preferences = {...this.$store.state.auth.preferences};
 		},
 
 		methods: {
@@ -68,9 +66,7 @@
 					convert_tabs_to_spaces: this.preferences.convertTabsToSpaces,
 					private_email: this.preferences.privateEmail,
 					indentation_size: this.preferences.indentationSize,
-
-				})
-				.then(response => {
+				}).then(response => {
 					this.loading = false;
 					this.preferences.updatedAt = Date.now();
 					this.message = 'Saved!';
