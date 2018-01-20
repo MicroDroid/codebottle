@@ -2,7 +2,6 @@ import * as types from '../mutation-types';
 import {apiUrl} from '../../helpers';
 
 const state = {
-	username: null,
 	accessToken: null,
 	expiresIn: 0,
 	obtainedAt: 0,
@@ -19,7 +18,6 @@ const actions = {
 			password: credentials.password,
 		}).then(response => {
 			const auth = {
-				username: response.data.username,
 				token: response.data.token,
 				expiresIn: response.data.expiresIn * 1000,
 				obtainedAt: Date.now(),
@@ -47,7 +45,6 @@ const actions = {
 		return axios.post(apiUrl('/auth/github'), payload)
 			.then(response => {
 				const auth = {
-					username: response.data.username,
 					token: response.data.token,
 					expiresIn: response.data.expiresIn * 1000,
 					obtainedAt: Date.now(),
@@ -73,14 +70,12 @@ const actions = {
 
 const mutations = {
 	[types.LOGIN] (state, payload) {
-		state.username = payload.username;
 		state.accessToken = payload.token;
 		state.expiresIn = payload.expiresIn;
 		state.obtainedAt = payload.obtainedAt ? payload.obtainedAt : Date.now();
 	},
 
 	[types.LOGOUT] (state) {
-		state.username = null,
 		state.accessToken = null;
 		state.expiresIn = 0;
 		state.obtainedAt = 0;

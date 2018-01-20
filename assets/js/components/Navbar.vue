@@ -105,7 +105,7 @@
 			}),
 
 			...mapState({
-				username: state => state.auth.username,
+				username: state => state.users.self.username,
 			}),
 		},
 

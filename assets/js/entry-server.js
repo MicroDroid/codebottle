@@ -26,6 +26,7 @@ module.exports = context => {
 						...root.axios.defaults.headers.common,
 					};
 					await store.dispatch('auth/fetchPreferences');
+					await store.dispatch('users/fetchSelf');
 				}
 			} catch (e) {
 				console.log('Invalid auth cookie passed to SSR');

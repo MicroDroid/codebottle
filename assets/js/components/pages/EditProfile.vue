@@ -5,6 +5,11 @@
 			<br/>
 			<form @submit.prevent="save">
 				<div class="form-group">
+					<label for="username">Username</label>
+					<input type="text" class="form-control" id="username" v-model="user.username" placeholder="Username" autofocus required>
+				</div>
+
+				<div class="form-group">
 					<label for="email">Email</label>
 					<input type="email" class="form-control" id="email" v-model="user.email" placeholder="Email" required>
 				</div>
@@ -24,8 +29,7 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError, apiUrl, cookToast} from '../../helpers';
-	import {mapState} from 'vuex';
+	import {extractError, apiUrl} from '../../helpers';
 
 	export default {
 		data: function() {
@@ -34,6 +38,7 @@
 				message: false,
 				loading: false,
 				error: false,
+				user: {},
 			};
 		},
 
@@ -41,14 +46,9 @@
 			return store.dispatch('users/fetchSelf');
 		},
 
-		computed: {
-			...mapState({
-				user: state => state.users.self,
-			}),
-		},
-
 		mounted: function() {
 			this.originalEmail = this.user.email;
+			this.user = {...this.$store.state.users.self};
 		},
 
 		methods: {
@@ -58,16 +58,17 @@
 				this.loading = true;
 
 				axios.put(apiUrl('/self'), {
-					username: this.username,
-					email: this.email,
-					bio: this.bio
+					username: this.user.username,
+					email: this.user.email,
+					bio: this.user.bio
 				}).then(response => {
 					this.loading = false;
+					this.$store.dispatch('users/fetchSelf');
 					if (this.originalEmail !== this.email)
 						this.message = 'Saved! We\'ve sent a verification email to your new email';
 					else
 						this.$router.push({name: 'view-user', params: {
-							username: this.username
+							username: this.user.username
 						}});
 					this.originalEmail = this.email;
 				}).catch(error => {
