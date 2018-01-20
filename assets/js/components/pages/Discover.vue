@@ -18,7 +18,7 @@
 									<span class="fa fa-star"></span> {{snippet.votes}}
 									<span class="fa fa-code"></span> {{snippet.language.name}}
 									<span class="fa fa-eye"></span> {{snippet.views}}
-									<span class="fa fa-clock-o"></span> {{moment(snippet.updated_at).fromNow()}}
+									<span class="fa fa-clock-o"></span> {{moment(snippet.updatedAt).fromNow()}}
 								</h6>
 								<div class="card-text">
 									{{snippet.description ? shorten(summarize(snippet.description), 200) : 'No description provided.'}}
