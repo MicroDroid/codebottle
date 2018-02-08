@@ -1,0 +1,4 @@
+node_modules
+public/js/*js
+public/css/*css
+.nyc_output
