@@ -80,6 +80,7 @@
     "vue": "^2.5.10",
     "vue-analytics": "^5.1.1",
     "vue-html-loader": "^1.2.4",
+    "vue-invisible-recaptcha": "^0.1.2",
     "vue-loader": "^12.2.2",
     "vue-meta": "^1.4.0",
     "vue-router": "^3.0.1",
