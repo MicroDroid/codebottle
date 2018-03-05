@@ -51,8 +51,6 @@ if (typeof(window) !== 'undefined' && window.__INITIAL_STATE__) {
 		setTimeout(() => {
 			store.commit(EAT_TOAST);
 		}, store.getters.toast.duration);
-
-	document.cookie = `auth=${JSON.stringify(store.state.auth)}; path=/`;
 }
 
 router.beforeEach((to, from, next) => {

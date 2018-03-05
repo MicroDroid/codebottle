@@ -21,10 +21,7 @@ module.exports = context => {
 				if (auth.obtainedAt + auth.expiresIn > Date.now()) {
 					root.document = {cookie: `auth=${context.authCookie}`};
 					store.commit('auth/LOGIN', auth);
-					root.axios.defaults.headers.common = {
-						'Authorization': 'Bearer ' + auth.token,
-						...root.axios.defaults.headers.common,
-					};
+					root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
 					await store.dispatch('auth/fetchPreferences');
 					await store.dispatch('users/fetchSelf');
 				}

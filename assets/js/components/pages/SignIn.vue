@@ -58,9 +58,10 @@
 				};
 
 				this.$store.dispatch('auth/login', credentials)
-					.then(() => {
+					.then(async () => {
+						await store.dispatch('users/fetchSelf');
+						await store.dispatch('auth/fetchPreferences');
 						this.$router.push({name: 'discover'});
-						store.dispatch('auth/fetchPreferences');
 					}).catch(error => {
 						this.loading = false;
 						this.error = extractError(error);

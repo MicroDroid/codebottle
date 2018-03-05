@@ -1,4 +1,5 @@
 import * as types from '../mutation-types';
+import root from 'window-or-global';
 import {apiUrl} from '../../helpers';
 
 const state = {
@@ -22,13 +23,9 @@ const actions = {
 				expiresIn: response.data.expiresIn * 1000,
 				obtainedAt: Date.now(),
 			};
-
-			window.axios.defaults.headers.common = {
-				'Authorization': 'Bearer ' + auth.token,
-				...window.axios.defaults.headers.common,
-			};
-
+			
 			document.cookie = `auth=${JSON.stringify(auth)}; path=/`;
+			root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
 			
 			commit(types.LOGIN, auth);
 		});
@@ -57,6 +54,7 @@ const actions = {
 
 
 				document.cookie = `auth=${JSON.stringify(auth)}; path=/`;
+				root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
 				
 				commit(types.LOGIN, auth);
 			});
@@ -64,6 +62,7 @@ const actions = {
 
 	logout: ({commit}) => {
 		document.cookie = 'auth=; path=/';
+		delete root.axios.defaults.headers.common['Authorization'];
 		commit(types.LOGOUT);
 	}
 };

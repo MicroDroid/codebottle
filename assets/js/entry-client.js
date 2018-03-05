@@ -1,4 +1,5 @@
 import {createApp} from './app';
+import root from 'window-or-global';
 
 const {app, router, store} = createApp();
 
@@ -13,16 +14,14 @@ const authCookie = getCookie('auth');
 if (authCookie) {
 	try {
 		const auth = JSON.parse(authCookie);
-		if (auth.token !== store.state.auth.accessToken)
-			console.error('Auth token mismatch!');
-		else if (auth.obtainedAt + auth.expiresIn > Date.now()) {
+		
+		if (auth.token && auth.obtainedAt + auth.expiresIn > Date.now()) {
 			store.commit('auth/LOGIN', auth);
-			window.axios.defaults.headers.common = {
-				'Authorization': 'Bearer ' + auth.token,
-				...window.axios.defaults.headers.common,
-			};
-		} else
+			root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
+		} else {
 			document.cookie = 'auth=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+			delete root.axios.defaults.headers.common['Authorization'];
+		}
 	} catch (e) {
 		console.error('Invalid auth cookie!');
 	}

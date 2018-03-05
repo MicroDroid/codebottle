@@ -40,7 +40,6 @@ module.exports = {
 		const priv = cryptojs.SHA256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
 		
 		ctx.body = {
-			username: user.username,
 			token: jwt.sign({
 				id: user.id,
 				priv,
