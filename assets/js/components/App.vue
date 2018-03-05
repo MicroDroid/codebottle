@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<div id="main-content">
-			<toast v-if="toast.show" :content="toast.content"></toast>
+			<toast v-if="toast.content" :content="toast.content"></toast>
 			<navbar></navbar>
 			<router-view></router-view>
 		</div>

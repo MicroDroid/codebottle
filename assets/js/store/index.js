@@ -25,8 +25,8 @@ export default new Vuex.Store({
 		languages: [],
 		categories: [],
 		toast: {
-			content: '',
-			show: false,
+			content: null,
+			duration: 0,
 		}
 	},
 	
