@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<div class="col-xs-12 col-md-7">
+		<div class="col-xs-12 col-md-11 col-lg-9">
 			<h1>Create snippet</h1>
 			<br/>
 			<form @submit.prevent="create">
