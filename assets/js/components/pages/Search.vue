@@ -137,12 +137,15 @@
 			this.$refs.searchbox.focus();
 		},
 
-		meta: {
-			meta: [
-				{name: 'description', content: 'Search modular code + code examples made by developers from around the world'},
-				{property: 'og:title', content: 'CodeBottle'},
-				{property: 'og:description', content: 'Search modular code + code examples made by developers from around the world'},
-			],
+		meta: function() {
+			return {
+				title: `'${this.keywords || this.$route.query.q}'`,
+				meta: [
+					{name: 'description', content: 'Search modular code + code examples made by developers from around the world'},
+					{property: 'og:title', content: 'CodeBottle'},
+					{property: 'og:description', content: 'Search modular code + code examples made by developers from around the world'},
+				],
+			}
 		},
 
 		components: {
