@@ -5,7 +5,7 @@
 				<div class="col-xs-12 col-sm-10 col-md-9 col-lg-7" id="form-wrapper">
 					<form @submit.prevent="search" id="search-form">
 						<input type="text" v-model="keywords" 
-							id="searchbox" placeholder="Search snippets" ref="searchbox" autofocus
+							id="searchbox" placeholder="Search snippets" ref="searchbox"
 							class="form-control stretched">
 
 						<div class="btn-group" role="group" id="btns">
@@ -64,6 +64,7 @@
 				if (this.$route.query.q) {
 					this.keywords = this.$route.query.q;
 					this.search();
+					this.$refs.searchbox.focus();					
 				}
 			},
 
@@ -133,7 +134,6 @@
 
 		mounted: function() {
 			this.keywords = this.$route.query.q ? this.$route.query.q : '';
-
 			this.$refs.searchbox.focus();
 		},
 

@@ -116,6 +116,7 @@
 
 			search: function() {
 				this.$router.push({name: 'search', query: {q: this.keywords}});
+				this.keywords = '';
 			},
 
 			onUserAction: function(item) {
