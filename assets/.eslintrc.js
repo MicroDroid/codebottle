@@ -25,6 +25,13 @@ module.exports = {
             "error",
             "always"
         ],
+        "indent": [
+            "error",
+            "tab",
+            {
+                "baseIndent": 0
+            }
+        ],
         "vue/script-indent": [
             "error",
             "tab",
