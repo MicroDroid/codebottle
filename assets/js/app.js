@@ -30,7 +30,7 @@ Vue.component('navbar', Navbar);
 Vue.component('loader', Loader);
 
 root.axios.interceptors.response.use(response => response, error => {
-	if (error.response.status === 401 && store.getters['auth/isAuthenticated']) {
+	if (error && error.response && error.response.status === 401 && store.getters['auth/isAuthenticated']) {
 		cookToast('You\'ve been logged out!', 4500);
 		store.dispatch('auth/logout');
 	}

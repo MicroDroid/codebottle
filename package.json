@@ -10,7 +10,8 @@
     "tests:coverage": "cross-env NODE_ENV=testing nyc -x tests -x models --clean mocha ./tests --recursive",
     "assets:dev": "cross-env NODE_ENV=development webpack --progress --hide-modules --watch",
     "assets:prod": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "assets:clean": "rm -f ./public/css/app-*.css && rm -f ./public/js/app-*.js ./public/webpack-manifest.json ./build/*json"
+    "assets:clean": "rm -f ./public/css/app-*.css && rm -f ./public/js/app-*.js ./public/webpack-manifest.json ./build/*json",
+    "dev": "env-cmd ./.env node ./index.js"
   },
   "author": "",
   "dependencies": {
@@ -31,6 +32,7 @@
     "css-loader": "^0.28.7",
     "dotenv": "^4.0.0",
     "ejs": "^2.5.7",
+    "env-cmd": "^7.0.0",
     "eslint": "^4.7.2",
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-vue": "^4.3.0",

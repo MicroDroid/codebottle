@@ -7,6 +7,9 @@ module.exports = context => {
 		protocol: context.protocol + ':',
 		hostname: context.hostname,
 	};
+	
+	root.serverRendering = true;
+	root.apiHost = context.apiHost;
 
 	return new Promise(async (resolve, reject) => {
 		const s = isDev && Date.now();

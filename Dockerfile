@@ -1,4 +1,4 @@
-FROM node:9.4-alpine
+FROM node:9
 # Two separate copies for caching
 COPY package.json /tmp/package.json
 RUN cd /tmp && npm i
