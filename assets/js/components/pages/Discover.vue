@@ -9,7 +9,7 @@
 			<hr>
 
 			<div id="snippets-container" class="row">
-				<div class="col-xs-12 col-sm-6 col-md-4" v-for="snippet in snippets">
+				<div class="col-xs-12 col-sm-6 col-md-4" v-for="snippet in snippets" :key="snippet.id">
 					<router-link :to="{name: 'view-snippet', params: {id: snippet.id}}" class="nostyle">
 						<div class="card">
 							<div class="card-body">
