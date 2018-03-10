@@ -32,8 +32,8 @@ module.exports = {
 				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 				allowNull: false
 			},
-		}).then(() => {
-			queryInterface.addIndex('votes', ['user_id', 'snippet_id'], {unique: true})
+		}).then(async () => {
+			await queryInterface.addIndex('votes', ['user_id', 'snippet_id'], {unique: true})
 		});
 	},
 	down: (queryInterface, Sequelize) => {

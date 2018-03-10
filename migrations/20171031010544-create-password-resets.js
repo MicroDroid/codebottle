@@ -25,9 +25,9 @@ module.exports = {
 			},
 		}, {
 			updatedAt: false,
-		}).then(() => {
-			queryInterface.addIndex('password_resets', ['email']);
-			queryInterface.addIndex('password_resets', ['token']);			
+		}).then(async () => {
+			await queryInterface.addIndex('password_resets', ['email']);
+			await queryInterface.addIndex('password_resets', ['token']);			
 		});
 	},
 

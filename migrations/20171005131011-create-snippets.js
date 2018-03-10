@@ -59,10 +59,10 @@ module.exports = {
 				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 				allowNull: false
 			},
-		}).then(() => {
-			queryInterface.addIndex('snippets', ['category_id']);
-			queryInterface.addIndex('snippets', ['language_id']);
-			queryInterface.addIndex('snippets', ['user_id']);
+		}).then(async () => {
+			await queryInterface.addIndex('snippets', ['category_id']);
+			await queryInterface.addIndex('snippets', ['language_id']);
+			await queryInterface.addIndex('snippets', ['user_id']);
 		});
 	},
 	down: (queryInterface, Sequelize) => {

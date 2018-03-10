@@ -40,12 +40,12 @@ module.exports = {
 				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 				allowNull: false
 			},
-		}).then(() => {
-			queryInterface.addIndex('social_connections', ['user_id', 'service'], {unique: true});
-			queryInterface.addIndex('social_connections', ['user_id', 'service', 'service_id'], {unique: true});		
-			queryInterface.addIndex('social_connections', ['user_id']);
-			queryInterface.addIndex('social_connections', ['service_id']);
-			queryInterface.addIndex('social_connections', ['service']);
+		}).then(async () => {
+			await queryInterface.addIndex('social_connections', ['user_id', 'service'], {unique: true});
+			await queryInterface.addIndex('social_connections', ['user_id', 'service', 'service_id'], {unique: true});		
+			await queryInterface.addIndex('social_connections', ['user_id']);
+			await queryInterface.addIndex('social_connections', ['service_id']);
+			await queryInterface.addIndex('social_connections', ['service']);
 		});
 	},
 	down: (queryInterface, Sequelize) => {
