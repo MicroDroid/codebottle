@@ -12,5 +12,5 @@ test_async:
   script:
    - cp ./.env.example ./.env
    - npm i
-   - npm run tests
+   - npm run tests:coverage
 
