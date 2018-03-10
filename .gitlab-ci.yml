@@ -10,6 +10,7 @@ stages:
 test_async:
   stage: test
   script:
+   - cp ./.env.example ./.env
    - npm i
    - npm run tests
 
