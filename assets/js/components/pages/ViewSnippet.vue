@@ -55,7 +55,7 @@
 					</span>
 				</p>
 				<pre><code itemprop="text" :class="codeLanguage" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
-				<div class="card" v-if="snippet.description">
+				<div class="card" v-if="snippet.description" id="description">
 					<div class="card-body">
 						<div class="card-text" v-html="marked(snippet.description)" itemprop="description">
 						</div>
@@ -234,5 +234,9 @@
 		color: #BC2C1A;
 		font-size: 16px;
 		vertical-align: super;
+	}
+
+	#description >>> img {
+		max-width: 100%;
 	}
 </style>
