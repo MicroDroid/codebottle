@@ -1,6 +1,8 @@
 'use strict';
 module.exports = {
 	up: (queryInterface, Sequelize) => {
+		const TIMESTAMP = require('sequelize-mysql-timestamp')(queryInterface.sequelize);
+
 		return queryInterface.createTable('user_preferences', {
 			id: {
 				type: Sequelize.INTEGER.UNSIGNED,
@@ -29,11 +31,13 @@ module.exports = {
 				defaultValue: false
 			},
 			created_at: {
-				type: Sequelize.TIME,
+				type: TIMESTAMP,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 				allowNull: false
 			},
 			updated_at: {
-				type: Sequelize.TIME,
+				type: TIMESTAMP,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 				allowNull: false
 			},
 		});

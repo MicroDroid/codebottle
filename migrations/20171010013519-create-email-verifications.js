@@ -1,6 +1,8 @@
 'use strict';
 module.exports = {
 	up: (queryInterface, Sequelize) => {
+		const TIMESTAMP = require('sequelize-mysql-timestamp')(queryInterface.sequelize);
+
 		return queryInterface.createTable('email_verifications', {
 			id: {
 				allowNull: false,
@@ -14,21 +16,23 @@ module.exports = {
 				unique: true
 			},
 			token: {
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(191),
 				allowNull: false,
 				unique: true
 			},
 			email: {
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(191),
 				allowNull: true
 			},
 			created_at: {
-				allowNull: false,
-				type: Sequelize.TIME,
+				type: TIMESTAMP,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+				allowNull: false
 			},
 			updated_at: {
-				allowNull: false,
-				type: Sequelize.TIME,
+				type: TIMESTAMP,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+				allowNull: false
 			},
 		});
 	},

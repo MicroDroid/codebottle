@@ -1,6 +1,8 @@
 'use strict';
 module.exports = {
 	up: (queryInterface, Sequelize) => {
+		const TIMESTAMP = require('sequelize-mysql-timestamp')(queryInterface.sequelize);
+
 		return queryInterface.createTable('password_resets', {
 			id: {
 				type: Sequelize.INTEGER.UNSIGNED,
@@ -9,17 +11,23 @@ module.exports = {
 				autoIncrement: true
 			},
 			email: {
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(191),
 				allowNull: false,
 			},
 			token: {
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(191),
 				allowNull: false,
 			},
 			created_at: {
-				type: Sequelize.TIME,
-				allowNull: false,
+				type: TIMESTAMP,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+				allowNull: false
 			},
+		}, {
+			updatedAt: false,
+		}).then(() => {
+			queryInterface.addIndex('password_resets', ['email']);
+			queryInterface.addIndex('password_resets', ['token']);			
 		});
 	},
 

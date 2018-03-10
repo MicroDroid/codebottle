@@ -1,6 +1,8 @@
 'use strict';
 module.exports = {
 	up: (queryInterface, Sequelize) => {
+		const TIMESTAMP = require('sequelize-mysql-timestamp')(queryInterface.sequelize);
+
 		return queryInterface.createTable('flags', {
 			id: {
 				type: Sequelize.INTEGER.UNSIGNED,
@@ -21,21 +23,24 @@ module.exports = {
 				allowNull: false
 			},
 			flaggable_type: {
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(191),
 				allowNull: false
 			},
 			deleted_at: {
-				type: Sequelize.TIME,
+				type: TIMESTAMP,
+				defaultValue: null,
 				allowNull: true,
 			},
 			created_at: {
-				type: Sequelize.TIME,
+				type: TIMESTAMP,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 				allowNull: false
 			},
 			updated_at: {
-				type: Sequelize.TIME,
+				type: TIMESTAMP,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 				allowNull: false
-			}
+			},
 		});
 	},
 	down: (queryInterface, Sequelize) => {

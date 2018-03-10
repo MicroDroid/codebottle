@@ -1,6 +1,8 @@
 'use strict';
 module.exports = {
 	up: (queryInterface, Sequelize) => {
+		const TIMESTAMP = require('sequelize-mysql-timestamp')(queryInterface.sequelize);
+
 		return queryInterface.createTable('snippets', {
 			id: {
 				type: Sequelize.INTEGER.UNSIGNED,
@@ -43,17 +45,24 @@ module.exports = {
 				defaultValue: 0
 			},
 			deleted_at: {
-				type: Sequelize.TIME,
-				allowNull: true
+				type: TIMESTAMP,
+				defaultValue: null,
+				allowNull: true,
 			},
 			created_at: {
-				type: Sequelize.TIME,
+				type: TIMESTAMP,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 				allowNull: false
 			},
 			updated_at: {
-				type: Sequelize.TIME,
+				type: TIMESTAMP,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 				allowNull: false
-			}
+			},
+		}).then(() => {
+			queryInterface.addIndex('snippets', ['category_id']);
+			queryInterface.addIndex('snippets', ['language_id']);
+			queryInterface.addIndex('snippets', ['user_id']);
 		});
 	},
 	down: (queryInterface, Sequelize) => {
