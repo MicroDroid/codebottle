@@ -8,7 +8,7 @@
 			</div>
 			<hr>
 
-			<snippets-deck :snippets="snippets" v-if="snippets"></snippets-deck>
+			<snippets-deck id="deck" :snippets="snippets" v-if="snippets"></snippets-deck>
 		</div>
 	</div>
 </template>
@@ -52,5 +52,9 @@
 <style type="text/css" scoped>
 	.green-text {
 		color: #4caf50;
+	}
+
+	#deck {
+		margin-top: 24px;
 	}
 </style>
