@@ -1,5 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
+	const TIMESTAMP = require('sequelize-mysql-timestamp')(sequelize);
+	
 	const emailVerification = sequelize.define('emailVerification', {
 		id: {
 			allowNull: false,
@@ -13,23 +15,25 @@ module.exports = (sequelize, DataTypes) => {
 			unique: true
 		},
 		token: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: false,
 			unique: true
 		},
 		email: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: true
 		},
 		created_at: {
-			allowNull: false,
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+			allowNull: false
 		},
 		updated_at: {
-			allowNull: false,
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+			allowNull: false
 		},
-	}, {});
+	});
 
 	emailVerification.associate = models => {
 		emailVerification.belongsTo(models.user);

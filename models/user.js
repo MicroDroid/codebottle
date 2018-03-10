@@ -2,6 +2,8 @@ const gravatar = require('gravatar');
 
 'use strict';
 module.exports = (sequelize, DataTypes) => {
+	const TIMESTAMP = require('sequelize-mysql-timestamp')(sequelize);
+
 	const user = sequelize.define('user', {
 		id: {
 			type: DataTypes.INTEGER.UNSIGNED,
@@ -10,21 +12,21 @@ module.exports = (sequelize, DataTypes) => {
 			autoIncrement: true
 		},
 		username: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: false,
 			unique: true
 		},
 		email: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: false,
 			unique: true
 		},
 		password: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: true,
 		},
 		bio: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: true
 		},
 		banned: {
@@ -37,17 +39,20 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			defaultValue: false
 		},
+		deleted_at: {
+			type: TIMESTAMP,
+			defaultValue: null,
+			allowNull: true,
+		},
 		created_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
 		},
 		updated_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
-		},
-		deleted_at: {
-			type: DataTypes.TIME,
-			allowNull: true
 		},
 	}, {
 		paranoid: true,

@@ -1,5 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
+	const TIMESTAMP = require('sequelize-mysql-timestamp')(sequelize);
+
 	const passwordReset = sequelize.define('passwordReset', {
 		id: {
 			type: DataTypes.INTEGER.UNSIGNED,
@@ -8,15 +10,16 @@ module.exports = (sequelize, DataTypes) => {
 			autoIncrement: true
 		},
 		email: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: false
 		},
 		token: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: false
 		},
 		created_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
 		},
 	}, {

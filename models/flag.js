@@ -1,5 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
+	const TIMESTAMP = require('sequelize-mysql-timestamp')(sequelize);
+
 	const flag = sequelize.define('flag', {
 		id: {
 			type: DataTypes.INTEGER.UNSIGNED,
@@ -20,21 +22,24 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false
 		},
 		flaggable_type: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: false
 		},
 		deleted_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: null,
 			allowNull: true,
 		},
 		created_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
 		},
 		updated_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
-		}
+		},
 	}, {
 		paranoid: true,
 	});

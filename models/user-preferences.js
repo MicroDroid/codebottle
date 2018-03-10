@@ -1,5 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
+	const TIMESTAMP = require('sequelize-mysql-timestamp')(sequelize);
+
 	const userPreferences = sequelize.define('userPreferences', {
 		id: {
 			type: DataTypes.INTEGER.UNSIGNED,
@@ -28,11 +30,13 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: false
 		},
 		created_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
 		},
 		updated_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
 		},
 	}, {

@@ -1,5 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
+	const TIMESTAMP = require('sequelize-mysql-timestamp')(sequelize);
+
 	const vote = sequelize.define('vote', {
 		id: {
 			type: DataTypes.INTEGER.UNSIGNED,
@@ -20,13 +22,15 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false
 		},
 		created_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
 		},
 		updated_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
-		}
+		},
 	}, {});
 
 	vote.associations = models => {

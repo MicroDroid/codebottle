@@ -1,5 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
+	const TIMESTAMP = require('sequelize-mysql-timestamp')(sequelize);
+
 	const socialConnection = sequelize.define('socialConnection', {
 		id: {
 			type: DataTypes.INTEGER.UNSIGNED,
@@ -12,29 +14,31 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false
 		},
 		service_id: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: true
 		},
 		service: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: false
 		},
 		token: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: false
 		},
 		token_type: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			allowNull: false
 		},
 		created_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
 		},
 		updated_at: {
-			type: DataTypes.TIME,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
-		}
+		},
 	});
 
 	socialConnection.associate = models => {

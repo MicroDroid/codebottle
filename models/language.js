@@ -1,5 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
+	const TIMESTAMP = require('sequelize-mysql-timestamp')(sequelize);
+
 	const language = sequelize.define('language', {
 		id: {
 			type: DataTypes.INTEGER.UNSIGNED,
@@ -8,16 +10,18 @@ module.exports = (sequelize, DataTypes) => {
 			autoIncrement: true,
 		},
 		name: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(16),
 			allowNull: false,
 		},
 		created_at: {
-			type: DataTypes.TIME,
-			allowNull: false,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+			allowNull: false
 		},
 		updated_at: {
-			type: DataTypes.TIME,
-			allowNull: false,
+			type: TIMESTAMP,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+			allowNull: false
 		},
 	}, {});
 
