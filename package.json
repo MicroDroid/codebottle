@@ -6,8 +6,8 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "tests": "cross-env NODE_ENV=testing mocha ./tests --recursive",
-    "tests:coverage": "cross-env NODE_ENV=testing nyc -x tests -x models --clean mocha ./tests --recursive",
+    "tests": "env-cmd ./.env cross-env NODE_ENV=testing mocha ./tests --recursive",
+    "tests:coverage": "env-cmd ./.env cross-env NODE_ENV=testing nyc -x tests -x models --clean mocha ./tests --recursive",
     "assets:dev": "cross-env NODE_ENV=development webpack --progress --hide-modules --watch",
     "assets:prod": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "assets:clean": "rm -f ./public/css/app-*.css && rm -f ./public/js/app-*.js ./public/webpack-manifest.json ./build/*json",
