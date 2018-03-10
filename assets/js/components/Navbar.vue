@@ -93,6 +93,7 @@
 			showMenu: false,
 			keywords: '',
 			userOptions: [
+				{label: 'View profile', key: 'view-profile'},
 				{label: 'Edit profile', key: 'edit-profile'},
 				{label: 'Settings', key: 'settings'},
 				{label: 'Sign out', key: 'sign-out'},
@@ -128,6 +129,9 @@
 						break;
 					case 'settings':
 						this.$router.push({name: 'settings.preferences'});
+						break;
+					case 'view-profile':
+						this.$router.push({name: 'view-user', params: {username: this.username}});
 						break;
 					case 'edit-profile':
 						this.$router.push({name: 'edit-profile'});
