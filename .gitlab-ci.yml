@@ -1,0 +1,15 @@
+image: node:9.4
+
+cache:
+  paths:
+  - node_modules/
+
+stages:
+  - test
+
+test_async:
+  stage: test
+  script:
+   - npm i
+   - npm run tests
+
