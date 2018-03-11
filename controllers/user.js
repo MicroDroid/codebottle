@@ -51,6 +51,28 @@ module.exports = {
 		return next();
 	},
 
+	getSnippets: async (ctx, next) => {
+		const user = await models.user.findOne({
+			where: {username: ctx.params.username},
+			attributes: ['username'],
+			include: [
+				{
+					model: models.snippet,
+					include: [models.language, models.category, models.vote]
+				}
+			]
+		});
+		
+		if (!user)
+			throw new ApiError(404, 'Not found');
+
+		if (user.snippets.length < 1)
+			ctx.body = [];
+		else ctx.body = user.snippets.map(s => models.snippet.transform(s));
+
+		return next();
+	},
+
 	create: async (ctx, next) => {
 		if (!(await helpers.verifyRecaptcha(ctx.request.body.recaptcha_token)))
 			throw new ApiError(422, 'Invalid reCAPTCHA');

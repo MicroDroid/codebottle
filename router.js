@@ -38,6 +38,7 @@ module.exports = () => {
 	router.post('/users', throttle(1, 900, true), UserController.create);
 	router.post('/users/email-verifications', throttle(5, 120), UserController.verifyEmail);
 	router.get('/users/:username', throttle(), UserController.get);
+	router.get('/users/:username/snippets', throttle(), UserController.getSnippets);
 
 	router.post('/auth/login', throttle(5, 120), AuthController.login);
 	router.post('/auth/github', throttle(5, 120), AuthController.github);

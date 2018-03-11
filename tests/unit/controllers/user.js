@@ -51,7 +51,7 @@ describe('User controller', () => {
 		},
 	};
 
-	it('Gets user properly', sinonTest(async function() {
+	it('Gets user properly', sinonTest(async function () {
 		const findOneStub = this.stub(models.user, 'findOne');
 		const getGitHubStub = this.stub(helpers, 'getGitHubUsername');
 		const transformUserStub = this.stub(models.user, 'transform');
@@ -61,15 +61,113 @@ describe('User controller', () => {
 		let ctx = {
 			status: 200,
 			body: {},
-			params: {username: 'OverCoder'},
+			params: { username: 'OverCoder' },
 		};
 
-		await expect(UserController.get(ctx, () => {}), 'Getting a user should be fulfilled')
+		await expect(UserController.get(ctx, () => { }), 'Getting a user should be fulfilled')
 			.to.eventually.be.fulfilled;
 
 		expect(ctx.status, 'Status should be the same').to.equal(200);
 		expect(getGitHubStub, 'GitHub username should be queried').to.have.been.calledOnce;
 		expect(transformUserStub, 'User should be transformed').to.have.been.calledOnce;
+	}));
+
+	it('Gets user snippets', sinonTest(async function () {
+		const findOneStub = this.stub(models.user, 'findOne');
+		const transformSnippetStub = this.stub(models.snippet, 'transform');
+
+		const user = {
+			..._.pick(overcoder, 'username', 'email', 'bio', 'banned', 'created_at', 'userPreferences'),
+			snippets: []
+		};
+
+		findOneStub.returns(user);
+
+		let ctx = {
+			status: 200,
+			body: {},
+			params: { username: 'OverCoder' },
+		};
+
+		await expect(UserController.getSnippets(ctx, () => { }), 'Getting user snippets should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(ctx.status, 'Status should be the same').to.equal(200);
+		expect(findOneStub, 'User should be queried').to.have.been.calledOnce;
+		expect(transformSnippetStub, 'No snippets should be transformed').to.not.have.been.called;
+
+		const category = {
+			id: 1,
+			name: 'Function',
+		};
+
+		const language = {
+			id: 1,
+			name: 'JavaScript',
+		};
+
+		user.snippets = [
+			{
+				id: 1,
+				public_id: 'abcde12345',
+				title: 'Unique title',
+				description: 'Test description',
+				code: 'Test code',
+				views: 30,
+				created_at: (new Date()).toISOString(),
+				updated_at: (new Date()).toISOString(),
+				votes: [{
+					id: 1,
+					user_id: overcoder.id,
+					snippet_id: 1,
+					vote: 1,
+				}],
+				category, language,
+			},
+			{
+				id: 2,
+				public_id: 'abcde12346',
+				title: 'Test title',
+				description: 'Unique description',
+				code: 'Test code',
+				views: 30,
+				created_at: (new Date()).toISOString(),
+				updated_at: (new Date()).toISOString(),
+				votes: [{
+					id: 2,
+					user_id: overcoder.id,
+					snippet_id: 2,
+					vote: -1,
+				}],
+				category, language,
+			},
+		];
+
+
+		await expect(UserController.getSnippets(ctx, () => { }), 'Getting user snippets should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(ctx.status, 'Status should be the same').to.equal(200);
+		expect(findOneStub, 'User should be queried').to.have.been.calledTwice;
+		expect(transformSnippetStub, 'Two snippets should be transformed').to.have.been.calledTwice;
+	}));
+
+	it('Throws error when getting inexistent user snippets', sinonTest(async function () {
+		const findOneStub = this.stub(models.user, 'findOne');
+		const transformSnippetStub = this.stub(models.snippet, 'transform');
+
+		let ctx = {
+			status: 200,
+			body: {},
+			params: {username: 'NotOverCoder'},
+		};
+
+		await expect(UserController.getSnippets(ctx, () => { }), 'Getting user snippets should fail')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(ctx.status, 'Status should become 404').to.equal(404);
+		expect(findOneStub, 'User should be queried').to.have.been.calledOnce;
+		expect(transformSnippetStub, 'No snippets should be transformed').to.not.have.been.called;
 	}));
 
 	it('Shows/Hides email based on preferences', sinonTest(async function () {
