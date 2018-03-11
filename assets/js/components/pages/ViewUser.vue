@@ -1,13 +1,17 @@
 <template>
 	<div class="container">
-		<div class="row" v-if="user" itemscope itemtype="http://schema.org/Person">
-			<div class="col center-text">
-				<img :src="user.profileImage" id="profile-img" class="center-block">
-				<h1 id="username">
+		<!-- Expanded (Desktop) -->
+		<div class="expanded row d-none d-md-flex d-lg-flex d-xl-flex mt-1"
+			v-if="user" itemscope itemtype="http://schema.org/Person">
+			<div class="col-4">
+				<img :src="user.profileImage" class="profile-img">
+			</div>
+			<div class="col-8">
+				<h1 class="username">
 					<strong itemprop="additionalName">{{user.username}}</strong>
-					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fa fa-flag"></span></a>
+					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fa fa-flag"></span></a>
 				</h1>
-				<p id="stats-bar">
+				<p class="stats-bar">
 					<span>
 						<span class="fa fa-calendar fa-fw"></span>
 						Joined {{moment(user.createdAt).fromNow()}}
@@ -21,28 +25,74 @@
 						<a itemprop="email" class="nostyle" :href="'https://github.com/' + user.github_username">
 							{{user.github_username}}
 						</a>
-					</span> <br/>
+					</span> <br v-if="user.github_username"/>
 					<span v-if="user.banned">
 						<span class="fa fa-exclamation-triangle fa-fw"></span>
 						This user is banned
-					</span> <br/>
+					</span> <br v-if="user.banned"/>
 				</p>
-				<p id="bio" itemprop="description">
+				<p class="bio" itemprop="description">
 					{{user.bio}}
 				</p>
+				<br/>
+
 				<modal :show="flagModalShown" title="Why are you flagging him?" :onDismiss="onFlagDismiss">
-					<textarea class="form-control" id="flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
+					<textarea class="form-control flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
 					<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
 				</modal>
 			</div>
 		</div>
+
+		<!-- Collapsed (Mobile) -->
+		<div class="collapsed row d-md-none d-lg-none d-xl-none"
+			v-if="user">
+			<div class="center-text">
+				<img :src="user.profileImage" class="profile-img center-block">
+				<h1 class="username">
+					<strong>{{user.username}}</strong>
+					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fa fa-flag"></span></a>
+				</h1>
+				<p class="stats-bar">
+					<span>
+						<span class="fa fa-calendar fa-fw"></span>
+						Joined {{moment(user.createdAt).fromNow()}}
+					</span> <br/>
+					<span>
+						<span class="fa fa-envelope fa-fw"></span>
+						<span>{{user.email || 'Private email'}}</span>
+					</span> <br/>
+					<span v-if="user.github_username">
+						<span class="fa fa-github fa-fw"></span>
+						<a class="nostyle" :href="'https://github.com/' + user.github_username">
+							{{user.github_username}}
+						</a>
+					</span> <br v-if="user.github_username"/>
+					<span v-if="user.banned">
+						<span class="fa fa-exclamation-triangle fa-fw"></span>
+						This user is banned
+					</span> <br v-if="user.banned"/>
+				</p>
+				<p class="bio">
+					{{user.bio}}
+				</p>
+				<br/>
+
+				<modal :show="flagModalShown" title="Why are you flagging him?" :onDismiss="onFlagDismiss">
+					<textarea class="form-control flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
+					<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
+				</modal>
+			</div>
+		</div>
+		<snippets-deck id="snippets-deck" :snippets="user.snippets" v-if="user.snippets"></snippets-deck>
 	</div>
 </template>
 
 <script type="text/javascript">
 	import {mapGetters} from 'vuex';
-	import {apiUrl, getAbsoluteUrl, cookToast, extractError} from '../../helpers';
+	import {apiUrl, getAbsoluteUrl, cookToast, extractErro} from '../../helpers';
 	import Modal from '../bootstrap/Modal';
+	import Loader from '../Loader';
+	import SnippetsDeck from '../SnippetsDeck';
 
 	export default {
 		data: () => ({
@@ -93,7 +143,9 @@
 		},
 
 		asyncData: function(store, route) {
-			return store.dispatch('users/fetch', route.params.username);
+			return store.dispatch('users/fetch', route.params.username).then(() => {
+				return store.dispatch('users/fetchUserSnippets', route.params.username);
+			});
 		},
 
 		meta: function() {
@@ -110,34 +162,47 @@
 
 		components: {
 			'modal': Modal,
+			'loader': Loader,
+			'snippets-deck': SnippetsDeck,
 		},
 	};
 </script>
 
 <style type="text/css" scoped>
-	#username {
+	.username {
 		margin-top: 16px;
 	}
 
-	#bio {
+	.bio {
 		max-width: 520px;
 		display: inline-block;
 	}
 
-	#profile-img {
-		max-width: 320px;
+	.profile-img {
 		box-shadow: 0px 0px 2px 1px rgba(172,172,172,0.2);
+	}
+
+	.expanded .profile-img {
+		width: 100%;
+	}
+
+	.collapsed .profile-img {
+		max-width: 320px;
 		margin-top: 24px;
 	}
 
-	#flag-description {
+	.flag-description {
 		min-height: 10vh;
 		width: 100%;
 	}
 
-	#flag-btn {
+	.flag-btn {
 		color: #BC2C1A;
 		font-size: 16px;
 		vertical-align: super;
+	}
+
+	#snippets-deck {
+		margin-top: 72px;
 	}
 </style>

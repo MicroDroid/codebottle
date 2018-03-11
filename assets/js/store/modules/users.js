@@ -19,13 +19,34 @@ const actions = {
 			.then(response => {
 				commit(types.STORE_SELF, response.data);
 			});
+	},
+
+	fetchUserSnippets: ({commit}, username) => {
+		return axios.get(apiUrl(`/users/${username}/snippets`))
+			.then(response => {
+				commit(types.STORE_USER_SNIPPETS, {
+					username,
+					snippets: response.data
+				});
+			});
 	}
 };
 
 const mutations = {
-	[types.STORE_USER] (state, user) {
+	[types.STORE_USER](state, user) {
 		state.users = state.users.filter(u => u.username !== user.username);
 		state.users.push(user);
+	},
+
+	[types.STORE_USER_SNIPPETS](state, payload) {
+		let user = state.users.filter(u => u.username === payload.username)[0];
+
+		if (!user) {
+			user = {username: payload.username};
+			state.users.push(user);
+		}
+
+		user.snippets = payload.snippets;
 	},
 
 	[types.STORE_SELF] (state, user) {
