@@ -165,7 +165,6 @@ describe('User controller', () => {
 		await expect(UserController.getSnippets(ctx, () => { }), 'Getting user snippets should fail')
 			.to.eventually.be.rejectedWith(ApiError);
 
-		expect(ctx.status, 'Status should become 404').to.equal(404);
 		expect(findOneStub, 'User should be queried').to.have.been.calledOnce;
 		expect(transformSnippetStub, 'No snippets should be transformed').to.not.have.been.called;
 	}));
