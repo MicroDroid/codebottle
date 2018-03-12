@@ -506,4 +506,87 @@ describe('Snippet controller', () => {
 		expect(transformSnippetsStub, 'Snippet should be transformed').to.have.been.calledOnce;
 		expect(ctx.body, 'Output snippet data should be same as input').to.deep.equal(snippet);
 	}));
+
+	it('Deletes snippets', sinonTest(async function () {
+		const destroyStub = this.stub();
+		const findOneStub = this.stub(models.snippet, 'findOne');
+
+		const snippet = {
+			...snippets[0],
+			user: overcoder,
+			destroy: destroyStub
+		};
+
+		findOneStub.returns(snippet);
+
+		const ctx = {
+			status: 200,
+			params: {
+				id: snippet.public_id,
+			},
+			state: {
+				user: overcoder
+			}
+		};
+
+		await expect(SnippetController.delete(ctx, () => { }), 'Should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(ctx.status, 'Status should be 204').to.equal(204);
+		expect(findOneStub, 'Snippet should be queried').to.have.been.calledOnce;
+		expect(destroyStub, 'Snippet should be destroyed').to.have.been.calledOnce;
+	}));
+
+	it('Throws error when deleting other people snippets', sinonTest(async function () {
+		const destroyStub = this.stub();
+		const findOneStub = this.stub(models.snippet, 'findOne');
+
+		const snippet = {
+			...snippets[0],
+			user: overcoder,
+			destroy: destroyStub
+		};
+
+		findOneStub.returns(snippet);
+
+		const ctx = {
+			status: 200,
+			params: {
+				id: snippet.public_id,
+			},
+			state: {
+				user: {
+					...overcoder,
+					id: overcoder.id + 1
+				}
+			}
+		};
+
+		await expect(SnippetController.delete(ctx, () => { }), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(findOneStub, 'Snippet should be queried').to.have.been.calledOnce;
+		expect(destroyStub, 'Snippet should not be destroyed').to.not.have.been.called;
+	}));
+
+	it('Throws error when deleting inexistent snippet', sinonTest(async function () {
+		const destroyStub = this.stub();
+		const findOneStub = this.stub(models.snippet, 'findOne');
+
+		const ctx = {
+			status: 200,
+			params: {
+				id: snippet.public_id,
+			},
+			state: {
+				user: overcoder
+			}
+		};
+
+		await expect(SnippetController.delete(ctx, () => { }), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(findOneStub, 'Snippet should be queried').to.have.been.calledOnce;
+		expect(destroyStub, 'Snippet should not be destroyed').to.not.have.been.called;
+	}));
 });
