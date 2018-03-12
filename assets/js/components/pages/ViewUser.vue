@@ -155,6 +155,7 @@
 					{name: 'description', content: this.user ? this.user.bio || 'No bio provided.' : 'No bio provided.'},
 					{property: 'og:description', content: this.user ? this.user.bio || 'No bio provided.' : 'No bio provided.'},
 					{property: 'og:title', content: this.user ? 'User ' + this.user.username : 'View user'},
+					{property: 'og:image', content: this.user ? this.user.profileImage : '/images/bottle_square.png', vmid: 'image'},
 					{property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
 				],
 			};
