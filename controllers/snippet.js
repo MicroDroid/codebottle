@@ -136,6 +136,25 @@ const controller = {
 
 		return next();
 	},
+
+	delete: async (ctx, next) => {
+		const snippet = await models.snippet.findOne({
+			where: { 'public_id': ctx.params.id },
+			include: [models.language, models.category, models.vote, models.user]
+		});
+
+		if (!snippet)
+			throw new ApiError(404, 'Not found');
+		
+		if (ctx.state.user.id !== snippet.user.id)
+			throw new ApiError(403, 'You can only delete your snippets');
+		
+		snippet.destroy();
+
+		ctx.status = 204;
+
+		return next();
+	}
 };
 
 module.exports = controller;

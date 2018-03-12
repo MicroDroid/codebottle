@@ -48,6 +48,7 @@ module.exports = () => {
 	// Protected end-points
 
 	router.post('/snippets', throttle(5, 900, true), protect(), SnippetController.create);
+	router.delete('/snippets/:id', throttle(), protect(), SnippetController.delete);
 	router.post('/snippets/:snippet/vote', throttle(), protect(), VoteController.vote);
 	router.get('/self', throttle(), protect(), UserController.getSelf);
 	router.put('/self', throttle(), protect(), UserController.setSelf);
