@@ -55,6 +55,9 @@
 					</span>
 				</p>
 				<p id="action-bar">
+					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="() => cookToast('Copied!', 1500)">
+						<span class="fa fa-copy"></span> Copy
+					</button>
 					<button class="btn btn-danger btn-sm" @click="deleteSnippet">
 						<span class="fa fa-trash"></span> Delete
 					</button>
@@ -159,7 +162,7 @@
 				});
 			},
 
-			marked,
+			marked, cookToast,
 			moment: moment.utc,
 		},
 
@@ -277,5 +280,9 @@
 
 	#action-bar button .fa {
 		margin-right: 3px;
+	}
+
+	#action-bar button {
+		margin-right: 4px;
 	}
 </style>

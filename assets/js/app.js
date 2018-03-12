@@ -5,6 +5,7 @@ require('./bootstrap');
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
+import VueClipboards from 'vue-clipboards';
 import VueAnalytics from 'vue-analytics';
 import VueMeta from 'vue-meta';
 import App from './components/App';
@@ -17,6 +18,7 @@ import store from './store';
 import {EAT_TOAST} from './store/mutation-types';
 import {setStore, cookToast} from './helpers';
 
+
 setStore(store);
 
 Vue.use(VueMeta, {
@@ -25,6 +27,7 @@ Vue.use(VueMeta, {
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VueClipboards);
 
 Vue.component('navbar', Navbar);
 Vue.component('loader', Loader);
