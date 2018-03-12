@@ -22,7 +22,7 @@
 					{{snippet.title}}
 					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fa fa-flag"></span></a>
 				</h2>
-				<p>
+				<p id="stats-bar">
 					<span>
 						<span class="fa fa-bullseye"></span>
 						<span itemprop="codeSampleType">{{snippet.category.name}}</span>
@@ -54,6 +54,11 @@
 						<span itemprop="dateModified">{{moment(snippet.updatedAt).fromNow()}}</span>
 					</span>
 				</p>
+				<p id="action-bar">
+					<button class="btn btn-danger btn-sm" @click="deleteSnippet">
+						<span class="fa fa-trash"></span> Delete
+					</button>
+				</p>
 				<pre><code itemprop="text" :class="codeLanguage" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
 				<div class="card" v-if="snippet.description" id="description">
 					<div class="card-body">
@@ -63,9 +68,16 @@
 				</div>
 			</div>
 		</div>
+
 		<modal :show="flagModalShown" title="Why are you flagging this snippet?" :onDismiss="onFlagDismiss">
 			<textarea class="form-control" id="flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
 			<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
+		</modal>
+
+		<modal :show="deleteModalShown" title="Are you sure you want to delete this snippet?" :onDismiss="onDeleteDismiss">
+			<p>This is irreversible.</p>
+			<button class="btn btn-primary" slot="footer" @click="confirmDeletion">Delete it</button>
+			<button class="btn btn-primary" slot="footer" @click="onDeleteDismiss">Cancel</button>
 		</modal>
 	</div>
 </template>
@@ -80,6 +92,7 @@
 		data: function() {
 			return {
 				flagModalShown: false,
+				deleteModalShown: false,
 				originalCurrentVote: false,
 			};
 		},
@@ -112,6 +125,24 @@
 
 			onFlagDismiss: function() {
 				this.flagModalShown = false;
+			},
+
+			onDeleteDismiss: function() {
+				this.deleteModalShown = false;
+			},
+
+			deleteSnippet: function() {
+				this.deleteModalShown = true;
+			},
+
+			confirmDeletion: function() {
+				axios.delete(apiUrl(`/snippets/${this.$route.params.id}`))
+					.then(() => {
+						cookToast('Deleted!', 4000);
+						this.$router.push({name: 'discover'});
+					}).catch(e => {
+						cookToast(extractError(e), 4000);	
+					});
 			},
 
 			submitFlag: function() {
@@ -238,5 +269,13 @@
 
 	#description >>> img {
 		max-width: 100%;
+	}
+
+	#stats-bar {
+		margin-bottom: 12px;
+	}
+
+	#action-bar button .fa {
+		margin-right: 3px;
 	}
 </style>
