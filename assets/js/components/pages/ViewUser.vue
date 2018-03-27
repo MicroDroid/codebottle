@@ -1,8 +1,8 @@
 <template>
-	<div class="container">
+	<div class="container" v-if="user">
 		<!-- Expanded (Desktop) -->
 		<div class="expanded row d-none d-md-flex d-lg-flex d-xl-flex mt-1"
-			v-if="user" itemscope itemtype="http://schema.org/Person">
+			itemscope itemtype="http://schema.org/Person">
 			<div class="col-4">
 				<img :src="user.profileImage" class="profile-img">
 			</div>
@@ -44,8 +44,7 @@
 		</div>
 
 		<!-- Collapsed (Mobile) -->
-		<div class="collapsed row d-md-none d-lg-none d-xl-none"
-			v-if="user">
+		<div class="collapsed row d-md-none d-lg-none d-xl-none">
 			<div class="center-text">
 				<img :src="user.profileImage" class="profile-img center-block">
 				<h1 class="username">
@@ -89,7 +88,7 @@
 
 <script type="text/javascript">
 	import {mapGetters} from 'vuex';
-	import {apiUrl, getAbsoluteUrl, cookToast, extractErro} from '../../helpers';
+	import {apiUrl, getAbsoluteUrl, cookToast, extractError} from '../../helpers';
 	import Modal from '../bootstrap/Modal';
 	import Loader from '../Loader';
 	import SnippetsDeck from '../SnippetsDeck';
@@ -144,7 +143,12 @@
 
 		asyncData: function(store, route) {
 			return store.dispatch('users/fetch', route.params.username).then(() => {
-				return store.dispatch('users/fetchUserSnippets', route.params.username);
+				return store.dispatch('users/fetchUserSnippets', route.params.username)
+					.catch(e => {
+						cookToast(extractError(e), 3000);			
+				});
+			}).catch(e => {
+				cookToast(extractError(e), 3000);
 			});
 		},
 
