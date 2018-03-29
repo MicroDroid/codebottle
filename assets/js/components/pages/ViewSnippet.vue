@@ -58,7 +58,7 @@
 					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="() => cookToast('Copied!', 1500)">
 						<span class="fa fa-copy"></span> Copy
 					</button>
-					<button class="btn btn-danger btn-sm" @click="deleteSnippet">
+					<button class="btn btn-danger btn-sm" @click="deleteSnippet" v-if="currentUsername === snippet.username">
 						<span class="fa fa-trash"></span> Delete
 					</button>
 				</p>
@@ -87,7 +87,7 @@
 
 <script type="text/javascript">
 	import striptags from 'striptags';
-	import {mapGetters} from 'vuex';
+	import {mapGetters, mapState} from 'vuex';
 	import {apiUrl, getAbsoluteUrl, cookToast, extractError} from '../../helpers';
 	import Modal from '../bootstrap/Modal';
 
@@ -171,6 +171,10 @@
 				isAuthenticated: 'auth/isAuthenticated',
 				preferences: 'auth/preferences',
 				snippetById: 'snippets/getById',
+			}),
+			
+			...mapState({
+				currentUsername: state => state.users.self.username,
 			}),
 
 			snippet: function() {
