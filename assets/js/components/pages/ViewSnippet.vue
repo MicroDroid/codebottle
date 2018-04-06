@@ -42,10 +42,6 @@
 						<span>{{snippet.views}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="fa fa-code-fork"></span>
-						<span itemprop="version">{{snippet.updates}}</span>
-					</span>
-					<span class="ml-2">
 						<span class="fa fa-clock-o"></span>
 						<span itemprop="dateCreated">{{moment(snippet.createdAt).fromNow()}}</span>
 					</span>
