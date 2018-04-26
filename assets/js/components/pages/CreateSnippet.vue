@@ -33,7 +33,7 @@
 						</div>
 					</div>
 				</div>
-				<button class="btn btn-primary" @click="create" type="submit" :disabled="loading">Create</button>
+				<button class="btn btn-primary" type="submit" :disabled="loading">Create</button>
 			</form>
 
 			<loader v-if="loading" />
