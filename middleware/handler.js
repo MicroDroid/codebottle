@@ -1,3 +1,4 @@
+const Logger = require('../utils/logger');
 const ApiError = require('../errors/api-error');
 const RateLimitError = require('../errors/rate-limit-error');
 
@@ -34,7 +35,7 @@ module.exports = async (ctx, next) => {
 					error: 'Internal error'
 				};
 				
-				console.log(e);
+				Logger.err(e);
 			}
 		}
 	}
