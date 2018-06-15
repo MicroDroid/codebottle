@@ -2,20 +2,28 @@
 	<div class="container">
 		<div class="row" v-if="snippet" itemscope itemtype="http://schema.org/SoftwareSourceCode">
 			<div class="col-xs-12 col-auto">
-				<h1>
+				<h1 id="voting-buttons">
 					<span :class="{
 							'fa': true,
 							'fa-chevron-up': true,
 							'clickable': true,
 							'voted': snippet.currentVote && snippet.currentVote == 1
-						}" @click="vote(1)"></span> <br/>
-					<span class="ml-2" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+						}" @click="vote(1)"></span>
+					<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 						<span itemprop="ratingValue">{{votes}}</span>
-					</span> <br/>
+					</span>
 					<span :class="'fa fa-chevron-down clickable'
 							+ ((snippet.currentVote && snippet.currentVote == -1) ?
 								' voted' : '')" @click="vote(-1)"></span>
 				</h1>
+				<p id="action-bar">
+					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="() => cookToast('Copied!', 1500)">
+						<span class="fa fa-copy"></span> Copy
+					</button>
+					<button class="btn btn-danger btn-sm" @click="deleteSnippet" v-if="currentUsername === snippet.username">
+						<span class="fa fa-trash"></span> Delete
+					</button>
+				</p>
 			</div>
 			<div class="col-xs-12 col" id="data-container">
 				<h2 itemprop="about">
@@ -49,14 +57,6 @@
 						<span class="fa fa-edit"></span>
 						<span itemprop="dateModified">{{moment(snippet.updatedAt).fromNow()}}</span>
 					</span>
-				</p>
-				<p id="action-bar">
-					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="() => cookToast('Copied!', 1500)">
-						<span class="fa fa-copy"></span> Copy
-					</button>
-					<button class="btn btn-danger btn-sm" @click="deleteSnippet" v-if="currentUsername === snippet.username">
-						<span class="fa fa-trash"></span> Delete
-					</button>
 				</p>
 				<pre><code itemprop="text" :class="codeLanguage" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
 				<div class="card" v-if="snippet.description" id="description">
@@ -108,8 +108,8 @@
 					.then(response => {
 						this.snippet.currentVote = vote;
 					}).catch(error => {
-						// pls
-					});
+						cookToast('Error while voting', 4000);
+				});
 			},
 
 			flag: function() {
@@ -141,7 +141,7 @@
 						this.$router.push({name: 'discover'});
 					}).catch(e => {
 						cookToast(extractError(e), 4000);	
-					});
+				});
 			},
 
 			submitFlag: function() {
@@ -227,8 +227,8 @@
 			const description = striptags(marked(this.snippet ? this.snippet.description : 'No description provided.'), '<pre>');
 			return {
 				title: this.snippet
-						? this.snippet.language.name + ' - ' + this.snippet.title
-						: 'View snippet',
+					? this.snippet.language.name + ' - ' + this.snippet.title
+					: 'View snippet',
 				meta: [
 					{name: 'description', content: description ? description : 'No description provided.'},
 					{property: 'og:description', content: description ? description : 'No description provided.'},
@@ -282,7 +282,23 @@
 		margin-right: 3px;
 	}
 
+	#action-bar {
+		margin-top: 32px;
+	}
+
 	#action-bar button {
-		margin-right: 4px;
+		margin-bottom: 4px;
+		border-radius: 1px;
+		min-width: 90px;
+		width: 100%;
+		display: block;
+	}
+
+	#voting-buttons {
+		text-align: center;
+	}
+
+	#voting-buttons > span {
+		display: block;
 	}
 </style>
