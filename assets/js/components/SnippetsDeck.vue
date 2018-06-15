@@ -13,7 +13,12 @@
                                 <span class="fa fa-clock-o"></span> {{moment(snippet.updatedAt).fromNow()}}
                             </h6>
                             <div class="card-text">
-                                {{snippet.description ? shorten(summarize(snippet.description), 200) : 'No description provided.'}}
+                                <p v-if="snippet.description && summarize(snippet.description)">
+                                    {{ shorten(summarize(snippet.description), 200) }}
+                                </p>
+                                <em v-else class="no-description">
+                                    {{ !snippet.description ? 'No description provided.' : 'Description is in form of code.' }}
+                                </em>
                             </div>
                         </div>
                     </div>
@@ -56,4 +61,8 @@
 	.card-subtitle span:first-child {
 		margin-left: 0;
 	}
+
+    .no-description {
+        color: rgba(255, 255, 255, 0.5);
+    }
 </style>
