@@ -81,7 +81,7 @@ const controller = {
 
 	getNew: async (ctx, next) => {
 		const snippets = await models.snippet.findAll({
-			limit: 10,
+			limit: 30,
 			order: [
 				['created_at', 'DESC'],
 			],
