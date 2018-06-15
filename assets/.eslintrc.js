@@ -35,6 +35,7 @@ module.exports = {
             "error",
             "tab",
         ],
+        "vue/order-in-components": "off",
     },
     "globals": {
         "axios": false,
