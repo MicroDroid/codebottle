@@ -2,6 +2,10 @@ const colors = require('colors/safe');
 const stackTrace = require('stack-trace');
 const path = require('path');
 const config = require('../config');
+const DiscordWebhook = require('webhook-discord');
+const os = require('os');
+
+const hook = config.hooks.discord.log ? new DiscordWebhook(config.hooks.discord.log) : null;
 
 /* istanbul ignore next */
 function log(type, message) {
@@ -38,6 +42,12 @@ function log(type, message) {
 	generated += ' ' + colors.italic(colors.grey(caller));
 
 	console.log(generated);
+
+	if (hook)
+		if (type === 'warn')
+			hook.custom('CodeBottle', message, os.hostname(), '#ffe900');
+		else if (type === 'err')
+			hook.custom('CodeBottle', message, os.hostname(), '#ff0000');
 }
 
 /* istanbul ignore next */

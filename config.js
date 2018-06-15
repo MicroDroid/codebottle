@@ -44,5 +44,11 @@ module.exports = {
 
 	recaptcha: {
 		secret: process.env.RECAPTCHA_SECRET,
+	},
+
+	hooks: {
+		discord: {
+			log: process.env.DISCORD_LOG_WEBHOOK
+		}
 	}
 };

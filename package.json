@@ -96,6 +96,7 @@
     "vue-style-loader": "^3.0.3",
     "vue-template-compiler": "^2.5.10",
     "vuex": "^2.4.1",
+    "webhook-discord": "^2.3.0",
     "webpack": "^3.6.0",
     "webpack-md5-hash": "0.0.5",
     "webpack-version-plugin": "^1.0.8",
