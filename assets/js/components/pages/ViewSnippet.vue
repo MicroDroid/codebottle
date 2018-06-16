@@ -120,7 +120,7 @@
 					.then(response => {
 						this.snippet.currentVote = vote;
 					}).catch(error => {
-						cookToast('Error while voting', 4000);
+						cookToast(extractError(error), 4000);
 				});
 			},
 
