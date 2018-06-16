@@ -8,6 +8,7 @@ const sinonTest = sinonTestFactory(sinon);
 const ApiError = require('../../../errors/api-error');
 const RateLimitError = require('../../../errors/rate-limit-error');
 const handler = require('../../../middleware/handler');
+const Logger = require('../../../utils/logger');
 
 chai.use(sinonChai);
 
@@ -16,7 +17,7 @@ describe('Handler middleware', () => {
 		const error = new TypeError('error!');
 		let ctx = {};
 
-		const consoleStub = this.stub(console, 'log');
+		const errStub = this.stub(Logger, 'err');
 
 		await handler(ctx, async () => {
 			throw error;
@@ -24,7 +25,7 @@ describe('Handler middleware', () => {
 
 		expect(ctx.status, 'Status should be 500').to.equal(500);
 		expect(ctx.body.error, 'Error should be \'Internal error\'').to.equal('Internal error');
-		expect(consoleStub, 'Should log to console').to.have.been.calledWith(error);
+		expect(errStub, 'Should log an error').to.have.been.called;
 	}));
 
 	it('Customizes error message for 401', sinonTest(async function() {
