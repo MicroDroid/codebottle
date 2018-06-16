@@ -87,6 +87,33 @@ export function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export function hljsLanguageById(id) {
+	switch (id) {
+	case 1:
+		return 'java';
+	case 2:
+		return 'cpp';
+	case 3:
+		return 'cs';
+	case 4:
+		return 'python';
+	case 5:
+		return 'php';
+	case 6:
+		return 'javascript';
+	case 7:
+		return 'perl';
+	case 8:
+		return 'ruby';
+	case 9:
+		return 'powershell';
+	case 10:
+		return 'lua';
+	default:
+		return '';
+	}
+}
+
 export function genRandomString(length) {
 	var text = '';
 	var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

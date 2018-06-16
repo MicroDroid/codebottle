@@ -4,22 +4,26 @@
 			<div class="col-xs-12 col-auto">
 				<h1 id="voting-buttons">
 					<span :class="{
-							'fa': true,
-							'fa-chevron-up': true,
-							'clickable': true,
-							'voted': snippet.currentVote && snippet.currentVote == 1
-						}" @click="vote(1)"></span>
+						'fa': true,
+						'fa-chevron-up': true,
+						'clickable': true,
+						'voted': snippet.currentVote && snippet.currentVote == 1
+					}" @click="vote(1)"></span>
 					<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 						<span itemprop="ratingValue">{{votes}}</span>
 					</span>
 					<span :class="'fa fa-chevron-down clickable'
-							+ ((snippet.currentVote && snippet.currentVote == -1) ?
-								' voted' : '')" @click="vote(-1)"></span>
+						+ ((snippet.currentVote && snippet.currentVote == -1) ?
+					' voted' : '')" @click="vote(-1)"></span>
 				</h1>
 				<p id="action-bar">
 					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="() => cookToast('Copied!', 1500)">
 						<span class="fa fa-copy"></span> Copy
 					</button>
+					<router-link tag="button" class="btn btn-warning btn-sm"
+						:to="{name: 'edit-snippet', params: {id: snippet.id}}">
+						<span class="fa fa-pencil"></span> Edit
+					</router-link>
 					<button class="btn btn-danger btn-sm" @click="deleteSnippet" v-if="currentUsername === snippet.username">
 						<span class="fa fa-trash"></span> Delete
 					</button>
@@ -46,6 +50,14 @@
 						</router-link>
 					</span>
 					<span class="ml-2">
+						<span class="fa fa-edit"></span>
+						<span>
+							<router-link :to="{name: 'snippet-revisions', params: {snippet_id: snippet.id}}">
+								{{ snippet.revisions_count }} revisions
+							</router-link>
+						</span>
+					</span>
+					<span class="ml-2">
 						<span class="fa fa-eye"></span>
 						<span>{{snippet.views}}</span>
 					</span>
@@ -58,7 +70,7 @@
 						<span itemprop="dateModified">{{moment(snippet.updatedAt).fromNow()}}</span>
 					</span>
 				</p>
-				<pre><code itemprop="text" :class="codeLanguage" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
+				<pre><code itemprop="text" :class="hljsLanguageById(snippet.language.id)" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
 				<div class="card" v-if="snippet.description" id="description">
 					<div class="card-body">
 						<div class="card-text" v-html="marked(snippet.description)" itemprop="description">
@@ -84,7 +96,7 @@
 <script type="text/javascript">
 	import striptags from 'striptags';
 	import {mapGetters, mapState} from 'vuex';
-	import {apiUrl, getAbsoluteUrl, cookToast, extractError} from '../../helpers';
+	import {apiUrl, getAbsoluteUrl, cookToast, extractError, hljsLanguageById} from '../../helpers';
 	import Modal from '../bootstrap/Modal';
 
 	export default {
@@ -160,6 +172,7 @@
 
 			marked, cookToast,
 			moment: moment.utc,
+			hljsLanguageById,
 		},
 
 		computed: {
@@ -188,39 +201,17 @@
 					return this.snippet.code.replace(/\t/g, Array(this.preferences.indentationSize + 1).join(' '));
 				return this.snippet.code;
 			},
-
-			codeLanguage: function() {
-				if (!this.snippet || !this.snippet.language)
-					return '';
-
-				switch(this.snippet.language.id) {
-					case 1:  return 'java';
-					case 2:  return 'cpp';
-					case 3:  return 'cs';
-					case 4:  return 'python';
-					case 5:  return 'php';
-					case 6:  return 'javascript';
-					case 7:  return 'perl';
-					case 8:  return 'ruby';
-					case 9:  return 'powershell';
-					case 10: return 'lua';
-					default: return '';
-				}
-			}
 		},
 
 		asyncData: function(store, route) {
 			return store.dispatch('snippets/fetch', route.params.id);
 		},
-
-		updated: function() {
+		
+		mounted: function() {
+			this.originalCurrentVote = this.snippet.currentVote;
 			document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
 				hljs.highlightBlock(b);
 			});
-		},
-
-		mounted: function() {
-			this.originalCurrentVote = this.snippet.currentVote;
 		},
 
 		meta: function() {

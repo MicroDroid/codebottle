@@ -17,6 +17,21 @@ export default [
 		component: require('./components/pages/ViewSnippet.vue'),
 	},
 	{
+		name: 'edit-snippet',
+		path: '/s/:id/edit',
+		component: require('./components/pages/EditSnippet.vue'),
+	},
+	{
+		name: 'snippet-revisions',
+		path: '/s/:snippet_id/revisions',
+		component: require('./components/pages/SnippetRevisions.vue'),
+	},
+	{
+		name: 'view-snippet-revision',
+		path: '/s/:snippet_id/revisions/:id',
+		component: require('./components/pages/ViewSnippetRevision.vue'),
+	},
+	{
 		name: 'view-user',
 		path: '/users/:username',
 		component: require('./components/pages/ViewUser.vue'),

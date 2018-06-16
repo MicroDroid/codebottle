@@ -34,8 +34,8 @@ module.exports = async (ctx, next) => {
 				ctx.body = {
 					error: 'Internal error'
 				};
-				
-				Logger.err(e);
+
+				Logger.err(e.stack);
 			}
 		}
 	}

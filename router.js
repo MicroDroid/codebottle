@@ -13,6 +13,7 @@ const LanguageController = require('./controllers/language');
 const UserController = require('./controllers/user');
 const AuthController = require('./controllers/auth');
 const SnippetController = require('./controllers/snippet');
+const SnippetRevisionController = require('./controllers/snippet-revision');
 const VoteController = require('./controllers/vote');
 const FlagController = require('./controllers/flag');
 const UserPreferencesController = require('./controllers/user-preferences');
@@ -34,6 +35,8 @@ module.exports = () => {
 
 	router.get('/snippets', throttle(), SnippetController.index);
 	router.get('/snippets/:id', throttle(), protect(true), SnippetController.get);
+	router.get('/snippets/:snippet_id/revisions', throttle(), SnippetRevisionController.getAll);
+	router.get('/snippets/:snippet_id/revisions/:id', throttle(), SnippetRevisionController.get);
 
 	router.post('/users', throttle(1, 900, true), UserController.create);
 	router.post('/users/email-verifications', throttle(5, 120), UserController.verifyEmail);
@@ -49,7 +52,9 @@ module.exports = () => {
 
 	router.post('/snippets', throttle(5, 900, true), protect(), SnippetController.create);
 	router.delete('/snippets/:id', throttle(), protect(), SnippetController.delete);
+	router.put('/snippets/:id', throttle(), protect(), SnippetController.edit);
 	router.post('/snippets/:snippet/vote', throttle(), protect(), VoteController.vote);
+
 	router.get('/self', throttle(), protect(), UserController.getSelf);
 	router.put('/self', throttle(), protect(), UserController.setSelf);
 

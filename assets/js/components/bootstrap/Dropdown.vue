@@ -42,6 +42,6 @@
 				if (this.onSelect)
 					this.onSelect(item);
 			},
-		}
+		},
 	};
 </script>

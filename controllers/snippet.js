@@ -15,7 +15,7 @@ const controller = {
 	get: async (ctx, next) => {
 		const snippet = await models.snippet.findOne({
 			where: {'public_id': ctx.params.id},
-			include: [models.language, models.category, models.vote, models.user]
+			include: [models.language, models.category, models.vote, models.user, models.snippetRevision]
 		});
 
 		if (!snippet)
@@ -40,6 +40,78 @@ const controller = {
 		}
 
 		ctx.body = models.snippet.transform(snippet, currentVote);
+
+		return next();
+	},
+
+	edit: async (ctx, next) => {
+		const snippet = await models.snippet.findOne({
+			where: { 'public_id': ctx.params.id },
+			include: [models.user, models.language, models.category, models.snippetRevision, models.vote]
+		});
+
+		if (!snippet)
+			throw new ApiError(404, 'Not found');
+		if (ctx.state.user.id !== snippet.user.id)
+			throw new ApiError(403, 'You can only edit your snippets');
+
+		const title = ctx.request.body.title;
+		const code = ctx.request.body.code;
+		const description = ctx.request.body.description;
+		const explanation = ctx.request.body.explanation;
+
+		if (!title)
+			throw new ApiError(422, 'Title field is required');
+		else if (title.length < 20)
+			throw new ApiError(422, 'Title is too short');
+		else if (title.length > 70)
+			throw new ApiError(422, 'Title is too long');
+		else if (!code)
+			throw new ApiError(422, 'Code field is required');
+
+		const language = await models.language.findOne({
+			where: { id: ctx.request.body.language },
+		});
+
+		const category = await models.category.findOne({
+			where: { id: ctx.request.body.category },
+		});
+
+		if (!language)
+			throw new ApiError(422, 'Invalid language selected');
+		else if (!category)
+			throw new ApiError(422, 'Invalid category selected');
+		
+		if (title != snippet.title
+			|| code != snippet.code
+			|| description != snippet.description
+			|| ctx.request.body.language != snippet.language_id
+			|| ctx.request.body.category != snippet.category_id) {
+			await snippet.update({
+				title,
+				code,
+				description,
+				language_id: language.id,
+				category_id: category.id,
+			});
+
+			await models.snippetRevision.create({
+				title,
+				code,
+				description,
+				explanation,
+				snippet_id: snippet.id,
+				user_id: ctx.state.user.id,
+				language_id: language.id,
+				category_id: category.id,
+			});
+
+			await snippet.reload({
+				include: [models.user, models.language, models.category, models.snippetRevision, models.vote]
+			});
+		}
+
+		ctx.body = models.snippet.transform(snippet, 0);
 
 		return next();
 	},
@@ -129,7 +201,7 @@ const controller = {
 		});
 
 		await snippet.reload({
-			include: [models.language, models.category, models.vote]
+			include: [models.language, models.category, models.vote, models.snippetRevision]
 		});
 
 		ctx.body = models.snippet.transform(snippet, 0);

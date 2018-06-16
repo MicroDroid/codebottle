@@ -49,7 +49,7 @@ $card-border-radius: 1px;
 
 $font-family-sans-serif: 'Lato', sans-serif;
 
-// ******* alert.scss *******
+// ******* alerts.scss *******
 $alert-danger-bg:             #2C2222;
 $alert-danger-text:           #EAA;
 $alert-danger-border:         #2A2020;
@@ -61,7 +61,7 @@ $alert-warning-border:        #2A2A20;
 $alert-success-bg:            #222C22;
 $alert-success-text:          #AEA;
 $alert-success-border:        #202A20;
-// ******* alert.scss *******
+// ******* alerts.scss *******
 
 $link-color: lighten($primary-color, 15%);
 
@@ -81,6 +81,9 @@ $modal-content-bg: lighten($dark, 8.5%);
 $modal-content-border-color: $dark;
 $modal-header-border-color: rgba($dark, .3);
 $modal-footer-border-color: rgba($dark, .3);
+
+$list-group-bg: lighten($dark, 8.5%);
+$list-group-border-color: lighten($dark, 5%);
 
 // Font Awesome variables
 

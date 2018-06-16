@@ -8,17 +8,24 @@ const state = {
 
 const actions = {
 	fetchNew: ({commit}) => {
-		return axios.get(apiUrl('/snippets'))
-			.then(response => {
-				commit(types.STORE_NEW_SNIPPETS, response.data);
-			});
+		return axios.get(apiUrl('/snippets')).then(response => {
+			commit(types.STORE_NEW_SNIPPETS, response.data);
+			return response.data;
+		});
 	},
 
 	fetch: ({commit}, id) => {
-		return axios.get(apiUrl(`/snippets/${id}`))
-			.then(response => {
-				commit(types.STORE_SNIPPET, response.data);
-			});
+		return axios.get(apiUrl(`/snippets/${id}`)).then(response => {
+			commit(types.STORE_SNIPPET, response.data);
+			return response.data;
+		});
+	},
+
+	fetchRevisions: ({commit}, snippet_id) => {
+		return axios.get(apiUrl(`/snippets/${snippet_id}/revisions`)).then(response => {
+			commit(types.STORE_SNIPPET_REVISIONS, {snippet_id, revisions: response.data});
+			return response.data;
+		});
 	}
 };
 
@@ -29,7 +36,20 @@ const mutations = {
 
 	[types.STORE_SNIPPET] (state, snippet) {
 		state.snippets = state.snippets.filter(s => s.id !== snippet.id);
-		state.snippets.push(snippet);
+		state.snippets.push({
+			...snippet,
+			revisions: [],
+			revisions_count: snippet.revisions,
+		});
+	},
+
+	[types.STORE_SNIPPET_REVISIONS](state, payload) {
+		let snippet = state.snippets.filter(s => s.id === payload.snippet_id)[0];
+	
+		if (!snippet) {
+			snippet = {id: payload.snippet_id, revisions: payload.revisions};
+			state.snippets.push(snippet);
+		} else snippet.revisions = payload.revisions;
 	}
 };
 

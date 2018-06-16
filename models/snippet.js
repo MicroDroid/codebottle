@@ -1,4 +1,7 @@
 'use strict';
+
+const Logger = require('../utils/logger');
+
 module.exports = (sequelize, DataTypes) => {
 	const TIMESTAMP = require('sequelize-mysql-timestamp')(sequelize);
 
@@ -73,6 +76,7 @@ module.exports = (sequelize, DataTypes) => {
 				flaggable_type: 'snippet',
 			}
 		});
+		snippet.hasMany(models.snippetRevision);
 	};
 
 	snippet.transform = (snippet, currentVote) => ({
@@ -90,10 +94,26 @@ module.exports = (sequelize, DataTypes) => {
 			name: snippet.category.name,
 		},
 		votes: snippet.votes.reduce((p, c) => p + c.vote, 0),
+		...snippet.snippetRevisions && {revisions: snippet.snippetRevisions.length},
 		...snippet.user && {username: snippet.user.username},
 		...typeof(currentVote) !== 'undefined' && {currentVote},
 		createdAt: snippet.created_at,
 		updatedAt: snippet.updated_at,
+	});
+
+	snippet.afterCreate(snippet => {
+		sequelize.models.snippetRevision.create({
+			snippet_id: snippet.id,
+			user_id: snippet.user_id, // Well for first revision it's same
+			title: snippet.title,
+			code: snippet.code,
+			description: snippet.description,
+			category_id: snippet.category_id,
+			language_id: snippet.language_id,
+		}).catch(e => {
+			Logger.err('Could not create snippet revision after creation!');
+			Logger.err(e);	
+		});
 	});
 
 	return snippet;
