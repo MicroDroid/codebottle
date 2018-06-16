@@ -50,7 +50,7 @@
 						</router-link>
 					</span>
 					<span class="ml-2">
-						<span class="fa fa-edit"></span>
+						<span class="fa fa-refresh"></span>
 						<span>
 							<router-link :to="{name: 'snippet-revisions', params: {snippet_id: snippet.id}}">
 								{{ snippet.revisions_count }} revisions
