@@ -21,7 +21,7 @@
 						<span class="fa fa-copy"></span> Copy
 					</button>
 					<router-link tag="button" class="btn btn-warning btn-sm"
-						:to="{name: 'edit-snippet', params: {id: snippet.id}}">
+						:to="{name: 'edit-snippet', params: {id: snippet.id}}" v-if="currentUsername === snippet.username">
 						<span class="fa fa-pencil"></span> Edit
 					</router-link>
 					<button class="btn btn-danger btn-sm" @click="deleteSnippet" v-if="currentUsername === snippet.username">
