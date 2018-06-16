@@ -36,6 +36,10 @@ module.exports = {
             "tab",
         ],
         "vue/order-in-components": "off",
+        "vue/mustache-interpolation-spacing": "off",
+        "vue/attributes-order": "off",
+        "vue/max-attributes-per-line": "off",
+        "vue/html-self-closing": "off",
     },
     "globals": {
         "axios": false,
