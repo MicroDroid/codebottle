@@ -5,6 +5,7 @@ const config = require('../config');
 const DiscordWebhook = require('webhook-discord');
 const os = require('os');
 
+/* istanbul ignore next */
 const hook = config.hooks.discord.log ? new DiscordWebhook(config.hooks.discord.log) : null;
 
 /* istanbul ignore next */
