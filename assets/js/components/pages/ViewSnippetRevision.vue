@@ -9,7 +9,7 @@
 					</router-link>
 				</div>
 				<div class="col ml-3">
-					<router-link tag="h5" class="clickable mb-0" :to="{name: 'view-user', params: {username: revision.author}}">
+					<router-link class="clickable mb-0 whiteLink" :to="{name: 'view-user', params: {username: revision.author}}">
 						{{revision.author}}
 					</router-link>
 					<p class="mb-0 text-muted">
