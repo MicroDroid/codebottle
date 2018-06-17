@@ -23,13 +23,13 @@
 					<div class="col">
 						<div class="form-group">
 							<label>Language</label>
-							<dropdown label="Language" :options="languages" :on-select="onLanguage" :selective="true" label-field="name"></dropdown>
+							<dropdown label="Language" :options="languages" @on-select="onLanguage" :selective="true" label-field="name"></dropdown>
 						</div>
 					</div>
 					<div class="col">
 						<div class="form-group">
 							<label>Snippet type</label>
-							<dropdown label="Type" :options="categories" :on-select="onCategory" :selective="true" label-field="name"></dropdown>
+							<dropdown label="Type" :options="categories" @on-select="onCategory" :selective="true" label-field="name"></dropdown>
 						</div>
 					</div>
 				</div>

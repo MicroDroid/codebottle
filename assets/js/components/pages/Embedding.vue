@@ -7,11 +7,11 @@
 			<input class="form-control" v-model="searchBadgeKeywords" placeholder="Keywords">
 			<div class="btn-group ml-2" role="group">
 				<dropdown label="Language" :options="languageOptions"
-					:on-select="onLanguage"
+					@on-select="onLanguage"
 					:selective="true"
 					label-field="name"></dropdown>
 				<dropdown label="Format" :options="formatOptions"
-					:on-select="onFormat"
+					@on-select="onFormat"
 					:selective="true"
 					label-field="name"></dropdown>
 				<button type="submit" class="btn btn-primary">Generate</button>

@@ -18,7 +18,6 @@
 		props: [
 			'label',
 			'options',
-			'on-select',
 			'selective',
 			'label-field',
 		],
@@ -39,8 +38,7 @@
 
 			select: function (item) {
 				this.selected = item[this.labelField ? this.labelField : 'label'];
-				if (this.onSelect)
-					this.onSelect(item);
+				this.$emit('on-select', item);
 			},
 		},
 	};

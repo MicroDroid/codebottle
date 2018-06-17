@@ -29,14 +29,14 @@
 						<div class="form-group">
 							<label>Language</label>
 							<dropdown :label="(languages.filter(l => l.id === language)[0] ? languages.filter(l => l.id === language)[0].name : 'Language')"
-								:options="languages" :on-select="onLanguage" label-field="name" :selective="true"></dropdown>
+								:options="languages" @on-select="onLanguage" label-field="name" :selective="true"></dropdown>
 						</div>
 					</div>
 					<div class="col">
 						<div class="form-group">
 							<label>Snippet type</label>
 							<dropdown :label="(categories.filter(c => c.id === category)[0] ? categories.filter(l => l.id === category)[0].name : 'Type')"
-								:options="categories" :on-select="onCategory" :selective="true" label-field="name"></dropdown>
+								:options="categories" @on-select="onCategory" :selective="true" label-field="name"></dropdown>
 						</div>
 					</div>
 				</div>
