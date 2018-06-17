@@ -11,7 +11,7 @@
     "tests:coverage": "env-cmd ./.env cross-env NODE_ENV=testing nyc -x tests -x models --clean mocha ./tests --recursive",
     "assets:dev": "cross-env NODE_ENV=development webpack --progress --hide-modules --watch",
     "assets:prod": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "assets:clean": "rm -f ./public/css/app-*.css && rm -f ./public/js/app-*.js ./public/webpack-manifest.json ./build/*json",
+    "assets:clean": "rm -f ./public/css/app-*.css && rm -f ./public/js/app-*.js ./public/webpack-manifest.json ./build/*json ./public/fonts/*",
     "dev": "env-cmd ./.env node ./index.js"
   },
   "author": "",
@@ -39,7 +39,7 @@
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-vue": "^4.4.0",
     "extract-text-webpack-plugin": "^3.0.0",
-    "file-loader": "^1.1.0",
+    "file-loader": "^1.1.11",
     "font-awesome": "^4.7.0",
     "gravatar": "^1.6.0",
     "highlight.js": "^9.12.0",

@@ -1,8 +1,14 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:400:700);
 
-@import "variables";
+@import 'variables';
 @import 'node_modules/bootstrap/scss/bootstrap';
-@import 'node_modules/font-awesome/scss/font-awesome';
+
+@import './font-awesome-pro/scss/fontawesome';
+@import './font-awesome-pro/scss/fa-brands.scss';
+@import './font-awesome-pro/scss/fa-light.scss';
+@import './font-awesome-pro/scss/fa-regular.scss';
+@import './font-awesome-pro/scss/fa-solid.scss';
+
 @import './pace';
 @import './loader';
 @import '~highlight.js/styles/railscasts.css';

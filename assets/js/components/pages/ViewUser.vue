@@ -9,25 +9,25 @@
 			<div class="col-8">
 				<h1 class="username">
 					<strong itemprop="additionalName">{{user.username}}</strong>
-					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fa fa-flag"></span></a>
+					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fas fa-flag"></span></a>
 				</h1>
 				<p class="stats-bar">
 					<span>
-						<span class="fa fa-calendar fa-fw"></span>
+						<span class="far fa-calendar fa-fw"></span>
 						Joined {{moment(user.createdAt).fromNow()}}
 					</span> <br/>
 					<span>
-						<span class="fa fa-envelope fa-fw"></span>
+						<span class="far fa-envelope fa-fw"></span>
 						<span itemprop="email">{{user.email || 'Private email'}}</span>
 					</span> <br/>
 					<span v-if="user.github_username">
-						<span class="fa fa-github fa-fw"></span>
+						<span class="fab fa-github fa-fw"></span>
 						<a itemprop="email" class="nostyle" :href="'https://github.com/' + user.github_username">
 							{{user.github_username}}
 						</a>
 					</span> <br v-if="user.github_username"/>
 					<span v-if="user.banned">
-						<span class="fa fa-exclamation-triangle fa-fw"></span>
+						<span class="far fa-exclamation-triangle fa-fw"></span>
 						This user is banned
 					</span> <br v-if="user.banned"/>
 				</p>
@@ -49,25 +49,25 @@
 				<img :src="user.profileImage" class="profile-img center-block">
 				<h1 class="username">
 					<strong>{{user.username}}</strong>
-					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fa fa-flag"></span></a>
+					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fas fa-flag"></span></a>
 				</h1>
 				<p class="stats-bar">
 					<span>
-						<span class="fa fa-calendar fa-fw"></span>
+						<span class="far fa-calendar fa-fw"></span>
 						Joined {{moment(user.createdAt).fromNow()}}
 					</span> <br/>
 					<span>
-						<span class="fa fa-envelope fa-fw"></span>
+						<span class="far fa-envelope fa-fw"></span>
 						<span>{{user.email || 'Private email'}}</span>
 					</span> <br/>
 					<span v-if="user.github_username">
-						<span class="fa fa-github fa-fw"></span>
+						<span class="fab fa-github fa-fw"></span>
 						<a class="nostyle" :href="'https://github.com/' + user.github_username">
 							{{user.github_username}}
 						</a>
 					</span> <br v-if="user.github_username"/>
 					<span v-if="user.banned">
-						<span class="fa fa-exclamation-triangle fa-fw"></span>
+						<span class="far fa-exclamation-triangle fa-fw"></span>
 						This user is banned
 					</span> <br v-if="user.banned"/>
 				</p>

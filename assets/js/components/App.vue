@@ -11,8 +11,8 @@
 				| <router-link :to="{name: 'embedding'}">Embedding</router-link>
 				| <a href="https://discord.gg/2Sd8Um3" id="discord-invite">Discord</a>
 				| <router-link :to="{name: 'privacy-policy'}">Privacy Policy</router-link>
-				| Built with <span class="fa fa-heart" title="Oh you burnt it!"></span> by OverCoder
-				| Proudly hosted by <a href="https://blackfields.net/">BFNT <span class="fa fa-globe" title="Globe!"></span></a>
+				| Built with <span class="fas fa-heart" title="Oh you burnt it!"></span> by OverCoder
+				| Proudly hosted by <a href="https://blackfields.net/">BFNT <span class="fal fa-globe" title="Globe!"></span></a>
 			</span>
 		</footer>
 	</div>

@@ -12,45 +12,45 @@
 					<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 						<span itemprop="ratingValue">{{votes}}</span>
 					</span>
-					<span :class="'fa fa-chevron-down clickable'
+					<span :class="'far fa-chevron-down clickable'
 						+ ((snippet.currentVote && snippet.currentVote == -1) ?
 					' voted' : '')" @click="vote(-1)"></span>
 				</h1>
 				<p id="action-bar">
 					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="() => cookToast('Copied!', 1500)">
-						<span class="fa fa-copy"></span> Copy
+						<span class="far fa-copy"></span> Copy
 					</button>
 					<router-link tag="button" class="btn btn-warning btn-sm"
 						:to="{name: 'edit-snippet', params: {id: snippet.id}}" v-if="currentUsername === snippet.username">
-						<span class="fa fa-pencil"></span> Edit
+						<span class="far fa-pencil"></span> Edit
 					</router-link>
 					<button class="btn btn-danger btn-sm" @click="deleteSnippet" v-if="currentUsername === snippet.username">
-						<span class="fa fa-trash"></span> Delete
+						<span class="far fa-trash"></span> Delete
 					</button>
 				</p>
 			</div>
 			<div class="col-xs-12 col" id="data-container">
 				<h2 itemprop="about">
 					{{snippet.title}}
-					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fa fa-flag"></span></a>
+					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fas fa-flag"></span></a>
 				</h2>
 				<p id="stats-bar">
 					<span>
-						<span class="fa fa-bullseye"></span>
+						<span class="far fa-bullseye"></span>
 						<span itemprop="codeSampleType">{{snippet.category.name}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="fa fa-code"></span>
+						<span class="far fa-code"></span>
 						<span itemprop="programmingLanguage">{{snippet.language.name}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="fa fa-user-o"></span>
+						<span class="far fa-user"></span>
 						<router-link :to="{name: 'view-user', params: {username: snippet.username}}" itemprop="author">
 							{{snippet.username}}
 						</router-link>
 					</span>
 					<span class="ml-2">
-						<span class="fa fa-refresh"></span>
+						<span class="far fa-sync"></span>
 						<span>
 							<router-link :to="{name: 'snippet-revisions', params: {snippet_id: snippet.id}}">
 								{{ snippet.revisions_count }} revisions
@@ -58,15 +58,15 @@
 						</span>
 					</span>
 					<span class="ml-2">
-						<span class="fa fa-eye"></span>
+						<span class="far fa-eye"></span>
 						<span>{{snippet.views}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="fa fa-clock-o"></span>
+						<span class="far fa-clock"></span>
 						<span itemprop="dateCreated">{{moment(snippet.createdAt).fromNow()}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="fa fa-edit"></span>
+						<span class="far fa-edit"></span>
 						<span itemprop="dateModified">{{moment(snippet.updatedAt).fromNow()}}</span>
 					</span>
 				</p>
@@ -269,8 +269,11 @@
 		margin-bottom: 12px;
 	}
 
-	#action-bar button .fa {
-		margin-right: 3px;
+	#stats-bar .fas,
+	#stats-bar .far,
+	#stats-bar .fal,
+	#stats-bar .fab {
+		margin-right: 2px;
 	}
 
 	#action-bar {

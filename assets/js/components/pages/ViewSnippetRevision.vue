@@ -28,11 +28,11 @@
 		<h2>{{revision.title}}</h2>
 		<p id="stats-bar">
 			<span>
-				<span class="fa fa-bullseye"></span>
+				<span class="far fa-bullseye"></span>
 				<span>{{revision.category.name}}</span>
 			</span>
 			<span class="ml-2">
-				<span class="fa fa-code"></span>
+				<span class="far fa-code"></span>
 				<span>{{revision.language.name}}</span>
 			</span>
 		</p>

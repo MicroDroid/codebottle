@@ -1,3 +1,4 @@
 css/app*css
 js/app*js
+fonts/*
 webpack-manifest.json

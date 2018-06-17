@@ -45,9 +45,9 @@ const common = {
       }),
     },
     {
-      test: /\.(woff|woff2|eot|ttf|otf|png|svg|jpe?g|gif)$/,
+      test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
       use: [
-        'file-loader'
+        'file-loader?name=/fonts/[name].[ext]'
       ]
     }],
   },

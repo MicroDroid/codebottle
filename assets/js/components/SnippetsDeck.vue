@@ -7,10 +7,10 @@
                         <div class="card-body">
                             <h5 class="card-title">{{snippet.title}}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">
-                                <span class="fa fa-star"></span> {{snippet.votes}}
-                                <span class="fa fa-code"></span> {{snippet.language.name}}
-                                <span class="fa fa-eye"></span> {{snippet.views}}
-                                <span class="fa fa-clock-o"></span> {{moment(snippet.updatedAt).fromNow()}}
+                                <span class="far fa-star"></span> {{snippet.votes}}
+                                <span class="far fa-code"></span> {{snippet.language.name}}
+                                <span class="far fa-eye"></span> {{snippet.views}}
+                                <span class="far fa-clock-o"></span> {{moment(snippet.updatedAt).fromNow()}}
                             </h6>
                             <div class="card-text">
                                 <p v-if="snippet.description && summarize(snippet.description)">

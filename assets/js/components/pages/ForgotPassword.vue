@@ -6,7 +6,7 @@
 			<form>
 				<div class="input-group">
 					<span class="input-group-addon">
-						<span class="fa fa-envelope"></span>
+						<span class="fas fa-envelope"></span>
 					</span>
 					<input type="email" class="form-control" placeholder="Email" name="email" id="email" v-model="email" ref="emailInput" required>
 				</div>
@@ -99,9 +99,5 @@
 	#submit-btn {
 		width: 100%;
 		text-transform: uppercase;
-	}
-
-	.fa {
-		width: 16px;
 	}
 </style>

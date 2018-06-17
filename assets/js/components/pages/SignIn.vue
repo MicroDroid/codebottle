@@ -6,13 +6,13 @@
 			<form @submit.prevent="login">
 				<div class="input-group">
 					<span class="input-group-addon">
-						<span class="fa fa-user"></span>
+						<span class="fas fa-user"></span>
 					</span>
 					<input type="text" class="form-control" placeholder="Username" name="username" v-model="username" ref="usernameInput">
 				</div>
 				<div class="input-group">
 					<span class="input-group-addon">
-						<span class="fa fa-key"></span>
+						<span class="fas fa-key"></span>
 					</span>
 					<input type="password" class="form-control" placeholder="Password" name="password" v-model="password">
 				</div>
@@ -106,9 +106,5 @@
 
 	#github-signin:hover {
 		background: #373737;
-	}
-
-	.fa {
-		width: 16px;
 	}
 </style>

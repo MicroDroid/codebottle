@@ -43,7 +43,7 @@
 				<div class="row">
 					<div class="col-auto">
 						<a class="navbar-brand ml-3" href="javascript:undefined" @click="toggleMenu">
-							<i class="fa fa-bars" aria-hidden="true"></i>
+							<i class="fal fa-bars" aria-hidden="true"></i>
 						</a>
 					</div>
 					<div class="col">
