@@ -34,7 +34,7 @@
 					{{snippet.title}}
 					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fas fa-flag"></span></a>
 				</h2>
-				<p id="stats-bar">
+				<p id="stats-bar" class="text-muted">
 					<span>
 						<span class="far fa-bullseye"></span>
 						<span itemprop="codeSampleType">{{snippet.category.name}}</span>
