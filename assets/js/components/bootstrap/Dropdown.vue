@@ -5,7 +5,7 @@
 		</button>
 
 		<div :class="{'dropdown-menu': true, 'show': open}" role="menu">
-			<a class="dropdown-item clickable" v-for="item in options" @mousedown="select(item)">
+			<a class="dropdown-item clickable" v-for="item in options" :key="item[keyField]" @mousedown="select(item)">
 				{{item[labelField]}}
 			</a>
 		</div>
@@ -33,6 +33,11 @@
 				type: String,
 				required: false,
 				default: 'label'
+			},
+			keyField: {
+				type: String,
+				required: false,
+				default: 'key'
 			},
 		},
 

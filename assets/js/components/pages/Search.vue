@@ -12,6 +12,7 @@
 							<dropdown label="Language" :options="languageOptions"
 								@on-select="onLanguage"
 								:selective="true"
+								key-field="id"
 								label-field="name"></dropdown>
 							<button type="submit" class="btn btn-primary">Search</button>
 						</div>

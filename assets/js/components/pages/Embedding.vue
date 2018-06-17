@@ -9,10 +9,12 @@
 				<dropdown label="Language" :options="languageOptions"
 					@on-select="onLanguage"
 					:selective="true"
+					key-field="id"
 					label-field="name"></dropdown>
 				<dropdown label="Format" :options="formatOptions"
 					@on-select="onFormat"
 					:selective="true"
+					key-field="id"
 					label-field="name"></dropdown>
 				<button type="submit" class="btn btn-primary">Generate</button>
 			</div>
