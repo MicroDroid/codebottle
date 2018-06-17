@@ -25,7 +25,7 @@
 						No results
 					</div>
 					<div :style="{opacity: loading ? 0.7 : 1.0}">
-						<div v-for="result in results">
+						<div v-for="result in results" :key="result.id">
 							<router-link :to="{name: 'view-snippet', params: {id: result.id}}">
 								{{result.title}}
 							</router-link>
