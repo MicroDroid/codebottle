@@ -45,7 +45,7 @@
 </template>
 
 <script type="text/javascript">
-	import InvisibleRecaptcha from '../InvisibleRecaptcha.vue';
+	import InvisibleRecaptcha from 'vue-invisible-recaptcha';
 	import {extractError, apiUrl} from '../../helpers';
 
 	export default {
