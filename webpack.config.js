@@ -11,8 +11,8 @@ const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
 const fs = require('fs');
 
 const hljsLanguages = ['java', 'cpp', 'cs', 'css', 'python', 'php', 'javascript',
-                        'perl', 'ruby', 'powershell', 'lua', 'json', 'bash', 'less',
-                        'markdown', 'scss', 'sql', 'html', 'xml', 'yaml'];
+  'perl', 'ruby', 'powershell', 'lua', 'json', 'bash', 'less', 'markdown', 'scss',
+  'sql', 'html', 'xml', 'yaml'];
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -68,7 +68,6 @@ module.exports = [
     ],
     output: {
       filename: 'js/app-[chunkhash].js',
-      // chunkFilename: 'js/[name].[id].[chunkhash:5].js',
       path: path.resolve(__dirname, 'public')
     },
     plugins: [
@@ -98,7 +97,7 @@ module.exports = [
       new WebpackMd5Hash(),
 
       ...(isProd ? [
-      	new UglifyJsPlugin(),
+        new UglifyJsPlugin(),
         new OptimizeCssAssetsPlugin(),
       ] : []),
     ],
@@ -114,7 +113,6 @@ module.exports = [
     output: {
       filename: 'js/ssr.js',
       path: path.resolve(__dirname, 'build'),
-      // chunkFilename: '[name].[id].[chunkhash:5].js',
       libraryTarget: 'commonjs2',
     },
     plugins: [
