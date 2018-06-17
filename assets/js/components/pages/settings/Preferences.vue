@@ -9,7 +9,7 @@
 					<h4 class="mb-4">Code format</h4>
 					<label for="indentation-size">Preferred indentation size</label>
 					<input type="number" id="indentation-size" class="form-control form-control-sm ml-2" max="8" min="2"
-						 v-model="preferences.indentationSize">
+						v-model="preferences.indentationSize">
 					<br/>
 					<label class="custom-control custom-checkbox mt-2">
 						<input type="checkbox" class="custom-control-input" v-model="preferences.convertTabsToSpaces">
@@ -70,10 +70,9 @@
 					this.loading = false;
 					this.preferences.updatedAt = Date.now();
 					this.message = 'Saved!';
-					this.$store.dispatch('auth/fetchPreferences')
-						.catch(error => {
-							cookToast('Error reloading preferences!', 3000);
-						});
+					this.$store.dispatch('auth/fetchPreferences').catch(error => {
+						cookToast('Error reloading preferences!', 3000);
+					});
 				}).catch(error => {
 					this.loading = false;
 					this.error = extractError(error);

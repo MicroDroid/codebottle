@@ -1,50 +1,50 @@
 <template>
-    <div>
-        <div id="snippets-container" class="row">
-            <div class="col-xs-12 col-sm-6 col-md-4" v-for="snippet in snippets" :key="snippet.id">
-                <router-link :to="{name: 'view-snippet', params: {id: snippet.id}}" class="nostyle">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{snippet.title}}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">
-                                <span class="far fa-star"></span> {{snippet.votes}}
-                                <span class="far fa-code"></span> {{snippet.language.name}}
-                                <span class="far fa-eye"></span> {{snippet.views}}
-                                <span class="far fa-clock-o"></span> {{moment(snippet.updatedAt).fromNow()}}
-                            </h6>
-                            <div class="card-text">
-                                <p v-if="snippet.description && summarize(snippet.description)">
-                                    {{ shorten(summarize(snippet.description), 200) }}
-                                </p>
-                                <em v-else class="no-description">
-                                    {{ !snippet.description ? 'No description provided.' : 'Description is in form of code.' }}
-                                </em>
-                            </div>
-                        </div>
-                    </div>
-                </router-link>
-            </div>
-        </div>
-    </div>
+	<div>
+		<div id="snippets-container" class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4" v-for="snippet in snippets" :key="snippet.id">
+				<router-link :to="{name: 'view-snippet', params: {id: snippet.id}}" class="nostyle">
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">{{snippet.title}}</h5>
+							<h6 class="card-subtitle mb-2 text-muted">
+								<span class="far fa-star"></span> {{snippet.votes}}
+								<span class="far fa-code"></span> {{snippet.language.name}}
+								<span class="far fa-eye"></span> {{snippet.views}}
+								<span class="far fa-clock-o"></span> {{moment(snippet.updatedAt).fromNow()}}
+							</h6>
+							<div class="card-text">
+								<p v-if="snippet.description && summarize(snippet.description)">
+									{{ shorten(summarize(snippet.description), 200) }}
+								</p>
+								<em v-else class="no-description">
+									{{ !snippet.description ? 'No description provided.' : 'Description is in form of code.' }}
+								</em>
+							</div>
+						</div>
+					</div>
+				</router-link>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script type="text/javascript">
-    import {shorten} from '../helpers';
-    import summarize from 'summarize-markdown';
+	import {shorten} from '../helpers';
+	import summarize from 'summarize-markdown';
 
-    export default {
-        props: {
-            snippets: {
-                type: Array,
-                required: true
-            }
-        },
+	export default {
+		props: {
+			snippets: {
+				type: Array,
+				required: true
+			}
+		},
 
-        methods: {
-            moment: moment.utc,
-            shorten, summarize
-        }
-    }
+		methods: {
+			moment: moment.utc,
+			shorten, summarize
+		}
+	}
 </script>
 
 <style scoped>
@@ -62,7 +62,7 @@
 		margin-left: 0;
 	}
 
-    .no-description {
-        color: rgba(255, 255, 255, 0.5);
-    }
+	.no-description {
+		color: rgba(255, 255, 255, 0.5);
+	}
 </style>

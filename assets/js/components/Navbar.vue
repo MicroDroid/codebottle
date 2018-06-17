@@ -122,20 +122,20 @@
 
 			onUserAction: function(item) {
 				switch(item.key) {
-					case 'sign-out':
-						this.$store.dispatch('auth/logout');
-						if (this.$route.meta.requiresAuth)
-							this.$router.push({name: 'search'});
-						break;
-					case 'settings':
-						this.$router.push({name: 'settings.preferences'});
-						break;
-					case 'view-profile':
-						this.$router.push({name: 'view-user', params: {username: this.username}});
-						break;
-					case 'edit-profile':
-						this.$router.push({name: 'edit-profile'});
-						break;
+				case 'sign-out':
+					this.$store.dispatch('auth/logout');
+					if (this.$route.meta.requiresAuth)
+						this.$router.push({name: 'search'});
+					break;
+				case 'settings':
+					this.$router.push({name: 'settings.preferences'});
+					break;
+				case 'view-profile':
+					this.$router.push({name: 'view-user', params: {username: this.username}});
+					break;
+				case 'edit-profile':
+					this.$router.push({name: 'edit-profile'});
+					break;
 				}
 			},
 

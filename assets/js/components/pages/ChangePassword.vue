@@ -38,15 +38,15 @@
 				this.loading = true;
 
 				axios.post(apiUrl('/auth/password/change'), {
-						token: this.$route.query.token,
-						password: this.password,
-					}).then(() => {
-						this.loading = false;
-						this.$router.push({name: 'signin'});
-					}).catch(error => {
-						this.loading = false;
-						this.error = extractError(error);
-					});
+					token: this.$route.query.token,
+					password: this.password,
+				}).then(() => {
+					this.loading = false;
+					this.$router.push({name: 'signin'});
+				}).catch(error => {
+					this.loading = false;
+					this.error = extractError(error);
+				});
 			}
 		},
 

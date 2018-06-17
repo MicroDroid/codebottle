@@ -101,12 +101,10 @@
 
 				axios.get(apiUrl('/snippets?' + cookGetParameters(params)), {
 					cancelToken: this.axiosSource.token,
-				})
-				.then(response => {
+				}).then(response => {
 					this.loading = false;
 					this.results = response.data;
-				})
-				.catch(error => {
+				}).catch(error => {
 					if (axios.isCancel(error)) {
 						// Do nothing, I guess.
 					} else {
@@ -146,7 +144,7 @@
 					{property: 'og:title', content: 'CodeBottle'},
 					{property: 'og:description', content: 'Search modular code + code examples made by developers from around the world'},
 				],
-			}
+			};
 		},
 
 		components: {

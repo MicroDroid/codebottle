@@ -54,15 +54,15 @@
 
 			resetPassword(recaptchaToken) {
 				axios.post(apiUrl('/auth/password/reset'), {
-						email: this.email,
-						recaptcha_token: recaptchaToken,
-					}).then(() => {
-						this.loading = false;
-						this.sent = true;
-					}).catch(error => {
-						this.loading = false;
-						this.error = extractError(error);
-					});
+					email: this.email,
+					recaptcha_token: recaptchaToken,
+				}).then(() => {
+					this.loading = false;
+					this.sent = true;
+				}).catch(error => {
+					this.loading = false;
+					this.error = extractError(error);
+				});
 			}
 		},
 
