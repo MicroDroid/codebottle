@@ -33,7 +33,7 @@
 				<ul class="nav navbar-nav" v-if="isAuthenticated">
 					<navbar-dropdown :label="'Hey ' + username + '!'"
 						:options="userOptions"
-						:onSelect="onUserAction"></navbar-dropdown>
+						@on-select="onUserAction"></navbar-dropdown>
 				</ul>
 			</div>
 		</nav>
@@ -76,7 +76,7 @@
 				<ul class="navbar-menu" v-if="showMenu && isAuthenticated">
 					<navbar-dropdown :label="'Hey ' + username + '!'"
 						:options="userOptions"
-						:onSelect="onUserAction"></navbar-dropdown>
+						@on-select="onUserAction"></navbar-dropdown>
 				</ul>
 			</div>
 		</nav>

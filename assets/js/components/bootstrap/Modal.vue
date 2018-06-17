@@ -29,14 +29,15 @@
 				required: true,
 			},
 
-			title: String,
-			onDismiss: Function,
+			title: {
+				type: String,
+				required: true,
+			}
 		},
 
 		methods: {
 			dismiss: function() {
-				if (this.onDismiss)
-					this.onDismiss();
+				this.$emit('on-dismiss');
 			}
 		}
 	};

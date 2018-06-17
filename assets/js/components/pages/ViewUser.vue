@@ -36,7 +36,7 @@
 				</p>
 				<br/>
 
-				<modal :show="flagModalShown" title="Why are you flagging them?" :onDismiss="onFlagDismiss">
+				<modal :show="flagModalShown" title="Why are you flagging them?" @on-dismiss="onFlagDismiss">
 					<textarea class="form-control flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
 					<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
 				</modal>
@@ -76,7 +76,7 @@
 				</p>
 				<br/>
 
-				<modal :show="flagModalShown" title="Why are you flagging them?" :onDismiss="onFlagDismiss">
+				<modal :show="flagModalShown" title="Why are you flagging them?" @on-dismiss="onFlagDismiss">
 					<textarea class="form-control flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
 					<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
 				</modal>

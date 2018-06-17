@@ -5,7 +5,7 @@
 		</a>
 		<div :class="{'dropdown-menu': true, 'show': open}">
 			<a class="dropdown-item clickable" v-for="item in options" @mousedown="select(item)">
-				{{item[labelField ? labelField : 'label']}}
+				{{item[labelField]}}
 			</a>
 		</div>
 	</li>
@@ -14,13 +14,26 @@
 
 <script type="text/javascript">
 	export default {
-		props: [
-			'label',
-			'options',
-			'onSelect',
-			'selective',
-			'labelField',
-		],
+		props: {
+			label: {
+				type: String,
+				required: true,
+			},
+			options: {
+				type: Array,
+				required: true,
+			},
+			selective: {
+				type: Boolean,
+				required: false,
+				default: false,
+			},
+			labelField: {
+				type: String,
+				required: false,
+				default: 'label'
+			},
+		},
 
 		data: () => ({
 			open: false,
@@ -37,9 +50,8 @@
 			},
 
 			select: function (item) {
-				this.selected = item[this.labelField ? this.labelField : 'label'];
-				if (this.onSelect)
-					this.onSelect(item);
+				this.selected = item[this.labelField];
+				this.$emit('on-select', item);
 			},
 		}
 	};

@@ -80,12 +80,12 @@
 			</div>
 		</div>
 
-		<modal :show="flagModalShown" title="Why are you flagging this snippet?" :onDismiss="onFlagDismiss">
+		<modal :show="flagModalShown" title="Why are you flagging this snippet?" @on-dismiss="onFlagDismiss">
 			<textarea class="form-control" id="flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
 			<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
 		</modal>
 
-		<modal :show="deleteModalShown" title="Are you sure you want to delete this snippet?" :onDismiss="onDeleteDismiss">
+		<modal :show="deleteModalShown" title="Are you sure you want to delete this snippet?" @on-dismiss="onDeleteDismiss">
 			<p>This is irreversible.</p>
 			<button class="btn btn-primary" slot="footer" @click="confirmDeletion">Delete it</button>
 			<button class="btn btn-primary" slot="footer" @click="onDeleteDismiss">Cancel</button>
