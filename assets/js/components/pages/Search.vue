@@ -10,9 +10,9 @@
 
 						<div class="btn-group" role="group" id="btns">
 							<dropdown label="Language" :options="languageOptions"
-								:onSelect="onLanguage"
+								:on-select="onLanguage"
 								:selective="true"
-								labelField="name"></dropdown>
+								label-field="name"></dropdown>
 							<button type="submit" class="btn btn-primary">Search</button>
 						</div>
 					</form>

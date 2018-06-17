@@ -18,9 +18,9 @@
 		props: [
 			'label',
 			'options',
-			'onSelect',
+			'on-select',
 			'selective',
-			'labelField',
+			'label-field',
 		],
 
 		data: () => ({
