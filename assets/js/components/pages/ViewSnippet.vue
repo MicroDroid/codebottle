@@ -96,7 +96,7 @@
 <script type="text/javascript">
 	import striptags from 'striptags';
 	import {mapGetters, mapState} from 'vuex';
-	import {apiUrl, getAbsoluteUrl, cookToast, extractError, hljsLanguageById} from '../../helpers';
+	import {apiUrl, getAbsoluteUrl, cookToast, extractError, hljsLanguageById, highlightCode} from '../../helpers';
 	import Modal from '../bootstrap/Modal';
 
 	export default {
@@ -209,9 +209,7 @@
 		
 		mounted: function() {
 			this.originalCurrentVote = this.snippet.currentVote;
-			document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
-				hljs.highlightBlock(b);
-			});
+			highlightCode();
 		},
 
 		meta: function() {

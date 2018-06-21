@@ -50,7 +50,7 @@
 	import striptags from 'striptags';
 	import {diffLines} from 'diff';
 	import {mapGetters} from 'vuex';
-	import {getAbsoluteUrl, cookToast, extractError, hljsLanguageById} from '../../helpers';
+	import {getAbsoluteUrl, cookToast, extractError, hljsLanguageById, highlightCode} from '../../helpers';
 
 	export default {
 		methods: {
@@ -99,9 +99,7 @@
 		},
 
 		mounted: function() {
-			document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
-				hljs.highlightBlock(b);
-			});
+			highlightCode();
 		},
 
 		meta: function() {

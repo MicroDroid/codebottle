@@ -122,3 +122,12 @@ export function genRandomString(length) {
 	}
 	return text;
 }
+
+
+export function highlightCode() {
+	document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
+		hljs.highlightBlock(b);
+		if (b.classList.contains('lang-text'))
+			b.classList.add('hljs');
+	});
+}

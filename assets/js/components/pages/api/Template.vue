@@ -12,6 +12,7 @@
 
 <script type="text/javascript">
 	import Sidenav from './Sidenav.vue';
+	import {highlightCode} from '../../../helpers';
 
 	export default {
 		props: {
@@ -35,14 +36,6 @@
 			},
 		},
 
-		methods: {
-			highlightCode: function() {
-				document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
-					hljs.highlightBlock(b);
-				});
-			},
-		},
-
 		components: {
 			'sidenav': Sidenav,
 		},
@@ -60,11 +53,11 @@
 		},
 
 		mounted: function() {
-			this.highlightCode();
+			highlightCode();
 		},
 		
 		updated: function() {
-			this.highlightCode();
+			highlightCode();
 		},
 	};
 </script>
