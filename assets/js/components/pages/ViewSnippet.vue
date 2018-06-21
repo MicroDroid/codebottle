@@ -10,7 +10,7 @@
 						'voted': snippet.currentVote && snippet.currentVote == 1
 					}" @click="vote(1)"></span>
 					<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-						<span itemprop="ratingValue">{{votes}}</span>
+						<span itemprop="ratingValue">{{snippet.votes}}</span>
 					</span>
 					<span :class="'fas fa-chevron-down clickable'
 						+ ((snippet.currentVote && snippet.currentVote == -1) ?
@@ -98,13 +98,13 @@
 	import {mapGetters, mapState} from 'vuex';
 	import {apiUrl, getAbsoluteUrl, cookToast, extractError, hljsLanguageById, highlightCode} from '../../helpers';
 	import Modal from '../bootstrap/Modal';
+	import {UPDATE_SNIPPET_CURRENT_VOTE} from '../../store/mutation-types';
 
 	export default {
 		data: function() {
 			return {
 				flagModalShown: false,
 				deleteModalShown: false,
-				originalCurrentVote: false,
 			};
 		},
 
@@ -118,7 +118,10 @@
 
 				axios.post(apiUrl('/snippets/' + this.$route.params.id + '/vote'), {vote})
 					.then(response => {
-						this.snippet.currentVote = vote;
+						this.$store.commit(`snippets/${UPDATE_SNIPPET_CURRENT_VOTE}`, {
+							id: this.snippet.id,
+							vote 
+						});
 					}).catch(error => {
 						cookToast(extractError(error), 4000);
 				});
@@ -190,12 +193,6 @@
 				return this.snippetById(this.$route.params.id);
 			},
 
-			votes: function() {
-				if (typeof(this.snippet.currentVote) === 'number')
-					return this.snippet.votes + (this.snippet.currentVote - this.originalCurrentVote);
-				return this.snippet.votes;
-			},
-
 			computedCode: function() {
 				if (this.preferences.convertTabsToSpaces)
 					return this.snippet.code.replace(/\t/g, Array(this.preferences.indentationSize + 1).join(' '));
@@ -208,12 +205,13 @@
 		},
 		
 		mounted: function() {
-			this.originalCurrentVote = this.snippet.currentVote;
 			highlightCode();
 		},
 
 		meta: function() {
-			const description = striptags(marked(this.snippet ? this.snippet.description : 'No description provided.'), '<pre>');
+			const description = striptags(marked(this.snippet
+				? (this.snippet.description ? this.snippet.description : 'No description provided')
+			: 'Description loading..'), '<pre>');
 			return {
 				title: this.snippet
 					? this.snippet.language.name + ' - ' + this.snippet.title

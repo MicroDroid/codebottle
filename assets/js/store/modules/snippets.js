@@ -45,11 +45,32 @@ const mutations = {
 
 	[types.STORE_SNIPPET_REVISIONS](state, payload) {
 		let snippet = state.snippets.filter(s => s.id === payload.snippet_id)[0];
-	
+
 		if (!snippet) {
-			snippet = {id: payload.snippet_id, revisions: payload.revisions};
+			snippet = {
+				id: payload.snippet_id,
+				revisions: payload.revisions
+			};
 			state.snippets.push(snippet);
 		} else snippet.revisions = payload.revisions;
+	},
+
+	[types.STORE_SNIPPET_REVISIONS](state, payload) {
+		let snippet = state.snippets.filter(s => s.id === payload.snippet_id)[0];
+
+		if (!snippet) {
+			snippet = {
+				id: payload.snippet_id,
+				revisions: payload.revisions
+			};
+			state.snippets.push(snippet);
+		} else snippet.revisions = payload.revisions;
+	},
+
+	[types.UPDATE_SNIPPET_CURRENT_VOTE](state, payload) {
+		let snippet = state.snippets.filter(s => s.id === payload.id)[0];
+		snippet.votes += payload.vote - snippet.currentVote;
+		snippet.currentVote = payload.vote;
 	}
 };
 
