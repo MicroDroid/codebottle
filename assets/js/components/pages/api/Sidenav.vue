@@ -14,6 +14,11 @@
 		</li>
 		<li>
 			<router-link :to="{name: 'api.snippets'}"> Snippets</router-link>
+			<ul>
+				<li>
+					<router-link :to="{name: 'api.snippet-revisions'}"> Revisions</router-link>
+				</li>
+			</ul>
 		</li>
 	</ul>
 </template>

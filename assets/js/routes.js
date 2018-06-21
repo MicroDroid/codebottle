@@ -134,6 +134,15 @@ export default [
 			description: 'Snippets are at the core of the website, yet see how quickly and easily you can get started with them with our simple API',
 			content: require('../markdown/api-docs/snippets.md'),
 		},
+	}, {
+		name: 'api.snippet-revisions',
+		path: '/api/docs/snippets/revisions',
+		component: require('./components/pages/api/Template.vue'),
+		props: {
+			title: 'Snippet Revisions',
+			description: 'Snippets revisions are edits made to the snippet since it has been created',
+			content: require('../markdown/api-docs/snippet-revisions.md'),
+		},
 	},
 
 	// Error handling
