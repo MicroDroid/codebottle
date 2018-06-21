@@ -4,7 +4,7 @@
 			<div class="col-xs-12 col-auto">
 				<h1 id="voting-buttons">
 					<span :class="{
-						'far': true,
+						'fas': true,
 						'fa-chevron-up': true,
 						'clickable': true,
 						'voted': snippet.currentVote && snippet.currentVote == 1
@@ -12,7 +12,7 @@
 					<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 						<span itemprop="ratingValue">{{votes}}</span>
 					</span>
-					<span :class="'far fa-chevron-down clickable'
+					<span :class="'fas fa-chevron-down clickable'
 						+ ((snippet.currentVote && snippet.currentVote == -1) ?
 					' voted' : '')" @click="vote(-1)"></span>
 				</h1>
