@@ -34,12 +34,6 @@
 				<p class="bio" itemprop="description">
 					{{user.bio}}
 				</p>
-				<br/>
-
-				<modal :show="flagModalShown" title="Why are you flagging them?" @on-dismiss="onFlagDismiss">
-					<textarea class="form-control flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
-					<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
-				</modal>
 			</div>
 		</div>
 
@@ -74,14 +68,14 @@
 				<p class="bio">
 					{{user.bio}}
 				</p>
-				<br/>
-
-				<modal :show="flagModalShown" title="Why are you flagging them?" @on-dismiss="onFlagDismiss">
-					<textarea class="form-control flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
-					<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
-				</modal>
 			</div>
 		</div>
+
+		<modal :show="flagModalShown" title="Why are you flagging them?" @on-dismiss="onFlagDismiss">
+			<textarea class="form-control flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
+			<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
+		</modal>
+
 		<snippets-deck id="snippets-deck" :snippets="user.snippets" v-if="user.snippets"></snippets-deck>
 	</div>
 </template>
