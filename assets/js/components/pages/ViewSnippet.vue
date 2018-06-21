@@ -4,7 +4,7 @@
 			<div class="col-xs-12 col-auto">
 				<h1 id="voting-buttons">
 					<span :class="{
-						'fa': true,
+						'far': true,
 						'fa-chevron-up': true,
 						'clickable': true,
 						'voted': snippet.currentVote && snippet.currentVote == 1
