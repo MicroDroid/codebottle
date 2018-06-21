@@ -8,7 +8,7 @@ module.exports = {
 
 		const user = ctx.state.user;
 		const snippet = await models.snippet.findOne({
-			where: {id: ctx.params.id}
+			where: {public_id: ctx.params.id}
 		});
 
 		if (!description)
