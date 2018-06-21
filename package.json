@@ -70,6 +70,7 @@
     "pace": "0.0.4",
     "pace-progress": "^1.0.2",
     "postcss-loader": "^2.0.6",
+    "raw-loader": "^0.5.1",
     "redis": "^2.8.0",
     "sass-loader": "^6.0.6",
     "sequelize": "^4.35.2",

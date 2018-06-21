@@ -1,0 +1,3 @@
+[submodule "api-docs"]
+	path = assets/markdown/api-docs
+	url = git@gitlab.com:codebottle/codebottle-api-docs.git

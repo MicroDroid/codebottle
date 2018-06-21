@@ -49,6 +49,10 @@ const common = {
       use: [
         'file-loader?name=/fonts/[name].[ext]'
       ]
+    },
+    {
+      test: /\.md$/,
+      use: 'raw-loader',
     }],
   },
 
