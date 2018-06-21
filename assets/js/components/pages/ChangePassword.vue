@@ -38,7 +38,7 @@
 				this.loading = true;
 
 				axios.post(apiUrl('/auth/password/change'), {
-					token: this.$route.query.token,
+					token: this.$route.hash.substring(1),
 					password: this.password,
 				}).then(() => {
 					this.loading = false;
