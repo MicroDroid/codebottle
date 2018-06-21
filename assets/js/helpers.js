@@ -126,8 +126,8 @@ export function genRandomString(length) {
 
 export function highlightCode() {
 	document.querySelectorAll('pre code:not(.hljs)').forEach(b => {
+		if (b.classList.contains('lang-text') || b.classList.length === 0)
+			b.classList.add('hljs', 'no-highlight');
 		hljs.highlightBlock(b);
-		if (b.classList.contains('lang-text'))
-			b.classList.add('hljs');
 	});
 }
