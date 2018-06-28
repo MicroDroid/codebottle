@@ -33,7 +33,7 @@
 				<ul class="nav navbar-nav" v-if="isAuthenticated">
 					<navbar-dropdown :label="'Hey ' + username + '!'"
 						:options="userOptions"
-						@on-select="onUserAction"></navbar-dropdown>
+						@on-select="onUserAction" />
 				</ul>
 			</div>
 		</nav>
@@ -43,7 +43,7 @@
 				<div class="row">
 					<div class="col-auto">
 						<a class="navbar-brand ml-3" href="javascript:undefined" @click="toggleMenu">
-							<i class="fal fa-bars" aria-hidden="true"></i>
+							<i class="fal fa-bars" aria-hidden="true" />
 						</a>
 					</div>
 					<div class="col">
@@ -76,7 +76,7 @@
 				<ul class="navbar-menu" v-if="showMenu && isAuthenticated">
 					<navbar-dropdown :label="'Hey ' + username + '!'"
 						:options="userOptions"
-						@on-select="onUserAction"></navbar-dropdown>
+						@on-select="onUserAction" />
 				</ul>
 			</div>
 		</nav>

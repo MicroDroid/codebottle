@@ -9,27 +9,27 @@
 			<div class="col-8">
 				<h1 class="username">
 					<strong itemprop="additionalName">{{user.username}}</strong>
-					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fas fa-flag"></span></a>
+					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fas fa-flag" /></a>
 				</h1>
 				<p class="stats-bar">
 					<span>
-						<span class="far fa-calendar fa-fw"></span>
+						<span class="far fa-calendar fa-fw" />
 						Joined {{moment(user.createdAt).fromNow()}}
-					</span> <br/>
+					</span> <br>
 					<span>
-						<span class="far fa-envelope fa-fw"></span>
+						<span class="far fa-envelope fa-fw" />
 						<span itemprop="email">{{user.email || 'Private email'}}</span>
-					</span> <br/>
+					</span> <br>
 					<span v-if="user.github_username">
-						<span class="fab fa-github fa-fw"></span>
+						<span class="fab fa-github fa-fw" />
 						<a itemprop="email" class="nostyle" :href="'https://github.com/' + user.github_username">
 							{{user.github_username}}
 						</a>
-					</span> <br v-if="user.github_username"/>
+					</span> <br v-if="user.github_username">
 					<span v-if="user.banned">
-						<span class="far fa-exclamation-triangle fa-fw"></span>
+						<span class="far fa-exclamation-triangle fa-fw" />
 						This user is banned
-					</span> <br v-if="user.banned"/>
+					</span> <br v-if="user.banned">
 				</p>
 				<p class="bio" itemprop="description">
 					{{user.bio}}
@@ -43,27 +43,27 @@
 				<img :src="user.profileImage" class="profile-img center-block">
 				<h1 class="username">
 					<strong>{{user.username}}</strong>
-					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fas fa-flag"></span></a>
+					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fas fa-flag" /></a>
 				</h1>
 				<p class="stats-bar">
 					<span>
-						<span class="far fa-calendar fa-fw"></span>
+						<span class="far fa-calendar fa-fw" />
 						Joined {{moment(user.createdAt).fromNow()}}
-					</span> <br/>
+					</span> <br>
 					<span>
-						<span class="far fa-envelope fa-fw"></span>
+						<span class="far fa-envelope fa-fw" />
 						<span>{{user.email || 'Private email'}}</span>
-					</span> <br/>
+					</span> <br>
 					<span v-if="user.github_username">
-						<span class="fab fa-github fa-fw"></span>
+						<span class="fab fa-github fa-fw" />
 						<a class="nostyle" :href="'https://github.com/' + user.github_username">
 							{{user.github_username}}
 						</a>
-					</span> <br v-if="user.github_username"/>
+					</span> <br v-if="user.github_username">
 					<span v-if="user.banned">
-						<span class="far fa-exclamation-triangle fa-fw"></span>
+						<span class="far fa-exclamation-triangle fa-fw" />
 						This user is banned
-					</span> <br v-if="user.banned"/>
+					</span> <br v-if="user.banned">
 				</p>
 				<p class="bio">
 					{{user.bio}}
@@ -72,11 +72,11 @@
 		</div>
 
 		<modal :show="flagModalShown" title="Why are you flagging them?" @on-dismiss="onFlagDismiss">
-			<textarea class="form-control flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
+			<textarea class="form-control flag-description" ref="flagDescription" placeholder="Explain briefly." />
 			<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
 		</modal>
 
-		<snippets-deck id="snippets-deck" :snippets="user.snippets" v-if="user.snippets"></snippets-deck>
+		<snippets-deck id="snippets-deck" :snippets="user.snippets" v-if="user.snippets" />
 	</div>
 </template>
 

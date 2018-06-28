@@ -2,15 +2,15 @@
 	<div class="container">
 		<div id="mini-container">
 			<h1>Reset password</h1>
-			<br/>
+			<br>
 			<form>
 				<div class="input-group">
 					<span class="input-group-addon">
-						<span class="fas fa-envelope"></span>
+						<span class="fas fa-envelope" />
 					</span>
 					<input type="email" class="form-control" placeholder="Email" name="email" id="email" v-model="email" ref="emailInput" required>
 				</div>
-				<br/>
+				<br>
 
 				<!-- <button class="btn btn-primary" type="submit" id="submit-btn" :disabled="loading || sent">Submit</button> -->
 
@@ -19,13 +19,13 @@
 					Submit
 				</invisible-recaptcha>
 			</form>
-			<br/>
-			<br/>
+			<br>
+			<br>
 			
 			<p>
 				Did you remember it? <router-link :to="{name: 'signin'}">Try signing in then</router-link>
 			</p>
-			<br/>
+			<br>
 			<loader v-if="loading"/>
 			<div class="alert alert-danger" v-if="error">{{error}}</div>
 			<div class="alert alert-success" v-if="sent">A password reset email has been sent, if the email is valid</div>

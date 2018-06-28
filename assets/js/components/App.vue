@@ -1,9 +1,9 @@
 <template>
 	<div id="app">
 		<div id="main-content">
-			<toast v-if="toast.content" :content="toast.content"></toast>
-			<navbar></navbar>
-			<router-view></router-view>
+			<toast v-if="toast.content" :content="toast.content" />
+			<navbar />
+			<router-view />
 		</div>
 		<footer>
 			<span>
@@ -11,8 +11,8 @@
 				| <router-link :to="{name: 'embedding'}">Embedding</router-link>
 				| <a href="https://discord.gg/2Sd8Um3" id="discord-invite">Discord</a>
 				| <router-link :to="{name: 'privacy-policy'}">Privacy Policy</router-link>
-				| Built with <span class="fas fa-heart" title="Oh you burnt it!"></span> by OverCoder
-				| Proudly hosted by <a href="https://blackfields.net/">BFNT <span class="fal fa-globe" title="Globe!"></span></a>
+				| Built with <span class="fas fa-heart" title="Oh you burnt it!" /> by OverCoder
+				| Proudly hosted by <a href="https://blackfields.net/">BFNT <span class="fal fa-globe" title="Globe!" /></a>
 			</span>
 		</footer>
 	</div>

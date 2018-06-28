@@ -2,27 +2,27 @@
 	<div class="container">
 		<div id="mini-container">
 			<h1>Create an account</h1>
-			<br/>
+			<br>
 			<form>
 				<div class="input-group">
 					<span class="input-group-addon">
-						<span class="fas fa-user"></span>
+						<span class="fas fa-user" />
 					</span>
 					<input type="text" class="form-control" placeholder="Username" v-model="username" autofocus>
 				</div>
 				<div class="input-group">
 					<span class="input-group-addon">
-						<span class="fas fa-envelope"></span>
+						<span class="fas fa-envelope" />
 					</span>
 					<input type="email" class="form-control" placeholder="Email" v-model="email">
 				</div>
 				<div class="input-group">
 					<span class="input-group-addon">
-						<span class="fas fa-key"></span>
+						<span class="fas fa-key" />
 					</span>
 					<input type="password" class="form-control" placeholder="Password" v-model="password">
 				</div>
-				<br/>
+				<br>
 				<invisible-recaptcha sitekey="6Lf3UygUAAAAAMq-bXV5Q6eVzeHD-edRvYbF20bU" :validate="submit" :callback="signup"
 					class="btn btn-primary" type="submit" id="signup-btn" :disabled="loading || created">
 					Create account
@@ -31,12 +31,12 @@
 					Sign up with GitHub
 				</router-link>
 			</form>
-			<br/>
+			<br>
 			
 			<p>
-				Existing user? <router-link :to="{name: 'signin'}">Sign in here</router-link> <br/>
+				Existing user? <router-link :to="{name: 'signin'}">Sign in here</router-link><br>
 			</p>
-			<br/>
+			<br>
 			<loader v-if="loading"/>
 			<div class="alert alert-danger" v-if="error">{{error}}</div>
 			<div class="alert alert-success" v-if="message">{{message}}</div>

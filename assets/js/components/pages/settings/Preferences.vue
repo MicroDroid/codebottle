@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12 col-md-3">
-				<sidenav></sidenav>
+				<sidenav />
 			</div>
 			<div class="col-xs-12 col-md-9">
 				<form @submit.prevent="save">
@@ -10,16 +10,16 @@
 					<label for="indentation-size">Preferred indentation size</label>
 					<input type="number" id="indentation-size" class="form-control form-control-sm ml-2" max="8" min="2"
 						v-model="preferences.indentationSize">
-					<br/>
+					<br>
 					<label class="custom-control custom-checkbox mt-2">
 						<input type="checkbox" class="custom-control-input" v-model="preferences.convertTabsToSpaces">
-						<span class="custom-control-indicator"></span>
+						<span class="custom-control-indicator" />
 						<span class="custom-control-description">Auto-convert tabs to spaces</span>
 					</label>
 					<h4 class="mb-4 mt-4">Privacy</h4>
 					<label class="custom-control custom-checkbox">
 						<input type="checkbox" class="custom-control-input" v-model="preferences.privateEmail">
-						<span class="custom-control-indicator"></span>
+						<span class="custom-control-indicator" />
 						<span class="custom-control-description">Hide email from profile</span>
 					</label>
 					<p class="text-muted mt-4" id="last-changed">Last changed {{moment(preferences.updatedAt).fromNow()}}</p>

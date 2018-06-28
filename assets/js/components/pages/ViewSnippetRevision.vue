@@ -28,19 +28,18 @@
 		<h2>{{revision.title}}</h2>
 		<p id="stats-bar">
 			<span>
-				<span class="far fa-bullseye"></span>
+				<span class="far fa-bullseye" />
 				<span>{{revision.category.name}}</span>
 			</span>
 			<span class="ml-2">
-				<span class="far fa-code"></span>
+				<span class="far fa-code" />
 				<span>{{revision.language.name}}</span>
 			</span>
 		</p>
 		<pre><code :class="hljsLanguageById(revision.language.id)" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
 		<div class="card" v-if="revision.description" id="description">
 			<div class="card-body">
-				<div class="card-text" v-html="marked(revision.description)">
-				</div>
+				<div class="card-text" v-html="marked(revision.description)" />
 			</div>
 		</div>
 	</div>

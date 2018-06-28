@@ -8,49 +8,49 @@
 						'fa-chevron-up': true,
 						'clickable': true,
 						'voted': snippet.currentVote && snippet.currentVote == 1
-					}" @click="vote(1)"></span>
+					}" @click="vote(1)" />
 					<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 						<span itemprop="ratingValue">{{snippet.votes}}</span>
 					</span>
 					<span :class="'fas fa-chevron-down clickable'
 						+ ((snippet.currentVote && snippet.currentVote == -1) ?
-					' voted' : '')" @click="vote(-1)"></span>
+					' voted' : '')" @click="vote(-1)" />
 				</h1>
 				<p id="action-bar">
 					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="() => cookToast('Copied!', 1500)">
-						<span class="far fa-copy"></span> Copy
+						<span class="far fa-copy" /> Copy
 					</button>
 					<router-link tag="button" class="btn btn-warning btn-sm"
 						:to="{name: 'edit-snippet', params: {id: snippet.id}}" v-if="currentUsername === snippet.username">
-						<span class="far fa-pencil"></span> Edit
+						<span class="far fa-pencil" /> Edit
 					</router-link>
 					<button class="btn btn-danger btn-sm" @click="deleteSnippet" v-if="currentUsername === snippet.username">
-						<span class="far fa-trash"></span> Delete
+						<span class="far fa-trash" /> Delete
 					</button>
 				</p>
 			</div>
 			<div class="col-xs-12 col" id="data-container">
 				<h2 itemprop="about">
 					{{snippet.title}}
-					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fas fa-flag"></span></a>
+					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fas fa-flag" /></a>
 				</h2>
 				<p id="stats-bar" class="text-muted">
 					<span>
-						<span class="far fa-bullseye"></span>
+						<span class="far fa-bullseye" />
 						<span itemprop="codeSampleType">{{snippet.category.name}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-code"></span>
+						<span class="far fa-code" />
 						<span itemprop="programmingLanguage">{{snippet.language.name}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-user"></span>
+						<span class="far fa-user" />
 						<router-link :to="{name: 'view-user', params: {username: snippet.username}}" itemprop="author">
 							{{snippet.username}}
 						</router-link>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-sync"></span>
+						<span class="far fa-sync" />
 						<span>
 							<router-link :to="{name: 'snippet-revisions', params: {snippet_id: snippet.id}}">
 								{{ snippet.revisions_count }} revisions
@@ -58,30 +58,29 @@
 						</span>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-eye"></span>
+						<span class="far fa-eye" />
 						<span>{{snippet.views}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-clock"></span>
+						<span class="far fa-clock" />
 						<span itemprop="dateCreated">{{moment(snippet.createdAt).fromNow()}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-edit"></span>
+						<span class="far fa-edit" />
 						<span itemprop="dateModified">{{moment(snippet.updatedAt).fromNow()}}</span>
 					</span>
 				</p>
 				<pre><code itemprop="text" :class="hljsLanguageById(snippet.language.id)" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
 				<div class="card" v-if="snippet.description" id="description">
 					<div class="card-body">
-						<div class="card-text" v-html="marked(snippet.description)" itemprop="description">
-						</div>
+						<div class="card-text" v-html="marked(snippet.description)" itemprop="description" />
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<modal :show="flagModalShown" title="Why are you flagging this snippet?" @on-dismiss="onFlagDismiss">
-			<textarea class="form-control" id="flag-description" ref="flagDescription" placeholder="Explain briefly."></textarea>
+			<textarea class="form-control" id="flag-description" ref="flagDescription" placeholder="Explain briefly." />
 			<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
 		</modal>
 

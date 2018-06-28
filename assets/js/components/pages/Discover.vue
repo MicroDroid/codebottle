@@ -8,7 +8,7 @@
 			</div>
 			<hr>
 
-			<snippets-deck id="deck" :snippets="snippets" v-if="snippets"></snippets-deck>
+			<snippets-deck id="deck" :snippets="snippets" v-if="snippets" />
 		</div>
 	</div>
 </template>

@@ -10,17 +10,17 @@
 					@on-select="onLanguage"
 					:selective="true"
 					key-field="id"
-					label-field="name"></dropdown>
+					label-field="name" />
 				<dropdown label="Format" :options="formatOptions"
 					@on-select="onFormat"
 					:selective="true"
 					key-field="id"
-					label-field="name"></dropdown>
+					label-field="name" />
 				<button type="submit" class="btn btn-primary">Generate</button>
 			</div>
 		</form>
 		<img :src="searchBadgeImg" v-if="searchBadgeImg !== ''" class="mb-2"></img>
-		<br/>
+		<br>
 		<code v-if="searchBadgeResult">{{searchBadgeResult}}</code>
 	</div>
 </template>

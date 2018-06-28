@@ -1,7 +1,7 @@
 <template>
 	<li :class="{'nav-link': true, dropdown: true, show: open, clickable: true}" @click="toggle" @blur="hide">
 		<a class="dropdown-toggle">
-			{{selected && selective ? selected : label}} <span class="caret"></span>
+			{{selected && selective ? selected : label}} <span class="caret" />
 		</a>
 		<div :class="{'dropdown-menu': true, 'show': open}">
 			<a class="dropdown-item clickable" v-for="item in options" :key="item[keyField]" @mousedown="select(item)">

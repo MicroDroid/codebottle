@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="col-xs-12 col-md-7">
 			<h1>Edit profile</h1>
-			<br/>
+			<br>
 			<form @submit.prevent="save">
 				<div class="form-group">
 					<label for="username">Username</label>
@@ -16,7 +16,7 @@
 
 				<div class="form-group">
 					<label for="bio">Bio</label>
-					<textarea type="text" class="form-control" id="bio" v-model="user.bio" placeholder="A short bio about yourself"></textarea>
+					<textarea type="text" class="form-control" id="bio" v-model="user.bio" placeholder="A short bio about yourself" />
 				</div>
 				<button class="btn btn-primary" type="submit" :disabled="loading">Save</button>
 			</form>

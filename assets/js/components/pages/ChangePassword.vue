@@ -2,19 +2,19 @@
 	<div class="container">
 		<div id="mini-container">
 			<h1>Change password</h1>
-			<br/>
+			<br>
 			<form @submit.prevent="changePassword">
 				<div class="input-group">
 					<span class="input-group-addon">
-						<span class="fas fa-key"></span>
+						<span class="fas fa-key" />
 					</span>
 					<input type="password" class="form-control" placeholder="New password" name="password" id="password" v-model="password" ref="passwordInput" required>
 				</div>
-				<br/>
+				<br>
 				<button class="btn btn-primary" type="submit" id="submit-btn" :disabled="loading">Submit</button>
 			</form>
-			<br/>
-			<br/>
+			<br>
+			<br>
 			<loader v-if="loading"/>
 			<div class="alert alert-danger" v-if="error">{{error}}</div>
 		</div>

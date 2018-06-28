@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="col-xs-12 col-md-11 col-lg-9">
 			<h1>Create snippet</h1>
-			<br/>
+			<br>
 			<form @submit.prevent="create">
 				<div class="form-group">
 					<label for="title">Title</label>
@@ -11,25 +11,25 @@
 
 				<div class="form-group">
 					<label for="code">Code</label>
-					<textarea type="text" class="form-control code-input" id="code" v-model="code" placeholder="Fancy stuff here" required></textarea>
+					<textarea type="text" class="form-control code-input" id="code" v-model="code" placeholder="Fancy stuff here" required />
 				</div>
 
 				<div class="form-group">
 					<label for="description">Description</label>
-					<textarea type="text" class="form-control" id="description" v-model="description" placeholder="Be brief"></textarea>
+					<textarea type="text" class="form-control" id="description" v-model="description" placeholder="Be brief" />
 				</div>
 
 				<div class="row">
 					<div class="col">
 						<div class="form-group">
 							<label>Language</label>
-							<dropdown label="Language" :options="languages" @on-select="onLanguage" :selective="true" key-field="id" label-field="name"></dropdown>
+							<dropdown label="Language" :options="languages" @on-select="onLanguage" :selective="true" key-field="id" label-field="name" />
 						</div>
 					</div>
 					<div class="col">
 						<div class="form-group">
 							<label>Snippet type</label>
-							<dropdown label="Type" :options="categories" @on-select="onCategory" :selective="true" key-field="id" label-field="name"></dropdown>
+							<dropdown label="Type" :options="categories" @on-select="onCategory" :selective="true" key-field="id" label-field="name" />
 						</div>
 					</div>
 				</div>
