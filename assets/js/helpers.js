@@ -109,6 +109,8 @@ export function hljsLanguageById(id) {
 		return 'powershell';
 	case 10:
 		return 'lua';
+	case 11:
+		return 'dart';
 	default:
 		return '';
 	}

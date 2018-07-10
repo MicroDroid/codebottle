@@ -12,7 +12,7 @@ const fs = require('fs');
 
 const hljsLanguages = ['java', 'cpp', 'cs', 'css', 'python', 'php', 'javascript',
   'perl', 'ruby', 'powershell', 'lua', 'json', 'bash', 'less', 'markdown', 'scss',
-  'sql', 'html', 'xml', 'yaml'];
+  'sql', 'html', 'xml', 'yaml', 'dart'];
 
 const isProd = process.env.NODE_ENV === 'production';
 
