@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="row" v-if="snippet" itemscope itemtype="http://schema.org/SoftwareSourceCode">
 			<div class="col-xs-12 col-auto">
-				<h1 id="voting-buttons">
+				<div id="voting-buttons">
 					<span :class="{
 						'fas': true,
 						'fa-chevron-up': true,
@@ -15,8 +15,8 @@
 					<span :class="'fas fa-chevron-down clickable'
 						+ ((snippet.currentVote && snippet.currentVote == -1) ?
 					' voted' : '')" @click="vote(-1)" />
-				</h1>
-				<p id="action-bar">
+				</div>
+				<div id="action-bar">
 					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="() => cookToast('Copied!', 1500)">
 						<span class="far fa-copy" /> Copy
 					</button>
@@ -27,14 +27,14 @@
 					<button class="btn btn-danger btn-sm" @click="deleteSnippet" v-if="currentUsername === snippet.username">
 						<span class="far fa-trash" /> Delete
 					</button>
-				</p>
+				</div>
 			</div>
 			<div class="col-xs-12 col" id="data-container">
 				<h2 itemprop="about">
 					{{snippet.title}}
 					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fas fa-flag" /></a>
 				</h2>
-				<p id="stats-bar" class="text-muted">
+				<div id="stats-bar" class="text-muted mb-2">
 					<span>
 						<span class="far fa-bullseye" />
 						<span itemprop="codeSampleType">{{snippet.category.name}}</span>
@@ -69,7 +69,7 @@
 						<span class="far fa-edit" />
 						<span itemprop="dateModified">{{moment(snippet.updatedAt).fromNow()}}</span>
 					</span>
-				</p>
+				</div>
 				<pre><code itemprop="text" :class="hljsLanguageById(snippet.language.id)" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
 				<div class="card" v-if="snippet.description" id="description">
 					<div class="card-body">
@@ -289,5 +289,6 @@
 
 	#voting-buttons > span {
 		display: block;
+		font-size: 2.5rem;
 	}
 </style>
