@@ -15,13 +15,11 @@ describe('IP middleware', () => {
 			ip: '127.0.0.1',
 		};
 
-		ctx.get = () => {}; // idk what would I else do
+		ctx.get = this.stub();
+		ctx.get.withArgs('CF_CONNECTING_IP').returns('8.8.8.8');
 
-		const getStub = this.stub(ctx, 'get');
-
-		getStub.withArgs('CF_CONNECTING_IP').returns('8.8.8.8');
-
-		await ip(ctx, () => {});
+		await expect(ip(ctx, () => {}), 'IP middleware should not error')
+			.to.eventually.be.fulfilled;
 
 		expect(ctx.ip, 'IP property should be set to Cloudflare\'s').to.equal('8.8.8.8');
 	}));
@@ -31,13 +29,11 @@ describe('IP middleware', () => {
 			ip: '127.0.0.1',
 		};
 
-		ctx.get = () => {};
+		ctx.get = this.stub();
+		ctx.get.withArgs('CF_CONNECTING_IP').returns(null);
 
-		const getStub = this.stub(ctx, 'get');
-
-		getStub.withArgs('CF_CONNECTING_IP').returns(null);
-
-		await ip(ctx, () => {});
+		await expect(ip(ctx, () => {}), 'IP middleware should not error')
+			.to.eventually.be.fulfilled;
 
 		expect(ctx.ip, 'IP should remain the same').to.equal(ctx.ip);
 	}));

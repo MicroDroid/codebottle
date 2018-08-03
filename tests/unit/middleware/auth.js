@@ -20,44 +20,69 @@ describe('Auth middleware', () => {
 		bio: 'Enthusiastic developer',
 	};
 
-	it('Does nothing if there is no JWT', sinonTest(async function() {
+	it('Does nothing if there is no JWT and passthrough is on', sinonTest(async function() {
 		let ctx = {
 			status: 200,
 			body: {},
 			state: {}
 		};
 
-		let authInstance = auth();
-		await authInstance(ctx, () => {});
+		const authInstance = auth(true);
+		await expect(authInstance(ctx, () => {}), 'Auth should not throw error')
+			.to.eventually.be.fulfilled;
 
-		expect(ctx.body, 'Body should remain the same').to.deep.equal({});
-		expect(ctx.status, 'Status should remain the same').to.equal(200);
-		expect(ctx.state.user, 'User should stay null').to.be.undefined;
-
-		authInstance = auth(true);
-		await authInstance(ctx, () => {});
-
-		expect(ctx.body, 'Body should remain the same').to.deep.equal({});
-		expect(ctx.status, 'Status should remain the same').to.equal(200);
-		expect(ctx.state.user, 'User should stay null').to.be.undefined;
+		expect(ctx.state.user, 'User should stay undefined').to.be.undefined;
 	}));
 
-	it('Throws error when JWT doesn\'t resolve to a user without passthrough', sinonTest(async function() {
+	it('Throws error without JWT and passthrough is off', sinonTest(async function () {
+		let ctx = {
+			status: 200,
+			body: {},
+			state: {}
+		};
+
+		const authInstance = auth(false);
+		await expect(authInstance(ctx, () => {}), 'Auth should not throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+	}));
+
+	it('Throws error with invalid JWT and passthrough off', sinonTest(async function() {
 		const findOneStub = this.stub(models.user, 'findOne');
 		findOneStub.returns(null);
 
 		let ctx = {
 			state: {
-				user: {id: 1}
+				user: {
+					id: 1
+				}
 			}
 		};
 
 		let authInstance = auth();
-		expect(authInstance(ctx, () => {}), 'Should throw error')
+		await expect(authInstance(ctx, () => {}), 'Should throw error')
 			.to.eventually.be.rejectedWith(ApiError);
 	}));
 
-	it('Throws error when privates don\'t match without passthrough', sinonTest(async function() {
+	it('Does not throw error with invalid JWT and passthrough on', sinonTest(async function () {
+		const findOneStub = this.stub(models.user, 'findOne');
+		findOneStub.returns(null);
+
+		let ctx = {
+			state: {
+				user: {
+					id: 1
+				}
+			}
+		};
+
+		let authInstance = auth(true);
+		await expect(authInstance(ctx, () => {}), 'Should not throw error')
+			.to.eventually.be.fulfilled;
+
+		expect(ctx.state.user, 'User should be set to undefined').to.be.undefined;
+	}));
+
+	it('Throws error when privates don\'t match and passthrough off', sinonTest(async function() {
 		const findOneStub = this.stub(models.user, 'findOne');
 		findOneStub.returns(overcoder);
 
@@ -75,25 +100,7 @@ describe('Auth middleware', () => {
 			.to.eventually.be.rejectedWith(ApiError);
 	}));
 
-	it('Does not throw error when JWT doesn\'t resolve to a user with passthrough', sinonTest(async function() {
-		const findOneStub = this.stub(models.user, 'findOne');
-		findOneStub.returns(null);
-
-		let ctx = {
-			state: {
-				user: {id: 1}
-			}
-		};
-
-		let authInstance = auth(true);
-		await expect(authInstance(ctx, () => {}), 'Should not throw error')
-			.to.eventually.be.fulfilled
-			.then(() => {
-				expect(ctx.state.user, 'User should be set to null').to.be.null;
-			});
-	}));
-
-	it('Does not throw error when privates don\'t match with passthrough', sinonTest(async function() {
+	it('Does not throw error when privates don\'t match and passthrough on', sinonTest(async function() {
 		const findOneStub = this.stub(models.user, 'findOne');
 		findOneStub.returns(overcoder);
 
@@ -107,11 +114,10 @@ describe('Auth middleware', () => {
 		};
 
 		let authInstance = auth(true);
-		return expect(authInstance(ctx, () => {}), 'Should not throw error')
-			.to.eventually.be.fulfilled
-			.then(() => {
-				expect(ctx.state.user, 'User should be set to null').to.be.null;
-			});
+		await expect(authInstance(ctx, () => {}), 'Should not throw error')
+			.to.eventually.be.fulfilled;
+			
+		expect(ctx.state.user, 'User should be set to undefined').to.be.undefined;
 	}));
 
 	it('Sets user if correct', sinonTest(async function() {
@@ -133,17 +139,18 @@ describe('Auth middleware', () => {
 		};
 
 		let authInstance = auth();
-		return expect(authInstance(ctx, () => {}), 'Should not throw error')
-			.to.eventually.be.fulfilled
-			.then(() => {
-				expect(ctx.state.user, 'User should be set properly').to.deep.equal(overcoder);
-				ctx.state.user = user;
-				const authInstance = auth(true);
-				return expect(authInstance(ctx, () => {}), 'Should not throw error')
-					.to.eventually.be.fulfilled
-					.then(() => {
-						expect(ctx.state.user, 'User should be set properly').to.deep.equal(overcoder);
-					});
-			});
+		await expect(authInstance(ctx, () => {}), 'Should not throw error')
+			.to.eventually.be.fulfilled;
+
+		expect(ctx.state.user, 'User should be set properly').to.deep.equal(overcoder);
+
+		// Reset user
+		ctx.state.user = user;
+
+		authInstance = auth(true);
+		await expect(authInstance(ctx, () => {}), 'Should not throw error')
+			.to.eventually.be.fulfilled;
+
+		expect(ctx.state.user, 'User should be set properly').to.deep.equal(overcoder);
 	}));
 });

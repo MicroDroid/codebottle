@@ -19,9 +19,9 @@ describe('Handler middleware', () => {
 
 		const errStub = this.stub(Logger, 'err');
 
-		await handler(ctx, async () => {
+		await expect(handler(ctx, async () => {
 			throw error;
-		});
+		}), 'Handler should not re-throw error').to.eventually.be.fulfilled;
 
 		expect(ctx.status, 'Status should be 500').to.equal(500);
 		expect(ctx.body.error, 'Error should be \'Internal error\'').to.equal('Internal error');
@@ -34,9 +34,9 @@ describe('Handler middleware', () => {
 
 		let ctx = {};
 
-		await handler(ctx, async () => {
+		await expect(handler(ctx, async () => {
 			throw error;
-		});
+		}), 'Handler should not re-throw error').to.eventually.be.fulfilled;
 
 		expect(ctx.status, 'Status should be 401').to.equal(401);
 		expect(ctx.body.error, 'Error should be \'Authenticated required\'').to.equal('Authentication required');
@@ -45,16 +45,9 @@ describe('Handler middleware', () => {
 	it('Customizes error message for 404', sinonTest(async function() {
 		let ctx = {};
 
-		await handler(ctx, async () => {
+		await expect(handler(ctx, async () => {
 			ctx.status = 404;
-		});
-
-		expect(ctx.status, 'Status should be 404').to.equal(404);
-		expect(ctx.body.error, 'Error should be \'Not found\'').to.equal('Not found');
-
-		ctx.status = 404;
-
-		await handler(ctx, () => {});
+		}), 'Handler should not re-throw error').to.eventually.be.fulfilled;
 
 		expect(ctx.status, 'Status should be 404').to.equal(404);
 		expect(ctx.body.error, 'Error should be \'Not found\'').to.equal('Not found');
@@ -63,16 +56,9 @@ describe('Handler middleware', () => {
 	it('Customizes error message for 405', sinonTest(async function() {
 		let ctx = {};
 
-		await handler(ctx, async () => {
+		await expect(handler(ctx, async () => {
 			ctx.status = 405;
-		});
-
-		expect(ctx.status, 'Status should be 405').to.equal(405);
-		expect(ctx.body.error, 'Error should be \'Method not allowed\'').to.equal('Method not allowed');
-
-		ctx.status = 405;
-
-		await handler(ctx, () => {});
+		}), 'Handler should not re-throw error').to.eventually.be.fulfilled;
 
 		expect(ctx.status, 'Status should be 405').to.equal(405);
 		expect(ctx.body.error, 'Error should be \'Method not allowed\'').to.equal('Method not allowed');
@@ -83,9 +69,9 @@ describe('Handler middleware', () => {
 
 		let ctx = {};
 
-		await handler(ctx, async function() {
+		await expect(handler(ctx, async () => {
 			throw error;
-		});
+		}), 'Handler should not re-throw error').to.eventually.be.fulfilled;
 
 		expect(ctx.status, `Status should be ${error.status}`).to.equal(error.status);
 		expect(ctx.body.error, `Error should be '${error.message}'`).to.equal(error.message);
@@ -96,9 +82,9 @@ describe('Handler middleware', () => {
 
 		let ctx = {};
 
-		await handler(ctx, async () => {
+		await expect(handler(ctx, async () => {
 			throw error;
-		});
+		}), 'Handler should not re-throw error').to.eventually.be.fulfilled;
 
 		expect(ctx.status, 'Status should be 429').to.equal(429);
 		expect(ctx.body.error, 'Error should be \'Too many requests\'').to.equal('Too many requests');

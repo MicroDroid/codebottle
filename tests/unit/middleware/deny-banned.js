@@ -27,19 +27,8 @@ describe('Auth middleware', () => {
 			},
 		};
 
-		await expect(denyBanned(ctx, () => {}), 'Should throw error')
+		return expect(denyBanned(ctx, () => {}), 'Should throw error')
 			.to.eventually.be.rejectedWith(ApiError);
-	}));
-
-	it('Does not deny unauthenticated requests', sinonTest(async function () {
-		let ctx = {
-			status: 200,
-			body: {},
-			state: {},
-		};
-
-		await expect(denyBanned(ctx, () => {}), 'Should be fulfilled')
-			.to.eventually.be.fulfilled;
 	}));
 
 	it('Does not deny not banned users', sinonTest(async function () {
@@ -51,7 +40,18 @@ describe('Auth middleware', () => {
 			},
 		};
 
-		await expect(denyBanned(ctx, () => {}), 'Should be fulfilled')
+		return expect(denyBanned(ctx, () => {}), 'Should be fulfilled')
 			.to.eventually.be.fulfilled;
+	}));
+
+	it('Rejects unauthenticated requests', sinonTest(async function () {
+		let ctx = {
+			status: 200,
+			body: {},
+			state: {},
+		};
+
+		await expect(denyBanned(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
 	}));
 });

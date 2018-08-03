@@ -68,7 +68,7 @@ describe('Throttle middleware', () => {
 			status: 200,
 		};
 
-		let throttleInstance = throttle(60, 60);
+		let throttleInstance = throttle();
 
 		await expect(throttleInstance(ctx, () => {}), 'Should not throw any error')
 			.to.eventually.be.fulfilled;
@@ -89,7 +89,7 @@ describe('Throttle middleware', () => {
 			status: 200,
 		};
 
-		let throttleInstance = throttle(60, 60);
+		let throttleInstance = throttle();
 
 		await expect(throttleInstance(ctx, () => {}), 'Should not throw any error')
 			.to.eventually.be.fulfilled;

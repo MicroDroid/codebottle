@@ -14,11 +14,11 @@ describe('Headers check middleware', () => {
 	it('Rejects wrong API versions', sinonTest(async function() {
 		let ctx = {
 			status: 200,
-			body: {}
+			body: {},
 		};
-		ctx.get = () => {};
-		const getStub = this.stub(ctx, 'get');
-		getStub.withArgs('Accept').returns('application/vnd.codebottle.v9+json');
+
+		ctx.get = this.stub();
+		ctx.get.withArgs('Accept').returns('application/vnd.codebottle.v9+json');
 
 		return expect(headersCheck(ctx, () => {}), 'Headers check should throw an API error')
 			.to.eventually.be.rejectedWith(ApiError);
@@ -29,9 +29,9 @@ describe('Headers check middleware', () => {
 			status: 200,
 			body: {}
 		};
-		ctx.get = () => {};
-		const getStub = this.stub(ctx, 'get');
-		getStub.withArgs('Accept').returns('application/json');
+
+		ctx.get = this.stub();
+		ctx.get.withArgs('Accept').returns('application/json');
 
 		return expect(headersCheck(ctx, () => {}), 'Headers check should throw an API error')
 			.to.eventually.be.rejectedWith(ApiError);
@@ -42,13 +42,14 @@ describe('Headers check middleware', () => {
 			status: 200,
 			body: {}
 		};
-		ctx.get = () => {};
-		const getStub = this.stub(ctx, 'get');
-		getStub.withArgs('Accept').returns('application/vnd.codebottle.v1+json');
 
-		await headersCheck(ctx, () => {});
+		ctx.get = this.stub();
+		ctx.get.withArgs('Accept').returns('application/vnd.codebottle.v1+json');
 
-		expect(getStub, 'Accept header should be queried').to.have.been.calledOnce;
+		await expect(headersCheck(ctx, () => {}), 'Headers check should pass')
+			.to.eventually.be.fulfilled;
+
+		expect(ctx.get, 'Accept header should be queried').to.have.been.calledOnce;
 		expect(ctx.status, 'Status code should be unchanged').to.equal(200);
 		expect(ctx.body, 'Body should remain the same').to.deep.equal({});
 	}));

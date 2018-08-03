@@ -49,7 +49,6 @@ describe('Auth controller', () => {
 	// Can't distingush between either or both inputs are wrong.
 	const rejectionMessage = 'Invalid username or password';
 
-	// We will authenticate this weird guy
 	const overcoder = {
 		id: 1,
 		username: 'OverCoder',
@@ -63,7 +62,7 @@ describe('Auth controller', () => {
 
 	it('Throws error on incorrect credentials', async () => {
 		// To reduce duplication. Mocks bcrypt
-		const attempt = (credentials, user) => {
+		const attempt = async (credentials, user) => {
 			findUserStub.returns(user);
 			bcryptStub.returns(false);
 
@@ -76,12 +75,11 @@ describe('Auth controller', () => {
 			};
 
 
-			return expect(AuthController.login(ctx, () => {}), 'Should throw error')
-				.to.eventually.be.rejectedWith(ApiError)
-				.then((e) => {
-					expect(e.message, 'Message should be constant').to.equal(rejectionMessage);
-					expect(e.status, 'Status should be 401').to.equal(401);
-				});
+			const error = await expect(AuthController.login(ctx, () => {}), 'Should throw error')
+				.to.eventually.be.rejectedWith(ApiError);
+
+			expect(error.message, 'Message should be constant').to.equal(rejectionMessage);
+			expect(error.status, 'Status should be 401').to.equal(401);
 		};
 		
 		await attempt({                                              }, overcoder);
@@ -173,10 +171,7 @@ describe('Auth controller', () => {
 		};
 
 		return expect(AuthController.resetPassword(ctx, () => {}), 'Should throw error')
-			.to.eventually.be.rejectedWith(ApiError)
-			.then((e) => {
-				expect(e.status, 'Status should be 422').to.equal(422);
-			});
+			.to.eventually.be.rejectedWith(ApiError);
 	}));
 
 	const resetPassword = (passwordReset, cachedKey) => {
@@ -226,14 +221,16 @@ describe('Auth controller', () => {
 	};
 
 	it('Resets password', sinonTest(async function () {
-		await resetPassword(null, null);
+		await expect(resetPassword(null, null), 'Reset password should succeed')
+			.to.eventually.be.fulfilled;
 	}));
 
 	it('Removes existing password resets when resetting', sinonTest(async function () {
 		const destroyStub = this.stub();
 		const reset = {destroy: destroyStub};
 
-		await resetPassword(reset, null);
+		await expect(resetPassword(reset, null), 'Reset password should succeed')
+			.to.eventually.be.fulfilled;
 
 		expect(destroyStub, 'Existing password reset should be destroyed')
 			.to.have.been.calledOnce;
@@ -250,11 +247,10 @@ describe('Auth controller', () => {
 			},
 		};
 
-		await expect(AuthController.resetPassword(ctx, () => {}), 'Should be fulfilled')
-			.to.eventually.be.rejectedWith(ApiError)
-			.then(e => {
-				expect(e.status, 'Status should be 422').to.equal(422);
-			});
+		const error = await expect(AuthController.resetPassword(ctx, () => {}), 'Should be fulfilled')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(error.status, 'Status should be 422').to.equal(422);
 	}));
 
 	it('Does nothing when resetting with unmatched user', sinonTest(async function () {
@@ -317,18 +313,17 @@ describe('Auth controller', () => {
 			email: overcoder.email,
 		});
 
-		const attempt = body => {
+		const attempt = async body => {
 			const ctx = {
 				status: 200,
 				body: {},
 				request: {body},
 			};
 
-			return expect(AuthController.changePassword(ctx, () => {}), 'Should throw error')
-				.to.eventually.be.rejectedWith(ApiError)
-				.then(e => {
-					expect(e.status, 'Status should be 422').to.equal(422);
-				});
+			const error = await expect(AuthController.changePassword(ctx, () => {}), 'Should throw error')
+				.to.eventually.be.rejectedWith(ApiError);
+
+			expect(error.status, 'Status should be 422').to.equal(422);
 		};
 
 		await attempt({                                             });
@@ -402,11 +397,10 @@ describe('Auth controller', () => {
 			},
 		};
 
-		return expect(AuthController.github(ctx, () => {}), 'Should throw error')
-			.to.eventually.to.be.rejectedWith(ApiError)
-			.then(e => {
-				expect(e.status, 'Status should be 422').to.equal(422);
-			});
+		const error = await expect(AuthController.github(ctx, () => {}), 'Should throw error')
+			.to.eventually.to.be.rejectedWith(ApiError);
+
+		expect(error.status, 'Status should be 422').to.equal(422);
 	}));
 
 	it('Throws error on GitHub auth failure', sinonTest(async function () {

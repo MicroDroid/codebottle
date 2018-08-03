@@ -19,11 +19,11 @@ describe('Helpers', () => {
 		const token = 'blah';
 		const postStub = this.stub(axios, 'post');
 
-		postStub.returns({data: {success: true}});
-		await expect(helpers.verifyRecaptcha(token), 'Verification should resolve to false').to.eventually.be.true;
+		postStub.resolves({data: {success: true}});
+		await expect(helpers.verifyRecaptcha(token), 'Verification should resolve to true').to.eventually.be.true;
 
-		postStub.returns({data: {success: false}});
-		await expect(helpers.verifyRecaptcha(token), 'Verification should resolve to true').to.eventually.be.false;
+		postStub.resolves({data: {success: false}});
+		await expect(helpers.verifyRecaptcha(token), 'Verification should resolve to false').to.eventually.be.false;
 
 		expect(postStub, 'Two POST requests should be made').to.have.been.calledTwice;
 	}));
