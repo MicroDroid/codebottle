@@ -321,8 +321,8 @@ describe('Snippet controller', () => {
 			expect(ctx.body[i]).to.deep.equal({
 				..._.omit(snippets[i], 'public_id', 'votes', 'updated_at', 'created_at'),
 				id: snippets[i].public_id,
-				updatedAt: snippet.updated_at,
-				createdAt: snippet.created_at,
+				updatedAt: snippets[i].updated_at,
+				createdAt: snippets[i].created_at,
 				votes: snippets[i].votes.reduce((p, c) => p + c.vote, 0)
 			}, 'Snippet should match schema');
 		}
@@ -348,8 +348,8 @@ describe('Snippet controller', () => {
 			expect(ctx.body[i]).to.deep.equal({
 				..._.omit(snippets[i], 'public_id', 'votes', 'created_at', 'updated_at'),
 				id: snippets[i].public_id,
-				createdAt: snippet.created_at,
-				updatedAt: snippet.updated_at,
+				createdAt: snippets[i].created_at,
+				updatedAt: snippets[i].updated_at,
 				votes: snippets[i].votes.reduce((p, c) => p + c.vote, 0)
 			}, 'Snippet should match schema');
 		}
