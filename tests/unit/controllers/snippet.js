@@ -507,6 +507,59 @@ describe('Snippet controller', () => {
 		expect(ctx.body, 'Output snippet data should be same as input').to.deep.equal(snippet);
 	}));
 
+	it('Throws error when deleting other people snippets', sinonTest(async function () {
+		const destroyStub = this.stub();
+		const findOneStub = this.stub(models.snippet, 'findOne');
+
+		const snippet = {
+			...snippets[0],
+			user: overcoder,
+			destroy: destroyStub
+		};
+
+		findOneStub.returns(snippet);
+
+		const ctx = {
+			status: 200,
+			params: {
+				id: snippet.public_id,
+			},
+			state: {
+				user: {
+					...overcoder,
+					id: overcoder.id + 1
+				}
+			}
+		};
+
+		await expect(SnippetController.delete(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(findOneStub, 'Snippet should be queried').to.have.been.calledOnce;
+		expect(destroyStub, 'Snippet should not be destroyed').to.not.have.been.called;
+	}));
+
+	it('Throws error when deleting inexistent snippet', sinonTest(async function () {
+		const destroyStub = this.stub();
+		const findOneStub = this.stub(models.snippet, 'findOne');
+
+		const ctx = {
+			status: 200,
+			params: {
+				id: snippet.public_id,
+			},
+			state: {
+				user: overcoder
+			}
+		};
+
+		await expect(SnippetController.delete(ctx, () => {}), 'Should throw error')
+			.to.eventually.be.rejectedWith(ApiError);
+
+		expect(findOneStub, 'Snippet should be queried').to.have.been.calledOnce;
+		expect(destroyStub, 'Snippet should not be destroyed').to.not.have.been.called;
+	}));
+
 	it('Deletes snippets', sinonTest(async function () {
 		const destroyStub = this.stub();
 		const findOneStub = this.stub(models.snippet, 'findOne');
@@ -537,14 +590,108 @@ describe('Snippet controller', () => {
 		expect(destroyStub, 'Snippet should be destroyed').to.have.been.calledOnce;
 	}));
 
-	it('Throws error when deleting other people snippets', sinonTest(async function () {
-		const destroyStub = this.stub();
+	it('Throws an error on editing snippet with invalid params', sinonTest(async function () {
+		const findLangaugeStub = this.stub(models.language, 'findOne');
+		const findCategoryStub = this.stub(models.category, 'findOne');
+		const findSnippetStub = this.stub(models.snippet, 'findOne');
+		const updateSnippetStub = this.stub();
+		const reloadSnippetStub = this.stub();
+		const createRevisionStub = this.stub(models.snippetRevision, 'create');
+		const transformSnippetsStub = this.stub(models.snippet, 'transform');
+
+		const id = 'abcde12345';
+
+		let snippet = {
+			...snippets[0],
+			public_id: id,
+			user_id: overcoder.id,
+			user: overcoder,
+			update: updateSnippetStub,
+			reload: reloadSnippetStub,
+		};
+
+		findSnippetStub.returns(snippet);
+		reloadSnippetStub.returns(snippet);
+		updateSnippetStub.returns(snippet);
+
+		const attempt = (body) => {
+
+			let ctx = {
+				status: 200,
+				body: {},
+				params: {
+					id: snippet.public_id
+				},
+				request: {
+					body,
+				},
+				state: {
+					user: overcoder,
+				}
+			};
+
+			if (body.category && body.category > 0)
+				findCategoryStub.returns(category);
+			else findCategoryStub.returns(null);
+
+			if (body.language && body.language > 0)
+				findLangaugeStub.returns(language);
+			else findLangaugeStub.returns(null);
+			
+			return expect(SnippetController.edit(ctx, () => {}), 'Should throw error')
+				.to.eventually.be.rejectedWith(ApiError);
+		};
+
+		const combinations = helpers.generateCombinations({
+			title: [
+				undefined,
+				'This is a very good title that fits the length limits',
+				'short',
+				'long'.repeat(18), // 72 characters
+			],
+			code: [
+				undefined,
+				'console.log(\'ES6 ftw!\');'
+			],
+			description: [
+				undefined,
+				'Some whatever description',
+			],
+			language: [
+				undefined,
+				1, -1,
+			],
+			category: [
+				undefined,
+				1, -1,
+			]
+		}).filter(combination => { // Filter out valid combinations
+			return !(combination.title &&
+				combination.title.length > 20 &&
+				combination.title.length < 70 &&
+				combination.code &&
+				combination.language === 1 &&
+				combination.category === 1);
+		});
+
+		for (let combination of combinations)
+			await attempt(combination);
+
+
+		expect(reloadSnippetStub, 'Snippet should not be reload').to.not.have.been.called;
+		expect(updateSnippetStub, 'Snippet should not be updated').to.not.have.been.called;
+		expect(createRevisionStub, 'Snippet revsion should not be created').to.not.have.been.called;
+		expect(transformSnippetsStub, 'Snippet should not be transformed').to.not.have.been.called;
+	}));
+
+	it('Throws error when editing other people snippets', sinonTest(async function () {
+		const updateStub = this.stub();
 		const findOneStub = this.stub(models.snippet, 'findOne');
 
 		const snippet = {
 			...snippets[0],
 			user: overcoder,
-			destroy: destroyStub
+			update: updateStub
 		};
 
 		findOneStub.returns(snippet);
@@ -562,15 +709,15 @@ describe('Snippet controller', () => {
 			}
 		};
 
-		await expect(SnippetController.delete(ctx, () => { }), 'Should throw error')
+		await expect(SnippetController.edit(ctx, () => {}), 'Should throw error')
 			.to.eventually.be.rejectedWith(ApiError);
 
 		expect(findOneStub, 'Snippet should be queried').to.have.been.calledOnce;
-		expect(destroyStub, 'Snippet should not be destroyed').to.not.have.been.called;
+		expect(updateStub, 'Snippet should not be updated').to.not.have.been.called;
 	}));
 
-	it('Throws error when deleting inexistent snippet', sinonTest(async function () {
-		const destroyStub = this.stub();
+	it('Throws error when editing inexistent snippet', sinonTest(async function () {
+		const updateStub = this.stub();
 		const findOneStub = this.stub(models.snippet, 'findOne');
 
 		const ctx = {
@@ -583,10 +730,74 @@ describe('Snippet controller', () => {
 			}
 		};
 
-		await expect(SnippetController.delete(ctx, () => { }), 'Should throw error')
+		await expect(SnippetController.edit(ctx, () => {}), 'Should throw error')
 			.to.eventually.be.rejectedWith(ApiError);
 
 		expect(findOneStub, 'Snippet should be queried').to.have.been.calledOnce;
-		expect(destroyStub, 'Snippet should not be destroyed').to.not.have.been.called;
+		expect(updateStub, 'Snippet should not be updated').to.not.have.been.called;
+	}));
+
+	it('Edits snippets', sinonTest(async function () {
+		const findLangaugeStub = this.stub(models.language, 'findOne');
+		const findCategoryStub = this.stub(models.category, 'findOne');
+		const createRevisionStub = this.stub(models.snippetRevision, 'create');
+		const transformSnippetsStub = this.stub(models.snippet, 'transform');
+		const findSnippetStub = this.stub(models.snippet, 'findOne');
+		const cryptoStub = this.stub(crypto, 'randomBytes');
+		const updateSnippetStub = this.stub();
+		const reloadSnippetStub = this.stub();
+
+		const id = 'abcde12345';
+
+		let input = {
+			title: 'This is a very good title that fits the length limits',
+			code: 'console.log(\'ES6 ftw!\');',
+			description: 'hello',
+			language: 1,
+			category: 1,
+		};
+
+		let snippet = {
+			...input,
+			public_id: id,
+			user_id: overcoder.id,
+			user: overcoder,
+			update: updateSnippetStub,
+			reload: reloadSnippetStub,
+		};
+
+		let ctx = {
+			status: 200,
+			body: {},
+			params: {
+				id: input.public_id
+			},
+			request: {
+				body: input,
+			},
+			state: {
+				user: overcoder,
+			}
+		};
+
+		findCategoryStub.returns(category);
+		findLangaugeStub.returns(language);
+		cryptoStub.returns(id);
+		findSnippetStub.resolves(snippet);
+		updateSnippetStub.resolves(snippet);
+		reloadSnippetStub.resolves(snippet);
+		transformSnippetsStub.returns(snippet);
+
+		await expect(SnippetController.edit(ctx, () => {}), 'Should be fulfilled')
+			.to.eventually.be.fulfilled;
+
+		expect(findSnippetStub, 'Snippet should be queried').to.have.been.calledOnce;
+		expect(findLangaugeStub, 'Language should be queried').to.have.been.calledOnce;
+		expect(findCategoryStub, 'Category should be queried').to.have.been.calledOnce;
+		expect(createRevisionStub, 'Revision should be created').to.have.been.calledOnce;
+		expect(reloadSnippetStub, 'Snippet should be reloaded').to.have.been.calledOnce;
+		expect(updateSnippetStub, 'Snippet should be updated').to.have.been.calledOnce;
+		expect(transformSnippetsStub, 'Snippet should be transformed').to.have.been.calledOnce;
+		expect(ctx.body, 'Output snippet data should be same as input').to.deep.equal(snippet);
 	}));
 });

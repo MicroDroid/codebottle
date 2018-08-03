@@ -128,8 +128,7 @@ const controller = {
 			if (!language)
 				throw new ApiError(422, 'Invalid language');
 		}
-
-		// See: https://github.com/sequelize/sequelize/issues/8448
+		
 		let where = {
 			[Sequelize.Op.or]: [
 				{title:       {[Sequelize.Op.like]: '%' + ctx.query.keywords + '%'}},
