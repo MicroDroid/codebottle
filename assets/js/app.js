@@ -44,7 +44,8 @@ root.axios.interceptors.response.use(response => response, error => {
 const router = new VueRouter({
 	mode: 'history',
 	linkActiveClass: 'active',
-	routes
+	routes,
+	scrollBehavior: (to, from, savedPosition) => savedPosition ? savedPosition : {x: 0, y: 0},
 });
 
 
