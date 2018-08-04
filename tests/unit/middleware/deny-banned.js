@@ -44,14 +44,14 @@ describe('Auth middleware', () => {
 			.to.eventually.be.fulfilled;
 	}));
 
-	it('Rejects unauthenticated requests', sinonTest(async function () {
+	it('Doesn\'t reject passthrough requests', sinonTest(async function () {
 		let ctx = {
 			status: 200,
 			body: {},
 			state: {},
 		};
 
-		await expect(denyBanned(ctx, () => {}), 'Should throw error')
-			.to.eventually.be.rejectedWith(ApiError);
+		await expect(denyBanned(ctx, () => {}), 'Should not throw error')
+			.to.eventually.be.fulfilled;
 	}));
 });
