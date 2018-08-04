@@ -38,7 +38,7 @@ function log(type, message) {
 
 	const trace = stackTrace.get();
 	const root = path.dirname(__dirname);
-	const caller = `.${trace[2].getFileName().substring(root.length)}:${trace[2].getLineNumber()}`;
+	const caller = `.${trace[3].getFileName().substring(root.length)}:${trace[3].getLineNumber()}`;
 
 	generated += ' ' + colors.italic(colors.grey(caller));
 
