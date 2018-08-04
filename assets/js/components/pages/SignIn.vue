@@ -5,14 +5,14 @@
 			<br/>
 			<form @submit.prevent="login">
 				<div class="input-group">
-					<span class="input-group-addon">
-						<span class="fas fa-user"></span>
+					<span class="input-group-prepend">
+						<span class="fas fa-user input-group-text"></span>
 					</span>
 					<input type="text" class="form-control" placeholder="Username" name="username" v-model="username" ref="usernameInput">
 				</div>
 				<div class="input-group">
-					<span class="input-group-addon">
-						<span class="fas fa-key"></span>
+					<span class="input-group-prepend">
+						<span class="fas fa-key input-group-text"></span>
 					</span>
 					<input type="password" class="form-control" placeholder="Password" name="password" v-model="password">
 				</div>

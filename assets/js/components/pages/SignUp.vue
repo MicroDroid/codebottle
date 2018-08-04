@@ -5,20 +5,20 @@
 			<br>
 			<form>
 				<div class="input-group">
-					<span class="input-group-addon">
-						<span class="fas fa-user" />
+					<span class="input-group-prepend">
+						<span class="fas fa-user input-group-text" />
 					</span>
 					<input type="text" class="form-control" placeholder="Username" v-model="username" autofocus>
 				</div>
 				<div class="input-group">
-					<span class="input-group-addon">
-						<span class="fas fa-envelope" />
+					<span class="input-group-prepend">
+						<span class="fas fa-envelope input-group-text" />
 					</span>
 					<input type="email" class="form-control" placeholder="Email" v-model="email">
 				</div>
 				<div class="input-group">
-					<span class="input-group-addon">
-						<span class="fas fa-key" />
+					<span class="input-group-prepend">
+						<span class="fas fa-key input-group-text" />
 					</span>
 					<input type="password" class="form-control" placeholder="Password" v-model="password">
 				</div>

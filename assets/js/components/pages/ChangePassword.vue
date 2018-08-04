@@ -5,9 +5,9 @@
 			<br>
 			<form @submit.prevent="changePassword">
 				<div class="input-group">
-					<span class="input-group-addon">
-						<span class="fas fa-key" />
-					</span>
+					<div class="input-group-prepend">
+						<span class="fas fa-key input-group-text" />
+					</div>
 					<input type="password" class="form-control" placeholder="New password" name="password" id="password" v-model="password" ref="passwordInput" required>
 				</div>
 				<br>

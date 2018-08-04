@@ -5,9 +5,9 @@
 			<br>
 			<form>
 				<div class="input-group">
-					<span class="input-group-addon">
-						<span class="fas fa-envelope" />
-					</span>
+					<div class="input-group-prepend">
+						<span class="fas fa-envelope input-group-text" />
+					</div>
 					<input type="email" class="form-control" placeholder="Email" name="email" id="email" v-model="email" ref="emailInput" required>
 				</div>
 				<br>
