@@ -70,6 +70,10 @@ footer * {
 	display: none; // because d-xxs-none doesn't exist
 }
 
+.navbar .form-control {
+	height: 42px;
+}
+
 .btn, .form-control {
 	font-family: $font-family-sans-serif;
 }
