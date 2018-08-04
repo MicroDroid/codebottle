@@ -1,6 +1,6 @@
 FROM node:10-alpine
 # Because bcrypt
-RUN apk --no-cache add --virtual builds-deps build-base python
+RUN apk --no-cache add --virtual builds-deps build-base python git openssh
 # Two separate copies for caching
 COPY package.json /tmp/package.json
 RUN cd /tmp && npm i
