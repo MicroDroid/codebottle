@@ -7,7 +7,7 @@ module.exports = async (ctx, next) => {
 	if (ctx.ip.toString().length < 8)
 		tabs += '\t';
 
-	const origin = (ctx.origin.startsWith('http://api.') || ctx.origin.startsWith('https://api.'))
+	const origin = ctx.origin.match(`https*://(api\.|(localhost|127.0.0.1|::1):${process.env.API_PORT}).*`)
 		? colors.black.bgYellow(' API ')
 		: colors.black.bgCyan(' RES ');
 
