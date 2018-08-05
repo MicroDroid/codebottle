@@ -1,6 +1,7 @@
 version: "3.4"
 services:
   web:
+    tty: true
     image: codebottle
     deploy:
       replicas: 4
