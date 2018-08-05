@@ -2,7 +2,7 @@ version: "3.4"
 services:
   web:
     tty: true
-    image: codebottle
+    image: registry.gitlab.com/codebottle/codebottle
     deploy:
       replicas: 4
       update_config:
