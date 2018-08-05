@@ -1,9 +1,12 @@
-version: "3"
+version: "3.4"
 services:
   web:
     image: codebottle
     deploy:
       replicas: 4
+      update_config:
+        parallelism: 2
+        order: start-first
       restart_policy:
         condition: on-failure
     ports:
