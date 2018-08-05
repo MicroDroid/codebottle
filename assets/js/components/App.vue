@@ -11,7 +11,7 @@
 				| <router-link :to="{name: 'embedding'}">Embedding</router-link>
 				| <a href="https://discord.gg/2Sd8Um3" id="discord-invite">Discord</a>
 				| <router-link :to="{name: 'privacy-policy'}">Privacy Policy</router-link>
-				| Built with <span class="fas fa-heart" title="Oh you burnt it!" /> by OverCoder
+				| Built with <span class="fas fa-heart" title="Oh you burnt it!" /> by <a href="https://microdroid.github.io/">OverCoder</a>
 				| Proudly hosted by <a href="https://blackfields.net/">BFNT <span class="fal fa-globe" title="Globe!" /></a>
 			</span>
 		</footer>
