@@ -6,7 +6,7 @@ services:
     deploy:
       replicas: 4
       update_config:
-        parallelism: 2
+        parallelism: 4
         order: start-first
       restart_policy:
         condition: on-failure
