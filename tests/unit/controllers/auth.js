@@ -123,7 +123,7 @@ describe('Auth controller', () => {
 
 		expect(jwtStub, 'JWT should be generated').to.have.been.calledOnce;
 		expect(sha256Stub, 'User should be hashed using SHA256').to.have.been.calledWith(
-			_.pick(overcoder, ['id', 'username', 'email', 'password', 'banned', 'activated'])
+			JSON.stringify(_.pick(overcoder, ['id', 'username', 'email', 'password', 'banned', 'activated']))
 		);
 
 		expect(ctx.body.token, 'Token should be set properly').to.equal(token);

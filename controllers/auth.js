@@ -37,7 +37,7 @@ module.exports = {
 		if (!user.activated)
 			throw new ApiError(401, 'Verify your email first');
 
-		const priv = cryptojs.SHA256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
+		const priv = cryptojs.SHA256(JSON.stringify(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated']))).toString();
 		
 		ctx.body = {
 			token: jwt.sign({
@@ -206,7 +206,7 @@ Time: ${(new Date()).toISOString()}
 			socialConnection.token = token.access_token;
 			await socialConnection.save();
 
-			const priv = cryptojs.SHA256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
+			const priv = cryptojs.SHA256(JSON.stringify(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated']))).toString();
 
 			ctx.body = {
 				username: user.username,
@@ -275,7 +275,7 @@ Time: ${(new Date()).toISOString()}
 				token: token.access_token,
 			});
 
-			const priv = cryptojs.SHA256(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated'])).toString();
+			const priv = cryptojs.SHA256(JSON.stringify(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated']))).toString();
 
 			ctx.body = {
 				username,
