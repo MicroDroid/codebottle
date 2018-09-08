@@ -9,7 +9,7 @@ const ejs = require('ejs');
 const helpers = require('./helpers');
 const models = require('./models');
 const handler = require('./middleware/handler');
-const loggerMiddleware = require('./middleware/logger');
+const loggerMiddleware = require('./middleware/logger')('res');
 const logger = require('./utils/logger');
 
 const koaConditional = require('koa-conditional-get');

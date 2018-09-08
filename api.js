@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const headersCheck = require('./middleware/headers-check');
 const handler = require('./middleware/handler');
-const logger = require('./middleware/logger');
+const logger = require('./middleware/logger')('api');
 const cors = require('koa2-cors');
 const koaBody = require('koa-body');
 
@@ -11,9 +11,6 @@ const koaCompress = require('koa-compress');
 
 const app = new Koa();
 const router = require('./router')(app);
-
-// Note: it'd be better to load koaBody only on route demand but like
-// Let's ignore that for the simplicity of code for now
 
 app
 	.use(handler)
