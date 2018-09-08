@@ -11,14 +11,14 @@ const actions = {
 		return axios.get(apiUrl(`/users/${username}`))
 			.then(response => {
 				commit(types.STORE_USER, response.data);
-			});
+		});
 	},
 
 	fetchSelf: ({commit}) => {
 		return axios.get(apiUrl('/self'))
 			.then(response => {
 				commit(types.STORE_SELF, response.data);
-			});
+		});
 	},
 
 	fetchUserSnippets: ({commit}, username) => {
@@ -28,7 +28,7 @@ const actions = {
 					username,
 					snippets: response.data
 				});
-			});
+		});
 	}
 };
 

@@ -35,7 +35,7 @@ const actions = {
 		return axios.get(apiUrl('/self/preferences'))
 			.then(response => {
 				commit(types.STORE_PREFERENCES, response.data);
-			});
+		});
 	},
 
 	githubLogin: ({commit}, payload) => {
@@ -57,7 +57,7 @@ const actions = {
 				root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
 				
 				commit(types.LOGIN, auth);
-			});
+		});
 	},
 
 	logout: ({commit}) => {
@@ -93,7 +93,7 @@ const getters = {
 	isAuthenticated: state => state.accessToken ? ((state.obtainedAt + state.expiresIn > Date.now())
 		? true
 		: false) 
-		: false,
+	: false,
 	preferences: state => state.preferences,
 };
 

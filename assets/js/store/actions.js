@@ -10,7 +10,7 @@ module.exports = {
 				commit(types.STORE_LANGUAGES, response.data);
 			}).catch(error => {
 				console.log('Failed to fetch languages!');
-			});
+		});
 	},
 
 	fetchCategories: ({commit}) => {
@@ -19,7 +19,7 @@ module.exports = {
 				commit(types.STORE_CATEGORIES, response.data);
 			}).catch(error => {
 				console.log('Failed to fetch categories!');
-			});
+		});
 	},
 
 	cookToast: ({commit}, data) => {

@@ -61,8 +61,7 @@ router.beforeEach((to, from, next) => {
 	if (to.meta.requiresAuth && !store.getters['auth/isAuthenticated']) {
 		next({name: 'signin'});
 		cookToast('Sign in first', 2000);
-	} else if ((to.name === 'signin' || to.name === 'signup')
-					&& store.getters['auth/isAuthenticated']) {
+	} else if ((to.name === 'signin' || to.name === 'signup') && store.getters['auth/isAuthenticated']) {
 		next({name: 'discover'});
 		cookToast('You are already signed in!', 2000);
 	} else next();

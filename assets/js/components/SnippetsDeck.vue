@@ -44,7 +44,7 @@
 			moment: moment.utc,
 			shorten, summarize
 		}
-	}
+	};
 </script>
 
 <style scoped>
