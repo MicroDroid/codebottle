@@ -23,7 +23,7 @@ app
 	.use(koaEtag())
 	.use(cors({
 		origin: '*',
-		maxAge: 846000, // 10d
+		maxAge: 864000, // 10d
 		allowHeaders: ['Authorization', 'Accept', 'Content-Type'],
 	}))
 	.use(headersCheck)
