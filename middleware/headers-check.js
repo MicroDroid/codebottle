@@ -6,12 +6,14 @@ module.exports = async (ctx, next) => {
 	const regex = /application\/vnd\.codebottle(\.v(\d))*\+json/;
 	const match = regex.exec(ctx.get('Accept'));
 
-	if (!match) {
+	let version;
+
+	if (!match)
+		version = '1';
+	else
+		version = match[2];
+
+	if (version !== '1')
 		throw error;
-	} else {	
-		const version = match[2];
-		if (version !== '1')
-			throw error;
-		else await next();
-	}
+	else await next();
 };
