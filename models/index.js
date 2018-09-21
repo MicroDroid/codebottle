@@ -1,5 +1,7 @@
 'use strict';
 
+const logger = require('../utils/logger');
+
 var fs				= require('fs');
 var path			= require('path');
 var Sequelize = require('sequelize');
@@ -11,14 +13,13 @@ var config		= require(__dirname + '/../config')['sequelize'];
 var db				= {};
 
 var sequelize = null;
-
 /* istanbul ignore next */
 if (config.use_env_variable) {
 	sequelize = new Sequelize(process.env[config.use_env_variable]);
 } else {
 	sequelize = new Sequelize(config.database, config.username, config.password, {
 		...config,
-		logging: process.env.SQL_LOGGING,
+		logging: process.env.SQL_LOGGING !== 'false' ? logger.sql : () => {},
 	});
 }
 
