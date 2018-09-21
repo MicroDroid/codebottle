@@ -47,7 +47,7 @@ const renderApp = async ctx => {
 		url: ctx.url.endsWith('?') ? ctx.url.slice(0, -1) : ctx.url, // It crashes otherwise
 		hostname: ctx.hostname,
 		protocol: ctx.protocol,
-		apiHost: `127.0.0.1:${process.env.API_PORT}`,
+		apiHost: `api.${ctx.hostname}`,
 		authCookie: ctx.cookies.get('auth'),
 	};
 
