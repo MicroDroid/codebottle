@@ -1,19 +1,18 @@
-'use strict';
+
+
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
 
 const logger = require('../utils/logger');
 
-var fs				= require('fs');
-var path			= require('path');
-var Sequelize = require('sequelize');
-var basename	= path.basename(__filename);
+const basename = path.basename(__filename);
 
-/* istanbul ignore next */
-var env			 = process.env.NODE_ENV || 'development';
-var config		= require(__dirname + '/../config')['sequelize'];
-var db				= {};
+const config = require(__dirname + '/../config')['sequelize'];
+const db = {};
 
-var sequelize = null;
-/* istanbul ignore next */
+let sequelize = null;
+
 if (config.use_env_variable) {
 	sequelize = new Sequelize(process.env[config.use_env_variable]);
 } else {
@@ -23,9 +22,7 @@ if (config.use_env_variable) {
 	});
 }
 
-/* istanbul ignore next */
-fs
-	.readdirSync(__dirname)
+fs.readdirSync(__dirname)
 	.filter(file => {
 		return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
 	})
@@ -34,7 +31,6 @@ fs
 		db[model.name] = model;
 	});
 
-/* istanbul ignore next */
 Object.keys(db).forEach(modelName => {
 	if (db[modelName].associate) {
 		db[modelName].associate(db);
