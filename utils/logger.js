@@ -6,7 +6,7 @@ const DiscordWebhook = require('webhook-discord');
 const os = require('os');
 
 /* istanbul ignore next */
-const hook = config.hooks.discord.log ? new DiscordWebhook(config.hooks.discord.log) : null;
+const hook = config.hooks.discord.runtime ? new DiscordWebhook(config.hooks.discord.runtime) : null;
 
 /* istanbul ignore next */
 function log(type, message) {

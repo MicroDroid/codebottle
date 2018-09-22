@@ -48,7 +48,7 @@ module.exports = {
 
 	hooks: {
 		discord: {
-			log: process.env.DISCORD_LOG_WEBHOOK
+			runtime: process.env.DISCORD_RUNTIME_WEBHOOK
 		}
 	}
 };
