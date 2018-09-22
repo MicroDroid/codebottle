@@ -117,7 +117,7 @@ module.exports = {
 					subject: 'Verify your email',
 					text: `Hi,
 
-You have request a password reset for your account, please click here to proceed:
+You have requested a password reset for your account, please click the link below to proceed:
 
 https://codebottle.io/change-password#${token}
 
@@ -139,7 +139,7 @@ Time: ${(new Date()).toISOString()}
 							Hi,
 						</p>
 						<p>
-							You have request a password reset for your account, please click here to proceed:
+							You have requested a password reset for your account, please click the link below to proceed:
 						</p>
 						<a href="https://codebottle.io/change-password#${token}">
 							https://codebottle.io/change-password#${token}

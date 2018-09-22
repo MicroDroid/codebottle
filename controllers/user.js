@@ -247,11 +247,11 @@ Time: ${(new Date()).toISOString()}
 					subject: 'Verify your new email',
 					text: `Hi,
 
-It looks like you have requested changing your email address. Please click the link below to verify the change:
+It looks like you have changed your email address on your CodeBottle account to this one. Please click the link below to verify this new email:
 
 https://codebottle.io/verify-email#${token}
 
-You can safely ignore this email if it was by mistake, and you can also contact us about it.
+If you haven't changed your email, your account might have been compromised. If that's the case, please contact us as soon as possible.
 
 Regards,
 
@@ -271,13 +271,13 @@ Time: ${(new Date()).toISOString()}
 								Hi,
 							</p>
 							<p>
-								It looks like you have requested changing your email address. Please click the link below to verify the change:
+								It looks like you have changed your email address on your CodeBottle account to this one.Please click the link below to verify this new email:
 							</p>
 							<a href="https://codebottle.io/verify-email#${token}">
 								https://codebottle.io/verify-email#${token}
 							</a>
 							<p>
-								You can safely ignore this email if it was by mistake, and you can also contact us about it.
+								If you haven't changed your email, your account might have been compromised. If that's the case, please contact us as soon as possible.
 							</p>
 							<p>
 								Regards,<br/>
