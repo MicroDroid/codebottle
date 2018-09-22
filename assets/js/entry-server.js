@@ -1,6 +1,5 @@
 import root from 'window-or-global';
 import {createApp} from './app';
-const isDev = process.env.NODE_ENV !== 'production';
 
 export default context => {
 	root.location = {
@@ -12,7 +11,6 @@ export default context => {
 	root.apiHost = context.apiHost;
 
 	return new Promise(async (resolve, reject) => {
-		const s = isDev && Date.now();
 		const {app, router, store} = createApp();
 
 		await store.dispatch('fetchLanguages');
@@ -51,7 +49,6 @@ export default context => {
 				store,
 				router.currentRoute
 			))).then(() => {
-				isDev && console.log(`SSR data prefetch: ${Date.now() - s}ms`);
 				context.state = store.state;
 				resolve(app);
 			}).catch(reject);
