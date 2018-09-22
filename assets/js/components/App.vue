@@ -36,7 +36,7 @@
 
 		meta: {
 			title: '404',
-			titleTemplate: '%s | CodeBottle',
+			titleTemplate: '%s / CodeBottle',
 			meta: [
 				{property: 'og:image', content: '/images/bottle_square.png', vmid: 'image'},
 			],
