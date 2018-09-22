@@ -73,7 +73,7 @@ module.exports = [
 		plugins: [
 			new VueLoaderPlugin(),
 			new MiniCssExtractPlugin({
-				filename: 'css/app-[chunkhash].css'
+				filename: 'css/app-[contenthash].css'
 			}),
 
 			new webpack.DefinePlugin({
