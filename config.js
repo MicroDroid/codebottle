@@ -26,7 +26,10 @@ module.exports = {
 			: process.env.NODE_ENV === 'development' ? console.log : null,
 	},
 
-	logging: process.env.LOGGING ? process.env.LOGGING === 'true' : process.env.NODE_ENV !== 'testing',
+	logging: {
+		http: process.env.LOG_HTTP !== 'false', // defaults true
+		sql: process.env.LOG_SQL === 'true', // defaults false
+	},
 
 	jwt: {
 		secret: process.env.JWT_SECRET,

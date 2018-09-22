@@ -8,17 +8,17 @@ const logger = require('../utils/logger');
 
 const basename = path.basename(__filename);
 
-const config = require(__dirname + '/../config')['sequelize'];
+const config = require('../config');
 const db = {};
 
 let sequelize = null;
 
-if (config.use_env_variable) {
-	sequelize = new Sequelize(process.env[config.use_env_variable]);
+if (config.sequelize.use_env_variable) {
+	sequelize = new Sequelize(process.env[config.sequelize.use_env_variable]);
 } else {
-	sequelize = new Sequelize(config.database, config.username, config.password, {
-		...config,
-		logging: process.env.SQL_LOGGING !== 'false' ? logger.sql : () => {},
+	sequelize = new Sequelize(config.sequelize.database, config.sequelize.username, config.sequelize.password, {
+		...config.sequelize,
+		logging: config.logging.sql ? logger.sql : () => {},
 	});
 }
 
