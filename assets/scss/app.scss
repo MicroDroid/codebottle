@@ -1,13 +1,13 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:400:700);
 
 @import 'variables';
-@import 'node_modules/bootstrap/scss/bootstrap';
+@import '~bootstrap/scss/bootstrap';
 
-@import './font-awesome-pro/scss/fontawesome';
-@import './font-awesome-pro/scss/fa-brands.scss';
-@import './font-awesome-pro/scss/fa-light.scss';
-@import './font-awesome-pro/scss/fa-regular.scss';
-@import './font-awesome-pro/scss/fa-solid.scss';
+@import '~@fortawesome/fontawesome-pro/scss/fontawesome';
+@import '~@fortawesome/fontawesome-pro/scss/light';
+@import '~@fortawesome/fontawesome-pro/scss/regular';
+@import '~@fortawesome/fontawesome-pro/scss/solid';
+@import '~@fortawesome/fontawesome-pro/scss/brands';
 
 @import './pace';
 @import './loader';
