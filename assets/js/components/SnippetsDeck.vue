@@ -10,7 +10,7 @@
 								<span class="far fa-star" /> {{snippet.votes}}
 								<span class="far fa-code" /> {{snippet.language.name}}
 								<span class="far fa-eye" /> {{snippet.views}}
-								<span class="far fa-clock" /> {{moment(snippet.updatedAt).fromNow()}}
+								<!-- <span class="far fa-clock" /> {{moment(snippet.updatedAt).fromNow()}} -->
 							</h6>
 							<div class="card-text">
 								<p v-if="snippet.description && summarize(snippet.description)">

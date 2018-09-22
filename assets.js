@@ -3,7 +3,8 @@ require('dotenv').config();
 const Sequelize = require('sequelize');
 const Koa = require('koa');
 const app = new Koa();
-const fs = require('fs');
+const fs = require('pn/fs');
+const path = require('path');
 const ejs = require('ejs');
 
 const helpers = require('./helpers');
@@ -31,16 +32,12 @@ app.use(koaEtag());
 app.use(loggerMiddleware);
 
 const renderApp = async ctx => {
-	const template = fs.readFileSync('./public/index.ejs', 'utf8');
-	const manifest = JSON.parse(fs.readFileSync('./build/webpack-manifest.json', 'utf8'));
-	const ssrManifest = JSON.parse(fs.readFileSync('./build/vue-ssr-server-bundle.json', 'utf8'));
+	const template = await fs.readFile(path.join(__dirname, 'build', 'index.html'), 'utf8');
+	const ssrManifest = JSON.parse(await fs.readFile('./build/vue-ssr-server-bundle.json', 'utf8'));
 
 	const renderer = createBundleRenderer(ssrManifest, {
 		runInNewContext: false,
-		template: ejs.render(template, {
-			js: '/' + manifest.js,
-			css: '/' + manifest.css,
-		}),
+		template,
 	});
 
 	const context = {
@@ -62,7 +59,7 @@ app.use(async (ctx, next) => {
 		if (await helpers.isDdgBot(ctx.ip)
 			|| await helpers.isGoogleBot(ctx.ip)
 			|| await helpers.isBingBot(ctx.ip)) {
-			const template = fs.readFileSync('./public/sitemap.ejs', 'utf8');
+			const template = await fs.readFile('./public/sitemap.ejs', 'utf8');
 			ctx.body = ejs.render(template, {
 				snippets: await models.snippet.findAll(),
 				users: await models.user.findAll(),

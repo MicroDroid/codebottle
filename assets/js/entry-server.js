@@ -2,7 +2,7 @@ import root from 'window-or-global';
 import {createApp} from './app';
 const isDev = process.env.NODE_ENV !== 'production';
 
-module.exports = context => {
+export default context => {
 	root.location = {
 		protocol: context.protocol + ':',
 		hostname: context.hostname,

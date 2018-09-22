@@ -1,4 +1,8 @@
 import root from 'window-or-global';
+import hljs from 'highlight.js/lib/highlight';
+import marked from 'marked';
+import moment from 'moment-mini';
+import axios from 'axios';
 
 // Will be replaced by server entry later, just to prevent undef errors
 if (typeof(window) === 'undefined')
@@ -7,20 +11,21 @@ if (typeof(window) === 'undefined')
 		hostname: 'codebottle.io'
 	};
 
-root.hljs = require('highlight.js/lib/highlight');
+root.hljs = hljs
 
 const hljsLanguages = ['java', 'cpp', 'cs', 'python', 'php', 'javascript', 'perl', 'ruby', 'powershell', 'lua', 'json', 'dart'];
 
-hljsLanguages.forEach((langName) => {
-	const langModule = require(`highlight.js/lib/languages/${langName}`);
-	root.hljs.registerLanguage(langName, langModule);
+hljsLanguages.forEach(langName => {
+	import(`highlight.js/lib/languages/${langName}`).then(langModule => {
+		root.hljs.registerLanguage(langName, langModule.default);
+	});
 });
 
-root.marked = require('marked');
+root.marked = marked;
 
-root.moment = require('moment-mini');
+root.moment = moment;
 
-root.axios = require('axios');
+root.axios = axios;
 root.axios.defaults.headers.common = {
 	'Accept': 'application/vnd.codebottle.v1+json',
 };

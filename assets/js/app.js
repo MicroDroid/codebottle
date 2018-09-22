@@ -1,6 +1,4 @@
-'use strict';
-
-require('./bootstrap');
+import './bootstrap';
 
 import Vue from 'vue';
 import Vuex from 'vuex';

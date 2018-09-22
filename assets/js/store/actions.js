@@ -3,7 +3,7 @@ import {apiUrl} from '../helpers';
 
 let toastEater = null;
 
-module.exports = {
+export default {
 	fetchLanguages: ({commit}) => {
 		axios.get(apiUrl('/languages'))
 			.then(response => {

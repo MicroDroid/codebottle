@@ -1,6 +1,6 @@
 import * as types from './mutation-types';
 
-module.exports = {
+export default {
 	[types.STORE_LANGUAGES]: (state, data) => {
 		state.languages = data;
 	},

@@ -1,12 +1,10 @@
 {
 	"presets": [
-		["env"]
+		["@babel/env"]
 	],
 	"plugins": [
-		"transform-object-rest-spread",
-		["transform-runtime", {
-			"polyfill": false,
-			"regenerator": true
-		}]
+		"@babel/plugin-syntax-object-rest-spread",
+		"@babel/plugin-transform-runtime",
+		"@babel/plugin-syntax-dynamic-import"
 	]
 }

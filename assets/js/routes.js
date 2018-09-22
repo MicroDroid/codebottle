@@ -1,87 +1,106 @@
-require('./bootstrap');
+import Discover from './components/pages/Discover';
+import Search from './components/pages/Search';
+import ViewSnippet from './components/pages/ViewSnippet';
+import EditSnippet from './components/pages/EditSnippet';
+import SnippetRevisions from './components/pages/SnippetRevisions';
+import ViewSnippetRevision from './components/pages/ViewSnippetRevision';
+import ViewUser from './components/pages/ViewUser';
+import CreateSnippet from './components/pages/CreateSnippet';
+import EditProfile from './components/pages/EditProfile';
+import Embedding from './components/pages/Embedding';
+import SignIn from './components/pages/SignIn';
+import GitHubSignIn from './components/pages/GitHubSignIn';
+import SignUp from './components/pages/SignUp';
+import VerifyEmail from './components/pages/VerifyEmail';
+import ForgotPassword from './components/pages/ForgotPassword';
+import ChangePassword from './components/pages/ChangePassword';
+import PrivacyPolicy from './components/pages/PrivacyPolicy';
+import Preferences from './components/pages/settings/Preferences';
+import ApiDocs from './components/pages/api/Template';
+import NotFound from './components/pages/NotFound';
 
 export default [
 	{
 		name: 'discover',
 		path: '/',
-		component: require('./components/pages/Discover.vue'),
+		component: Discover,
 	}, {
 		name: 'search',
 		path: '/search',
-		component: require('./components/pages/Search.vue'),
+		component: Search,
 	}, {
 		name: 'view-snippet',
 		path: '/s/:id',
-		component: require('./components/pages/ViewSnippet.vue'),
+		component: ViewSnippet,
 	}, {
 		name: 'edit-snippet',
 		path: '/s/:id/edit',
-		component: require('./components/pages/EditSnippet.vue'),
+		component: EditSnippet,
 	}, {
 		name: 'snippet-revisions',
 		path: '/s/:snippet_id/revisions',
-		component: require('./components/pages/SnippetRevisions.vue'),
+		component: SnippetRevisions,
 	}, {
 		name: 'view-snippet-revision',
 		path: '/s/:snippet_id/revisions/:id',
-		component: require('./components/pages/ViewSnippetRevision.vue'),
+		component: ViewSnippetRevision,
 	}, {
 		name: 'view-user',
 		path: '/users/:username',
-		component: require('./components/pages/ViewUser.vue'),
+		component: ViewUser,
 	}, {
 		name: 'create',
 		path: '/create',
-		component: require('./components/pages/CreateSnippet.vue'),
+		component: CreateSnippet,
 		meta: {
 			requiresAuth: true
 		},
 	}, {
 		name: 'edit-profile',
 		path: '/edit-profile',
-		component: require('./components/pages/EditProfile.vue'),
+		component: EditProfile,
 		meta: {
 			requiresAuth: true
 		},
 	}, {
 		name: 'embedding',
 		path: '/embedding',
-		component: require('./components/pages/Embedding.vue'),
+		component: Embedding,
 	}, {
 		name: 'signin',
 		path: '/signin',
-		component: require('./components/pages/SignIn.vue'),
+		component: SignIn,
 	}, {
 		name: 'github-signin',
 		path: '/signin/github',
-		component: require('./components/pages/GitHubSignIn.vue'),
+		component: GitHubSignIn,
 	}, {
 		name: 'signup',
 		path: '/signup',
-		component: require('./components/pages/SignUp.vue'),
+		component: SignUp,
 	}, {
 		name: 'verify-email',
 		path: '/verify-email',
-		component: require('./components/pages/VerifyEmail.vue'),
+		component: VerifyEmail,
 	}, {
 		name: 'forgot-password',
 		path: '/forgot-password',
-		component: require('./components/pages/ForgotPassword.vue'),
+		component: ForgotPassword,
 	}, {
 		name: 'change-password',
 		path: '/change-password',
-		component: require('./components/pages/ChangePassword.vue'),
+		component: ChangePassword,
 	}, {
 		name: 'privacy-policy',
 		path: '/privacy-policy',
-		component: require('./components/pages/PrivacyPolicy.vue'),
+		component: PrivacyPolicy,
 	},
 	
 
 	{
 		name: 'settings.preferences',
 		path: '/settings/preferences',
-		component: require('./components/pages/settings/Preferences.vue'),
+		component: Preferences,
 		meta: {
 			requiresAuth: true
 		},
@@ -92,7 +111,7 @@ export default [
 	{
 		name: 'api.getting-started',
 		path: '/api/docs/getting-started',
-		component: require('./components/pages/api/Template.vue'),
+		component: ApiDocs,
 		props: {
 			title: 'Getting Started',
 			description: 'Get started quickly into using our quota-less free API and integrate it with your application',
@@ -101,7 +120,7 @@ export default [
 	}, {
 		name: 'api.authentication',
 		path: '/api/docs/authentication',
-		component: require('./components/pages/api/Template.vue'),
+		component: ApiDocs,
 		props: {
 			title: 'Authentication',
 			description: 'Learn how to easily authenticate to our API using personal access tokens or OAuth 2.0 application tokens',
@@ -110,7 +129,7 @@ export default [
 	}, {
 		name: 'api.languages',
 		path: '/api/docs/languages',
-		component: require('./components/pages/api/Template.vue'),
+		component: ApiDocs,
 		props: {
 			title: 'Languages',
 			description: 'Languages classify snippets, making it easy to reach the snippet that speaks the language of your project\'s',
@@ -119,7 +138,7 @@ export default [
 	}, {
 		name: 'api.categories',
 		path: '/api/docs/categories',
-		component: require('./components/pages/api/Template.vue'),
+		component: ApiDocs,
 		props: {
 			title: 'Categories',
 			description: 'Categories make it easy for plugins and scripts to determine the type of the snippet and import it properly',
@@ -128,7 +147,7 @@ export default [
 	}, {
 		name: 'api.snippets',
 		path: '/api/docs/snippets',
-		component: require('./components/pages/api/Template.vue'),
+		component: ApiDocs,
 		props: {
 			title: 'Snippets',
 			description: 'Snippets are at the core of the website, yet see how quickly and easily you can get started with them with our simple API',
@@ -137,7 +156,7 @@ export default [
 	}, {
 		name: 'api.snippet-revisions',
 		path: '/api/docs/snippets/revisions',
-		component: require('./components/pages/api/Template.vue'),
+		component: ApiDocs,
 		props: {
 			title: 'Snippet Revisions',
 			description: 'Snippets revisions are edits made to the snippet since it has been created',
@@ -150,7 +169,7 @@ export default [
 	{
 		name: 'NotFound',
 		path: '*',
-		component: require('./components/pages/NotFound.vue'),
+		component: NotFound,
 	},
 
 	// Redirects

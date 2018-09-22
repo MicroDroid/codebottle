@@ -2,139 +2,135 @@ require('dotenv').config();
 
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const WebpackVersionPlugin = require('webpack-version-plugin');
-const WebpackMd5Hash = require('webpack-md5-hash');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
-const fs = require('fs');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const hljsLanguages = ['java', 'cpp', 'cs', 'css', 'python', 'php', 'javascript',
-  'perl', 'ruby', 'powershell', 'lua', 'json', 'bash', 'less', 'markdown', 'scss',
-  'sql', 'html', 'xml', 'yaml', 'dart'];
+	'perl', 'ruby', 'powershell', 'lua', 'json', 'bash', 'less', 'markdown', 'scss',
+	'sql', 'html', 'xml', 'yaml', 'dart'];
 
 const isProd = process.env.NODE_ENV === 'production';
-
+	
 const common = {
-  module: {
-    rules: [{
-      test: /\.vue$/,
-      loader: 'vue-loader',
-    },
-    {
-      test: /\.js$/,
-      exclude: /(node_modules)/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['env']
-        }
-      },
-    },
-    {
-      test: /\.css$/,
-      loaders: ['vue-style-loader', 'css-loader']
-    },
-    {
-      test: /\.scss$/,
-      include: [/node_modules/, path.join(__dirname, 'assets/scss')],
-      loader: ExtractTextPlugin.extract({
-        fallback: 'vue-style-loader',
-        use: ['css-loader', 'sass-loader']
-      }),
-    },
-    {
-      test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
-      use: [
-        'file-loader?name=/fonts/[name].[ext]'
-      ]
-    },
-    {
-      test: /\.md$/,
-      use: 'raw-loader',
-    }],
-  },
+	mode: isProd ? 'production' : 'development',
+	module: {
+		rules: [{
+			test: /\.vue$/,
+			loader: 'vue-loader',
+		},
+		{
+			test: /\.js$/,
+			exclude: /(node_modules)/,
+			use: {
+				loader: 'babel-loader'
+			},
+		},
+		{
+			test: /\.css$/,
+			loaders: ['vue-style-loader', 'css-loader']
+		},
+		{
+			test: /\.scss$/,
+			include: [/node_modules/, path.join(__dirname, 'assets', 'scss')],
+			use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+		},
+		{
+			test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
+			use: [
+				'file-loader?name=fonts/[name].[ext]'
+			]
+		},
+		{
+			test: /\.md$/,
+			use: 'raw-loader',
+		}],
+	},
 
-  resolve: {
-    alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-    },
-    extensions: ['.js', '.vue'],
-  }
+	resolve: {
+		alias: {
+			vue$: 'vue/dist/vue.esm.js',
+		},
+		extensions: ['.js', '.vue'],
+	}
 };
 
 module.exports = [
-  {
-    entry: [
-      './assets/scss/app.scss',
-      './assets/js/entry-client.js',
-    ],
-    output: {
-      filename: 'js/app-[chunkhash].js',
-      path: path.resolve(__dirname, 'public')
-    },
-    plugins: [
-      new ExtractTextPlugin('css/app-[contenthash].css'),
+	{
+		entry: [
+			path.join(__dirname, 'assets', 'js', 'entry-client.js'),
+			path.join(__dirname, 'assets', 'scss', 'app.scss'),
+		],
+		output: {
+			filename: 'js/app-[chunkhash].js',
+			path: path.resolve(__dirname, 'public'),
+			publicPath: '/',
+		},
+		plugins: [
+			new VueLoaderPlugin(),
+			new MiniCssExtractPlugin({
+				filename: 'css/app-[chunkhash].css'
+			}),
 
-      new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: `'${process.env.NODE_ENV}'`
-        }
-      }),
+			new webpack.DefinePlugin({
+				'process.env': {
+					NODE_ENV: `'${process.env.NODE_ENV}'`
+				}
+			}),
 
-      new webpack.ContextReplacementPlugin(
-        /highlight\.js\/lib\/languages$/,
-        new RegExp(`^./(${hljsLanguages.join('|')})$`)
-      ),
+			new webpack.ContextReplacementPlugin(
+				/highlight\.js\/lib\/languages$/,
+				new RegExp(`^./(${hljsLanguages.join('|')})$`)
+			),
 
-      new WebpackVersionPlugin({
-        cb: (manifest) => {
-          manifest = {
-            js: manifest.files.main.filter(f => f.endsWith('.js'))[0],
-            css: manifest.files.main.filter(f => f.endsWith('.css'))[0],
-          }
-          fs.writeFileSync(path.join(__dirname, 'build', 'webpack-manifest.json'), JSON.stringify(manifest, null, 2));
-        }
-      }),
+			new HtmlWebpackPlugin({
+				template: path.join(__dirname, 'assets', 'index-template.html'),
+				minify: {
+					collapseWhitespace: true,
+					preserveLineBreaks: false
+				},
+				filename: path.join(__dirname, 'build', 'index.html'),
+			}),
 
-      new WebpackMd5Hash(),
+			...(isProd ? [
+				new UglifyJsPlugin(),
+				new OptimizeCssAssetsPlugin(),
+			] : []),
+		],
 
-      ...(isProd ? [
-        new UglifyJsPlugin(),
-        new OptimizeCssAssetsPlugin(),
-      ] : []),
-    ],
+		...common
+	},
 
-    ...common
-  },
+	{
+		target: 'node',
+		entry: [
+			path.join(__dirname, 'assets', 'js', 'entry-server.js'),
+		],
+		output: {
+			filename: 'js/ssr.js',
+			path: path.resolve(__dirname, 'build'),
+			libraryTarget: 'commonjs2',
+		},
+		plugins: [
+			new VueLoaderPlugin(),
+			new webpack.DefinePlugin({
+				'process.env': {
+					NODE_ENV: `'${process.env.NODE_ENV}'`
+				},
+				'process.env.VUE_ENV': '"server"'
+			}),
 
-  {
-    target: 'node',
-    entry: [
-      './assets/js/entry-server.js',
-    ],
-    output: {
-      filename: 'js/ssr.js',
-      path: path.resolve(__dirname, 'build'),
-      libraryTarget: 'commonjs2',
-    },
-    plugins: [
-      new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: `'${process.env.NODE_ENV}'`
-        },
-        'process.env.VUE_ENV': '"server"'
-      }),
+			new webpack.ContextReplacementPlugin(
+				/highlight\.js\/lib\/languages$/,
+				new RegExp(`^./(${hljsLanguages.join('|')})$`)
+			),
+			
+			new VueSSRServerPlugin(),
+		],
 
-      new webpack.ContextReplacementPlugin(
-        /highlight\.js\/lib\/languages$/,
-        new RegExp(`^./(${hljsLanguages.join('|')})$`)
-      ),
-      
-      new VueSSRServerPlugin(),
-    ],
-
-    ...common
-  },
+		...common
+	},
 ];
