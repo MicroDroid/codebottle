@@ -8,6 +8,7 @@
 		<footer>
 			<span>
 				<router-link :to="{name: 'api.getting-started'}">API</router-link>
+				| <router-link :to="{name: 'support'}" id="support-link">Support</router-link>
 				| <router-link :to="{name: 'embedding'}">Embedding</router-link>
 				| <a href="https://discord.gg/2Sd8Um3" target="_blank" id="discord-invite">Discord</a>
 				| <router-link :to="{name: 'privacy-policy'}">Privacy Policy</router-link>
@@ -42,3 +43,9 @@
 		}
 	};
 </script>
+
+<style scoped>
+	#support-link {
+		color: #ffeb3b;
+	}
+</style>

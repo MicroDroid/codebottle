@@ -1,5 +1,6 @@
 import Discover from './components/pages/Discover';
 import Search from './components/pages/Search';
+import Support from './components/pages/Support';
 import ViewSnippet from './components/pages/ViewSnippet';
 import EditSnippet from './components/pages/EditSnippet';
 import SnippetRevisions from './components/pages/SnippetRevisions';
@@ -28,6 +29,10 @@ export default [
 		name: 'search',
 		path: '/search',
 		component: Search,
+	}, {
+		name: 'support',
+		path: '/support',
+		component: Support,
 	}, {
 		name: 'view-snippet',
 		path: '/s/:id',
