@@ -1,5 +1,10 @@
 /* istanbul ignore next */
 module.exports = {
+	http: {
+		apiPort: process.env.API_PORT || 3000,
+		assetsPort: process.env.ASSETS_PORT || 3001,
+	},
+
 	sequelize: {
 		host: process.env.DB_HOST,
 		port: process.env.DB_PORT,

@@ -7,9 +7,10 @@
 const logger = require('./utils/logger');
 const api = require('./api');
 const assets = require('./assets');
+const config = require('./config');
 
-const apiPort = process.env.API_PORT || 3000;
-const assetsPort = process.env.ASSETS_PORT || 3001;
+const apiPort = config.http.apiPort;
+const assetsPort = config.http.assetsPort;
 
 api.proxy = assets.proxy = true;
 
