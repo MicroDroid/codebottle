@@ -11,14 +11,13 @@ if (typeof(window) === 'undefined')
 		hostname: 'codebottle.io'
 	};
 
-root.hljs = hljs
+root.hljs = hljs;
 
 const hljsLanguages = ['java', 'cpp', 'cs', 'python', 'php', 'javascript', 'perl', 'ruby', 'powershell', 'lua', 'json', 'dart'];
 
 hljsLanguages.forEach(langName => {
-	import(`highlight.js/lib/languages/${langName}`).then(langModule => {
-		root.hljs.registerLanguage(langName, langModule.default);
-	});
+	const langModule = require(`highlight.js/lib/languages/${langName}`);
+	root.hljs.registerLanguage(langName, langModule);
 });
 
 root.marked = marked;
