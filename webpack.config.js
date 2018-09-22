@@ -4,7 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
@@ -94,12 +94,21 @@ module.exports = [
 				},
 				filename: path.join(__dirname, 'build', 'index.html'),
 			}),
-
-			...(isProd ? [
-				new UglifyJsPlugin(),
-				new OptimizeCssAssetsPlugin(),
-			] : []),
 		],
+
+
+		...isProd ? {
+			optimization: {
+				minimizer: [
+					new TerserWebpackPlugin({
+						cache: true,
+						parallel: true,
+						sourceMap: false,
+					}),
+					new OptimizeCssAssetsPlugin(),
+				]
+			}
+		} : {},
 
 		...common
 	},
