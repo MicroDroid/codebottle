@@ -11,7 +11,7 @@
     "tests:coverage": "env-cmd ./.env cross-env NODE_ENV=testing nyc -x tests -x models --clean mocha ./tests --recursive",
     "assets:dev": "cross-env NODE_ENV=development webpack --progress --hide-modules --watch",
     "assets:prod": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "assets:clean": "rm -f ./public/css/app-*.css && rm -f ./public/js/app-*.js ./public/webpack-manifest.json ./build/*json ./public/fonts/*",
+    "assets:clean": "rm -f ./public/css/app-*.css ./public/js/app-*.js ./build/* ./public/fonts/*",
     "dev": "cross-env NODE_ENV=development env-cmd ./.env node ./index.js",
     "prod": "cross-env NODE_ENV=production env-cmd ./.env node ./index.js"
   },
