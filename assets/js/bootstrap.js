@@ -13,7 +13,7 @@ if (typeof(window) === 'undefined')
 
 root.hljs = hljs;
 
-const hljsLanguages = ['java', 'cpp', 'cs', 'python', 'php', 'javascript', 'perl', 'ruby', 'powershell', 'lua', 'json', 'dart'];
+const hljsLanguages = ['java', 'cpp', 'cs', 'python', 'php', 'javascript', 'perl', 'ruby', 'powershell', 'lua', 'json', 'crystal', 'dart'];
 
 hljsLanguages.forEach(langName => {
 	const langModule = require(`highlight.js/lib/languages/${langName}`);

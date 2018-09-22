@@ -112,6 +112,8 @@ export function hljsLanguageById(id) {
 	case 10:
 		return 'lua';
 	case 11:
+		return 'crystal';
+	case 12:
 		return 'dart';
 	default:
 		return '';
