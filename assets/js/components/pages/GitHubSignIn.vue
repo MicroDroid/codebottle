@@ -8,12 +8,6 @@
 	import {extractError, findGetParameter, genRandomString, cookGetParameters, cookToast} from '../../helpers';
 
 	export default {
-		data: function() {
-			return {
-				GITHUB_CLIENT_ID: process.env.NODE_ENV === 'production' ? '621e357ad57133607c33' : '0d1b8a8f60c5e2070c45',
-			};
-		},
-
 		meta: {
 			title: 'Please wait..',
 
@@ -44,8 +38,10 @@
 			} else {
 				const state = genRandomString(24);
 				localStorage.setItem('github_oauth_state', btoa(state));
+				
 				window.location = 'http://github.com/login/oauth/authorize?' + cookGetParameters({
-					client_id: this.GITHUB_CLIENT_ID,
+					client_id: process.env.OAUTH_GITHUB_CLIENT_ID,
+					redirect_uri: process.env.OAUTH_GITHUB_REDIRECT_URI,
 					scope: 'user:email',
 					state
 				});

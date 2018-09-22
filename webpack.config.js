@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const config = require('./config');
 const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -77,7 +78,9 @@ module.exports = [
 
 			new webpack.DefinePlugin({
 				'process.env': {
-					NODE_ENV: `'${process.env.NODE_ENV}'`
+					NODE_ENV: `'${process.env.NODE_ENV}'`,
+					OAUTH_GITHUB_CLIENT_ID: `'${config.oauth.github.clientId}'`,
+					OAUTH_GITHUB_REDIRECT_URI: `'${config.oauth.github.redirectUri}'`,
 				}
 			}),
 
@@ -127,7 +130,9 @@ module.exports = [
 			new VueLoaderPlugin(),
 			new webpack.DefinePlugin({
 				'process.env': {
-					NODE_ENV: `'${process.env.NODE_ENV}'`
+					NODE_ENV: `'${process.env.NODE_ENV}'`,
+					OAUTH_GITHUB_CLIENT_ID: `'${config.oauth.github.clientId}'`,
+					OAUTH_GITHUB_REDIRECT_URI: `'${config.oauth.github.redirectUri}'`,
 				},
 				'process.env.VUE_ENV': '"server"'
 			}),

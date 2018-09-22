@@ -176,8 +176,8 @@ Time: ${(new Date()).toISOString()}
 
 		const githubOAuth = simpleOAuth.create({
 			client: {
-				id: '0d1b8a8f60c5e2070c45',
-				secret: '08fe963ff66b25e435d68f33a57148e80c05e794',
+				id: config.oauth.github.clientId,
+				secret: config.oauth.github.clientSecret,
 			},
 			auth: {
 				tokenHost: 'https://github.com',

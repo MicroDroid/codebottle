@@ -58,5 +58,13 @@ module.exports = {
 		discord: {
 			runtime: process.env.DISCORD_RUNTIME_WEBHOOK
 		}
+	},
+
+	oauth: {
+		github: {
+			clientId: process.env.OAUTH_GITHUB_CLIENT_ID,
+			clientSecret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
+			redirectUri: process.env.OAUTH_GITHUB_REDIRECT_URI,
+		}
 	}
 };
