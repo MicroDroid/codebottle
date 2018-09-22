@@ -4,7 +4,6 @@
 	],
 	"plugins": [
 		"@babel/plugin-syntax-object-rest-spread",
-		"@babel/plugin-transform-runtime",
-		"@babel/plugin-syntax-dynamic-import"
+		"@babel/plugin-transform-runtime"
 	]
 }
