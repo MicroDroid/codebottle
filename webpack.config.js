@@ -89,7 +89,7 @@ module.exports = [
 			new HtmlWebpackPlugin({
 				template: path.join(__dirname, 'assets', 'index-template.html'),
 				minify: {
-					collapseWhitespace: true,
+					collapseWhitespace: false, // https://github.com/nuxt/nuxt.js/issues/1552#issuecomment-341729165
 					preserveLineBreaks: false
 				},
 				filename: path.join(__dirname, 'build', 'index.html'),
