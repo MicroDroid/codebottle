@@ -10,9 +10,6 @@ const hook = config.hooks.discord.runtime ? new DiscordWebhook(config.hooks.disc
 
 /* istanbul ignore next */
 function log(type, message) {
-	if (!config.logging)
-		return;
-
 	var generated = (new Date()).toISOString() + ' ';
 
 	switch(type) {
