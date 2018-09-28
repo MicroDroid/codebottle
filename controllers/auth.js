@@ -114,7 +114,7 @@ module.exports = {
 				nodemailer.sendMail({
 					from: '"CodeBottle" <noreply@codebottle.io>',
 					to: user.email,
-					subject: 'Verify your email',
+					subject: 'Password reset request',
 					text: `Hi,
 
 You have requested a password reset for your account, please click the link below to proceed:
