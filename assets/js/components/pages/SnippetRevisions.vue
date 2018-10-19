@@ -40,7 +40,7 @@
 	import striptags from 'striptags';
 	import {diffLines} from 'diff';
 	import {mapGetters} from 'vuex';
-	import {getAbsoluteUrl, cookToast, extractError} from '../../helpers';
+	import {getAbsoluteUrl, extractError} from '../../helpers';
 
 	export default {
 		methods: {
@@ -78,10 +78,16 @@
 
 					return Promise.all(promises);
 				}).catch(e => {
-					cookToast(extractError(e), 3000);			
+					store.dispatch('toasts/addToast', {
+						content: extractError(e),
+						duration: 3000
+					});			
 				});
 			}).catch(e => {
-				cookToast(extractError(e), 3000);
+				store.dispatch('toasts/addToast', {
+					content: extractError(e),
+					duration: 3000
+				});
 			});
 		},
 

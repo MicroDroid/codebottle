@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<div id="main-content">
-			<toast v-if="toast.content" :content="toast.content" />
+			<toast />
 			<navbar />
 			<router-view />
 		</div>
@@ -21,26 +21,19 @@
 
 <script type="text/javascript">
 	import Toast from './Toast';
-	import {mapGetters} from 'vuex';
-
+	
 	export default {
-		components: {
-			Toast,
-		},
-
-		computed: {
-			...mapGetters([
-				'toast',
-			])
-		},
-
 		meta: {
 			title: '404',
 			titleTemplate: '%s / CodeBottle',
 			meta: [
 				{property: 'og:image', content: '/images/bottle_square.png', vmid: 'image'},
 			],
-		}
+		},
+
+		components: {
+			Toast,
+		},
 	};
 </script>
 

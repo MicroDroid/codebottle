@@ -5,7 +5,7 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError, findGetParameter, genRandomString, cookGetParameters, cookToast} from '../../helpers';
+	import {extractError, findGetParameter, genRandomString, cookGetParameters} from '../../helpers';
 
 	export default {
 		meta: {
@@ -22,7 +22,10 @@
 			if (code) {
 				const originalState = atob(localStorage.getItem('github_oauth_state'));
 				if (originalState !== findGetParameter('state'))
-					return cookToast('State mismatch error', 3000);
+					return this.$store.dispatch('toasts/addToast', {
+						content: 'State mismatch error',
+						duration: 3000
+					});
 
 				localStorage.removeItem('github_oauth_state');
 
@@ -32,7 +35,10 @@
 				}).then(() => {
 					this.$router.push({name: 'discover'});
 				}).catch(error => {
-					cookToast(extractError(error), 3000);
+					this.$store.dispatch('toasts/addToast', {
+						content: extractError(error),
+						duration: 3000
+					});
 					this.$router.push({name: 'signin'});
 				});
 			} else {

@@ -5,14 +5,17 @@
 </template>
 
 <script type="text/javascript">
-	import {apiUrl, cookToast} from '../../helpers';
+	import {apiUrl} from '../../helpers';
 	
 	export default {
 		mounted: function() {
 			axios.post(apiUrl('/users/email-verifications'), {
 				token: window.location.hash.substr(1),
 			}).then(response => {
-				cookToast('Email has been verified!', 3000);
+				this.$store.dispatch('toasts/addToast', {
+					content: 'Email has been verified!',
+					duration: 3000
+				});
 				this.$router.push({name: 'discover'});
 			}).catch(error => {
 				// idk, show something up

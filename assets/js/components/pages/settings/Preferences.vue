@@ -35,7 +35,7 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError, apiUrl, cookToast} from '../../../helpers';
+	import {extractError, apiUrl} from '../../../helpers';
 	import Sidenav from './Sidenav';
 
 	export default {
@@ -71,7 +71,10 @@
 					this.preferences.updatedAt = Date.now();
 					this.message = 'Saved!';
 					this.$store.dispatch('auth/fetchPreferences').catch(error => {
-						cookToast('Error reloading preferences!', 3000);
+						this.$store.dispatch('toasts/addToast', {
+							content: 'Error reloading preferences!',
+							duration: 3000
+						});
 					});
 				}).catch(error => {
 					this.loading = false;

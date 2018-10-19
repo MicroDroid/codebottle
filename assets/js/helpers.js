@@ -1,7 +1,5 @@
 import root from 'window-or-global';
 
-let store;
-
 export function extractError(error) {
 	if (error.response)
 		if (!error.response.data || !error.response.data.error)
@@ -74,14 +72,6 @@ export function getAbsoluteUrl(url) {
 		+ root.location.hostname
 		+ '/'
 		+ (url.indexOf('/') === 0 ? url.substr(1) : url);
-}
-
-export function setStore(theStoreToBeSet) {
-	store = theStoreToBeSet;
-}
-
-export function cookToast(content, duration) {
-	store.dispatch('cookToast', {content, duration});
 }
 
 // No, I don't use this to FREEZE THE ENTIRE COMPUTER!

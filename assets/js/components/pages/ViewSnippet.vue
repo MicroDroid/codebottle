@@ -17,7 +17,7 @@
 					' voted' : '')" @click="vote(-1)" />
 				</div>
 				<div id="action-bar">
-					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="() => cookToast('Copied!', 1500)">
+					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="showCopiedToast">
 						<span class="far fa-copy" /> Copy
 					</button>
 					<router-link tag="button" class="btn btn-warning btn-sm"
@@ -95,7 +95,7 @@
 <script type="text/javascript">
 	import striptags from 'striptags';
 	import {mapGetters, mapState} from 'vuex';
-	import {apiUrl, getAbsoluteUrl, cookToast, extractError, hljsLanguageById, highlightCode} from '../../helpers';
+	import {apiUrl, getAbsoluteUrl, extractError, hljsLanguageById, highlightCode} from '../../helpers';
 	import Modal from '../bootstrap/Modal';
 	import {UPDATE_SNIPPET_CURRENT_VOTE} from '../../store/mutation-types';
 
@@ -108,6 +108,13 @@
 		},
 
 		methods: {
+			showCopiedToast() {
+				this.$store.dispatch('toasts/addToast', {
+					content: 'Copied!',
+					duration: 1500
+				});
+			},
+
 			vote: function(vote) {
 				if (!this.isAuthenticated)
 					return this.$router.push({name: 'signin'});
@@ -122,7 +129,10 @@
 							vote 
 						});
 					}).catch(error => {
-						cookToast(extractError(error), 4000);
+						this.$store.dispatch('toasts/addToast', {
+							content: extractError(error),
+							duration: 4000
+						});
 				});
 			},
 
@@ -151,28 +161,43 @@
 			confirmDeletion: function() {
 				axios.delete(apiUrl(`/snippets/${this.$route.params.id}`))
 					.then(() => {
-						cookToast('Deleted!', 4000);
+						this.$store.dispatch('toasts/addToast', {
+							content: 'Deleted!',
+							duration: 4000
+						});
 						this.$router.push({name: 'discover'});
 					}).catch(e => {
-						cookToast(extractError(e), 4000);	
+						this.$store.dispatch('toasts/addToast', {
+							content: extractError(e),
+							duration: 4000
+						});	
 				});
 			},
 
 			submitFlag: function() {
 				const description = this.$refs.flagDescription.value;
 				this.flagModalShown = false;
-				cookToast('Sending..', 30000);
+				this.$store.dispatch('toasts/addToast', {
+					content: 'Sending..',
+					duration: 30000
+				});
 
 				axios.post(apiUrl('/snippets/' + this.$route.params.id + '/flag'), {
 					description,
 				}).then(response => {
-					cookToast('Sent!', 2000);
+					this.$store.dispatch('toasts/addToast', {
+						content: 'Sent!',
+						duration: 2000
+					});
 				}).catch(error => {
-					cookToast(extractError(error), 3000);
+					this.$store.dispatch('toasts/addToast', {
+						content: extractError(error),
+						duration: 3000
+					});
 				});
 			},
 
-			marked, cookToast,
+			marked,
 			moment: moment.utc,
 			hljsLanguageById,
 		},

@@ -49,7 +49,7 @@
 	import striptags from 'striptags';
 	import {diffLines} from 'diff';
 	import {mapGetters} from 'vuex';
-	import {getAbsoluteUrl, cookToast, extractError, hljsLanguageById, highlightCode} from '../../helpers';
+	import {getAbsoluteUrl, extractError, hljsLanguageById, highlightCode} from '../../helpers';
 
 	export default {
 		methods: {
@@ -87,13 +87,22 @@
 			return store.dispatch('snippets/fetch', route.params.snippet_id).then(() => {
 				return store.dispatch('snippets/fetchRevisions', route.params.snippet_id).then(revisions => {
 					return store.dispatch('users/fetch', revisions[route.params.id].author).catch(e => {
-						cookToast(extractError(e), 3000);	
+						store.dispatch('toasts/addToast', {
+							content: extractError(e),
+							duration: 3000
+						});	
 					});	
 				}).catch(e => {
-					cookToast(extractError(e), 3000);			
+					store.dispatch('toasts/addToast', {
+						content: extractError(e),
+						duration: 3000
+					});			
 				});
 			}).catch(e => {
-				cookToast(extractError(e), 3000);
+				store.dispatch('toasts/addToast', {
+					content: extractError(e),
+					duration: 3000
+				});
 			});
 		},
 

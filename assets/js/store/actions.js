@@ -1,8 +1,6 @@
 import * as types from './mutation-types';
 import {apiUrl} from '../helpers';
 
-let toastEater = null;
-
 export default {
 	fetchLanguages: ({commit}) => {
 		axios.get(apiUrl('/languages'))
@@ -20,14 +18,5 @@ export default {
 			}).catch(error => {
 				console.log('Failed to fetch categories!');
 		});
-	},
-
-	cookToast: ({commit}, data) => {
-		if (toastEater)
-			clearTimeout(toastEater);
-		commit(types.COOK_TOAST, data);
-		toastEater = setTimeout(() => {
-			commit(types.EAT_TOAST);
-		}, data.duration);
-	},
+	}
 };

@@ -1,22 +1,48 @@
 <template>
-	<span id="toast" class="unselectable">
-		{{content}}
+	<span class="toast" v-if="show">
+		{{ toast.content }}
 	</span>
 </template>
 
 <script type="text/javascript">
+	import {mapGetters} from 'vuex';
+
 	export default {
-		props: {
-			content: {
-				type: String,
-				required: true,
+		data() {
+			return {
+				show: false,
+			};
+		},
+
+		watch: {
+			toast: {
+				handler(newToast) {
+					if (!newToast) { // There are no more toasts left to show
+						this.show = false;
+						return;
+					}
+
+					this.show = true;
+
+					setTimeout(() => {
+						this.$store.dispatch('toasts/removeToast', newToast.id);
+					}, newToast.duration);
+				},
+
+				immediate: true,
 			},
+		},
+
+		computed: {
+			...mapGetters({
+				toast: 'toasts/firstToast'
+			}),
 		},
 	};
 </script>
 
 <style scoped>
-	#toast {
+	.toast {
 		position: absolute;
 		top: 5vh;
 		left: 50%;

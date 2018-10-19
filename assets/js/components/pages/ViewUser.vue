@@ -82,7 +82,7 @@
 
 <script type="text/javascript">
 	import {mapGetters} from 'vuex';
-	import {apiUrl, getAbsoluteUrl, cookToast, extractError} from '../../helpers';
+	import {apiUrl, getAbsoluteUrl, extractError} from '../../helpers';
 	import Modal from '../bootstrap/Modal';
 	import Loader from '../Loader';
 	import SnippetsDeck from '../SnippetsDeck';
@@ -109,14 +109,23 @@
 			submitFlag: function() {
 				const description = this.$refs.flagDescription.value;
 				this.flagModalShown = false;
-				cookToast('Sending..', 30000);
+				this.$store.dispatch('toasts/addToast', {
+					content: 'Sending..',
+					duration: 30000
+				});
 
 				axios.post(apiUrl('/users/' + this.$route.params.username + '/flag'), {
 					description,
 				}).then(response => {
-					cookToast('Sent!', 2000);
+					this.$store.dispatch('toasts/addToast', {
+						content: 'Sent!',
+						duration: 2000
+					});
 				}).catch(error => {
-					cookToast(extractError(error), 3000);
+					this.$store.dispatch('toasts/addToast', {
+						content: extractError(error),
+						duration: 3000
+					});
 				});
 			},
 
@@ -139,10 +148,16 @@
 			return store.dispatch('users/fetch', route.params.username).then(() => {
 				return store.dispatch('users/fetchUserSnippets', route.params.username)
 					.catch(e => {
-						cookToast(extractError(e), 3000);			
+						store.dispatch('toasts/addToast', {
+							content: extractError(e),
+							duration: 3000,
+						});			
 				});
 			}).catch(e => {
-				cookToast(extractError(e), 3000);
+				store.dispatch('toasts/addToast', {
+					content: extractError(e),
+					duration: 3000,
+				});
 			});
 		},
 
