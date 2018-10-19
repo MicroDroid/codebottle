@@ -1,10 +1,10 @@
 <template>
-	<div class="modal" :class="{show}">
-		<div class="modal-dialog" v-if="show">
+	<div :class="{show}" class="modal">
+		<div v-if="show" class="modal-dialog">
 			<div class="modal-content text-left">
 				<div class="modal-header">
 					<slot name="header" />
-					<h5 class="modal-title" v-if="title">{{title}}</h5>
+					<h5 v-if="title" class="modal-title">{{ title }}</h5>
 					<button type="button" class="close text-muted" @click="dismiss">
 						<span aria-hidden="true">&times;</span>
 					</button>

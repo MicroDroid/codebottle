@@ -1,12 +1,13 @@
 <template>
-	<div class="container" v-if="snippet && revisions">
-		<h2>{{snippet.title}}</h2>
-		<h5 class="text-muted">{{snippet.revisions_count}} revisions</h5>
+	<div v-if="snippet && revisions" class="container">
+		<h2>{{ snippet.title }}</h2>
+		<h5 class="text-muted">{{ snippet.revisions_count }} revisions</h5>
 		<ul class="list-group mt-3">
-			<router-link tag="li" v-for="(revision, index) in revisions" :key="revision.createdAt"
+			<router-link v-for="(revision, index) in revisions"
 				:to="index+1 === revisions.length 
 					? {name: 'view-snippet', params: {id: snippet.id}}
 				: {name: 'view-snippet-revision', params: {snippet_id: snippet.id, id: index+1}}"
+				:key="revision.createdAt" tag="li"
 				class="clickable list-group-item d-flex justify-content-between align-items-center" exact>
 				<div class="row no-gutters">
 					<div class="col-auto">
@@ -16,16 +17,16 @@
 						</router-link>
 					</div>
 					<div class="col ml-3">
-						<router-link class="clickable mb-0 whiteLink" :to="{name: 'view-user', params: {username: revision.author}}">
-							{{revision.author}}
+						<router-link :to="{name: 'view-user', params: {username: revision.author}}" class="clickable mb-0 whiteLink">
+							{{ revision.author }}
 						</router-link>
 						<p class="mb-0 text-muted">
-							{{index === 0 ? 'Initial revision' : revision.explanation}}
+							{{ index === 0 ? 'Initial revision' : revision.explanation }}
 						</p>
 					</div>
 				</div>
 				<div>
-					<span class="badge badge-primary mr-2" v-if="index+1 === revisions.length">Current</span>
+					<span v-if="index+1 === revisions.length" class="badge badge-primary mr-2">Current</span>
 					<span class="text-muted">
 						{{ moment(revision.createdAt).fromNow() }} / 
 						{{ index === 0 ? 'Original' : diffLines(revisions[index-1].code, revision.code).map(o => o.value).join('').split('\n').length + ' changes' }}
@@ -43,11 +44,6 @@
 	import {getAbsoluteUrl, extractError} from '../../helpers';
 
 	export default {
-		methods: {
-			diffLines,
-			moment: moment.utc
-		},
-
 		computed: {
 			...mapGetters({
 				snippetById: 'snippets/getById',
@@ -61,6 +57,11 @@
 			revisions: function() {
 				return this.snippetById(this.$route.params.snippet_id).revisions;
 			},
+		},
+
+		methods: {
+			diffLines,
+			moment: moment.utc
 		},
 
 		asyncData: function(store, route) {

@@ -2,20 +2,16 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12 col-sm-10 col-md-9 col-lg-7">
-				<form @submit.prevent="search" class="mb-2">
+				<form class="mb-2" @submit.prevent="search">
 					<div class="row no-gutters">
 						<div class="col">
-							<input type="text" v-model="keywords" 
-								placeholder="Search snippets" ref="searchbox"
+							<input ref="searchbox" v-model="keywords" type="text" placeholder="Search snippets"
 								class="form-control w-100">
 						</div>
 						<div class="col-auto">
 							<div class="btn-group ml-2" role="group">
-								<dropdown label="Language" :options="languageOptions"
-									@on-select="onLanguage"
-									:selective="true"
-									key-field="id"
-									label-field="name" />
+								<dropdown :options="languageOptions" :selective="true" label="Language" key-field="id"
+									label-field="name" @on-select="onLanguage" />
 								<button type="submit" class="btn btn-primary">Search</button>
 							</div>
 						</div>
@@ -26,17 +22,17 @@
 
 		<hr>
 
-		<div class="alert alert-danger" v-if="error">{{error}}</div>
-		<div class="alert alert-warning alert-transparent" v-if="!loading && !error && (!results || results.length < 1)">
+		<div v-if="error" class="alert alert-danger">{{ error }}</div>
+		<div v-if="!loading && !error && (!results || results.length < 1)" class="alert alert-warning alert-transparent">
 			No results
 		</div>
 		<div :style="{opacity: loading ? 0.7 : 1.0}">
 			<div v-for="result in results" :key="result.id">
 				<router-link :to="{name: 'view-snippet', params: {id: result.id}}">
-					{{result.title}}
+					{{ result.title }}
 				</router-link>
 				<p>
-					{{shorten(summarize(result.description), 350)}}
+					{{ shorten(summarize(result.description), 350) }}
 				</p>
 			</div>
 		</div>
@@ -51,6 +47,10 @@
 	import debounce from 'lodash.debounce';
 
 	export default {
+		components: {
+			'dropdown': Dropdown,
+		},
+		
 		data: function () {
 			return {
 				loading: false,
@@ -63,8 +63,21 @@
 			};
 		},
 
+		computed: {
+			...mapState([
+				'languages',
+			]),
+
+			languageOptions: function() {
+				return [
+					{id: -1, name: 'All languages'},
+					...this.languages,
+				];
+			},
+		},
+
 		watch: {
-			'$route': function(to, from) {
+			$route: function() {
 				if (this.$route.query.q) {
 					this.keywords = this.$route.query.q;
 					this.search();
@@ -79,6 +92,11 @@
 				this.searchDebounce = debounce(this.search, 250);
 				this.searchDebounce();
 			}
+		},
+
+		mounted: function() {
+			this.keywords = this.$route.query.q ? this.$route.query.q : '';
+			this.$refs.searchbox.focus();
 		},
 
 		methods: {
@@ -121,24 +139,6 @@
 			shorten, staticUrl, summarize
 		},
 
-		computed: {
-			...mapState([
-				'languages',
-			]),
-
-			languageOptions: function() {
-				return [
-					{id: -1, name: 'All languages'},
-					...this.languages,
-				];
-			},
-		},
-
-		mounted: function() {
-			this.keywords = this.$route.query.q ? this.$route.query.q : '';
-			this.$refs.searchbox.focus();
-		},
-
 		meta: function() {
 			return {
 				title: `'${this.keywords || this.$route.query.q}'`,
@@ -148,10 +148,6 @@
 					{property: 'og:description', content: 'Search modular code + code examples made by developers from around the world'},
 				],
 			};
-		},
-
-		components: {
-			'dropdown': Dropdown,
 		},
 	};
 </script>

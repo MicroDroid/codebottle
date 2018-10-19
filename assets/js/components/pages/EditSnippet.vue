@@ -3,25 +3,29 @@
 		<div class="col-xs-12 col-md-11 col-lg-9">
 			<h1>Edit snippet</h1>
 			<br>
-			<form @submit.prevent="edit" class="mb-5">
+			<form class="mb-5" @submit.prevent="edit">
 				<div class="form-group">
 					<label for="title">Title</label>
-					<input id="title" type="text" class="form-control" v-model="title" placeholder="Focus on keywords" autofocus required>
+					<input id="title" v-model="title" type="text" class="form-control"
+						placeholder="Focus on keywords" autofocus required>
 				</div>
 
 				<div class="form-group">
 					<label for="code">Code</label>
-					<textarea id="code" type="text" class="form-control code-input" v-model="code" placeholder="Fancy stuff here" required />
+					<textarea id="code" v-model="code" type="text" class="form-control code-input"
+						placeholder="Fancy stuff here" required />
 				</div>
 
 				<div class="form-group">
 					<label for="description">Description</label>
-					<textarea id="description" type="text" class="form-control description" v-model="description" placeholder="Be brief" />
+					<textarea id="description" v-model="description" type="text" class="form-control description"
+						placeholder="Be brief" />
 				</div>
 
 				<div class="form-group">
 					<label for="explanation">Explanation</label>
-					<input id="explanation" type="text" class="form-control" v-model="explanation" placeholder="Why did you make this edit?">
+					<input id="explanation" v-model="explanation" type="text" class="form-control"
+						placeholder="Why did you make this edit?">
 				</div>
 
 				<div class="row">
@@ -29,22 +33,24 @@
 						<div class="form-group">
 							<label>Language</label>
 							<dropdown :label="(languages.filter(l => l.id === language)[0] ? languages.filter(l => l.id === language)[0].name : 'Language')"
-								:options="languages" @on-select="onLanguage" key-field="id" label-field="name" :selective="true" />
+								:options="languages" :selective="true" key-field="id" label-field="name"
+								@on-select="onLanguage" @j="k" />
 						</div>
 					</div>
 					<div class="col">
 						<div class="form-group">
 							<label>Snippet type</label>
 							<dropdown :label="(categories.filter(c => c.id === category)[0] ? categories.filter(l => l.id === category)[0].name : 'Type')"
-								:options="categories" @on-select="onCategory" :selective="true" key-field="id" label-field="name" />
+								:options="categories" :selective="true"
+								key-field="id" label-field="name" @on-select="onCategory" />
 						</div>
 					</div>
 				</div>
-				<button class="btn btn-primary" type="submit" :disabled="loading">Save</button>
+				<button :disabled="loading" class="btn btn-primary" type="submit">Save</button>
 			</form>
 
 			<loader v-if="loading" />
-			<div class="alert alert-danger text-center" v-if="error">{{error}}</div>
+			<div v-if="error" class="alert alert-danger text-center">{{ error }}</div>
 		</div>
 	</div>
 </template>
@@ -55,6 +61,10 @@
 	import {extractError, apiUrl} from '../../helpers';
 
 	export default {
+		components: {
+			'dropdown': Dropdown
+		},
+
 		data: function() {
 			return {
 				title: '',
@@ -76,10 +86,6 @@
 			...mapGetters({
 				snippetById: 'snippets/getById',
 			}),
-		},
-
-		components: {
-			'dropdown': Dropdown
 		},
 
 		asyncData: function(store, route) {

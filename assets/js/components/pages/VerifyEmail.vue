@@ -11,13 +11,13 @@
 		mounted: function() {
 			axios.post(apiUrl('/users/email-verifications'), {
 				token: window.location.hash.substr(1),
-			}).then(response => {
+			}).then(() => {
 				this.$store.dispatch('toasts/addToast', {
 					content: 'Email has been verified!',
 					duration: 3000
 				});
 				this.$router.push({name: 'discover'});
-			}).catch(error => {
+			}).catch(() => {
 				// idk, show something up
 			});
 		},

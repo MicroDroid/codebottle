@@ -1,49 +1,49 @@
 <template>
 	<div class="container">
-		<div class="row" v-if="snippet" itemscope itemtype="http://schema.org/SoftwareSourceCode">
-			<div class="col-xs-12 col-auto">
+		<div v-if="snippet" class="row" itemscope itemtype="http://schema.org/SoftwareSourceCode">
+			<div class="col-12 col-sm-auto mb-4">
 				<div class="text-center voting-buttons">
-					<span class="fas fa-chevron-up clickable" @click="vote(1)"
-						:class="{voted: snippet.currentVote && snippet.currentVote == 1}"/>
+					<span :class="{voted: snippet.currentVote && snippet.currentVote == 1}"
+						class="fas fa-chevron-up clickable" @click="vote(1)" />
 					<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-						<span itemprop="ratingValue">{{snippet.votes}}</span>
+						<span itemprop="ratingValue">{{ snippet.votes }}</span>
 					</span>
-					<span class="fas fa-chevron-down clickable"
-						:class="{voted: snippet.currentVote && snippet.currentVote == -1}" @click="vote(-1)" />
+					<span :class="{voted: snippet.currentVote && snippet.currentVote == -1}"
+						class="fas fa-chevron-down clickable" @click="vote(-1)" />
 				</div>
 				<div class="action-bar mt-4">
-					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="showCopiedToast">
+					<button v-clipboard="computedCode" class="btn btn-info btn-sm" @click="showCopiedToast">
 						<span class="far fa-copy" /> Copy
 					</button>
-					<router-link tag="button" class="btn btn-warning btn-sm"
-						:to="{name: 'edit-snippet', params: {id: snippet.id}}" v-if="currentUsername === snippet.username">
+					<router-link v-if="currentUsername === snippet.username" :to="{name: 'edit-snippet', params: {id: snippet.id}}"
+						tag="button" class="btn btn-warning btn-sm">
 						<span class="far fa-pencil" /> Edit
 					</router-link>
-					<button class="btn btn-danger btn-sm" @click="deleteSnippet" v-if="currentUsername === snippet.username">
+					<button v-if="currentUsername === snippet.username" class="btn btn-danger btn-sm" @click="deleteSnippet">
 						<span class="far fa-trash" /> Delete
 					</button>
 				</div>
 			</div>
-			<div class="col-xs-12 col">
+			<div class="col-12 col-sm snippet-data-container">
 				<h2 itemprop="about">
-					{{snippet.title}}
-					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn">
+					{{ snippet.title }}
+					<a href="javascript:undefined" class="flag-btn" @click.prevent="flag">
 						<span class="fas fa-flag" />
 					</a>
 				</h2>
 				<div class="text-muted mb-2">
 					<span>
 						<span class="far fa-bullseye mr-1" />
-						<span itemprop="codeSampleType">{{snippet.category.name}}</span>
+						<span itemprop="codeSampleType">{{ snippet.category.name }}</span>
 					</span>
 					<span class="ml-2">
 						<span class="far fa-code mr-1" />
-						<span itemprop="programmingLanguage">{{snippet.language.name}}</span>
+						<span itemprop="programmingLanguage">{{ snippet.language.name }}</span>
 					</span>
 					<span class="ml-2">
 						<span class="far fa-user mr-1" />
 						<router-link :to="{name: 'view-user', params: {username: snippet.username}}" itemprop="author">
-							{{snippet.username}}
+							{{ snippet.username }}
 						</router-link>
 					</span>
 					<span class="ml-2">
@@ -56,35 +56,35 @@
 					</span>
 					<span class="ml-2">
 						<span class="far fa-eye mr-1" />
-						<span>{{snippet.views}}</span>
+						<span>{{ snippet.views }}</span>
 					</span>
 					<span class="ml-2">
 						<span class="far fa-clock mr-1" />
-						<span itemprop="dateCreated">{{moment(snippet.createdAt).fromNow()}}</span>
+						<span itemprop="dateCreated">{{ moment(snippet.createdAt).fromNow() }}</span>
 					</span>
 					<span class="ml-2">
 						<span class="far fa-edit mr-1" />
-						<span itemprop="dateModified">{{moment(snippet.updatedAt).fromNow()}}</span>
+						<span itemprop="dateModified">{{ moment(snippet.updatedAt).fromNow() }}</span>
 					</span>
 				</div>
-				<pre><code itemprop="text" class="p-3" :class="hljsLanguageById(snippet.language.id)" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
-				<div class="card description" v-if="snippet.description">
+				<pre><code :style="{'tab-size': preferences.indentationSize}" :class="hljsLanguageById(snippet.language.id)" itemprop="text" class="p-3">{{ computedCode }}</code></pre>
+				<div v-if="snippet.description" class="card description">
 					<div class="card-body">
-						<div class="card-text" v-html="marked(snippet.description)" itemprop="description" />
+						<div class="card-text" itemprop="description" v-html="marked(snippet.description)" />
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<modal :show="flagModalShown" title="Why are you flagging this snippet?" @on-dismiss="onFlagDismiss">
-			<textarea class="form-control flag-description w-100" ref="flagDescription" placeholder="Explain briefly." />
-			<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
+			<textarea ref="flagDescription" class="form-control flag-description w-100" placeholder="Explain briefly." />
+			<button slot="footer" class="btn btn-primary" @click="submitFlag">Send</button>
 		</modal>
 
 		<modal :show="deleteModalShown" title="Are you sure you want to delete this snippet?" @on-dismiss="onDeleteDismiss">
 			<p>This is irreversible.</p>
-			<button class="btn btn-primary" slot="footer" @click="confirmDeletion">Delete it</button>
-			<button class="btn btn-primary" slot="footer" @click="onDeleteDismiss">Cancel</button>
+			<button slot="footer" class="btn btn-primary" @click="confirmDeletion">Delete it</button>
+			<button slot="footer" class="btn btn-primary" @click="onDeleteDismiss">Cancel</button>
 		</modal>
 	</div>
 </template>
@@ -97,11 +97,41 @@
 	import {UPDATE_SNIPPET_CURRENT_VOTE} from '../../store/mutation-types';
 
 	export default {
+		components: {
+			Modal,
+		},
+
 		data: function() {
 			return {
 				flagModalShown: false,
 				deleteModalShown: false,
 			};
+		},
+
+		computed: {
+			...mapGetters({
+				isAuthenticated: 'auth/isAuthenticated',
+				preferences: 'auth/preferences',
+				snippetById: 'snippets/getById',
+			}),
+			
+			...mapState({
+				currentUsername: state => state.users.self.username,
+			}),
+
+			snippet: function() {
+				return this.snippetById(this.$route.params.id);
+			},
+
+			computedCode: function() {
+				if (this.preferences.convertTabsToSpaces)
+					return this.snippet.code.replace(/\t/g, Array(this.preferences.indentationSize + 1).join(' '));
+				return this.snippet.code;
+			},
+		},
+		
+		mounted: function() {
+			highlightCode();
 		},
 
 		methods: {
@@ -120,7 +150,7 @@
 					vote = 0;
 
 				axios.post(apiUrl('/snippets/' + this.$route.params.id + '/vote'), {vote})
-					.then(response => {
+					.then(() => {
 						this.$store.commit(`snippets/${UPDATE_SNIPPET_CURRENT_VOTE}`, {
 							id: this.snippet.id,
 							vote 
@@ -181,7 +211,7 @@
 
 				axios.post(apiUrl('/snippets/' + this.$route.params.id + '/flag'), {
 					description,
-				}).then(response => {
+				}).then(() => {
 					this.$store.dispatch('toasts/addToast', {
 						content: 'Sent!',
 						duration: 2000
@@ -199,34 +229,8 @@
 			hljsLanguageById,
 		},
 
-		computed: {
-			...mapGetters({
-				isAuthenticated: 'auth/isAuthenticated',
-				preferences: 'auth/preferences',
-				snippetById: 'snippets/getById',
-			}),
-			
-			...mapState({
-				currentUsername: state => state.users.self.username,
-			}),
-
-			snippet: function() {
-				return this.snippetById(this.$route.params.id);
-			},
-
-			computedCode: function() {
-				if (this.preferences.convertTabsToSpaces)
-					return this.snippet.code.replace(/\t/g, Array(this.preferences.indentationSize + 1).join(' '));
-				return this.snippet.code;
-			},
-		},
-
 		asyncData: function(store, route) {
 			return store.dispatch('snippets/fetch', route.params.id);
-		},
-		
-		mounted: function() {
-			highlightCode();
 		},
 
 		meta: function() {
@@ -246,10 +250,6 @@
 					{property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
 				]
 			};
-		},
-
-		components: {
-			'modal': Modal,
 		},
 	};
 </script>
@@ -284,5 +284,9 @@
 	.voting-buttons > span {
 		display: block;
 		font-size: 2.5rem;
+	}
+
+	.snippet-data-container {
+		min-width: 0; // No idea why I have to put this for columns to work
 	}
 </style>

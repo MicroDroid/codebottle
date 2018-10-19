@@ -3,27 +3,30 @@
 		<div class="col-xs-12 col-md-7">
 			<h1>Edit profile</h1>
 			<br>
-			<form @submit.prevent="save" class="mb-5">
+			<form class="mb-5" @submit.prevent="save">
 				<div class="form-group">
 					<label for="username">Username</label>
-					<input id="username" type="text" class="form-control" v-model="user.username" placeholder="Username" autofocus required>
+					<input id="username" v-model="user.username" type="text" class="form-control"
+						placeholder="Username" autofocus required>
 				</div>
 
 				<div class="form-group">
 					<label for="email">Email</label>
-					<input id="email" type="email" class="form-control" v-model="user.email" placeholder="Email" required>
+					<input id="email" v-model="user.email" placeholder="Email" type="email"
+						class="form-control" required>
 				</div>
 
 				<div class="form-group">
 					<label for="bio">Bio</label>
-					<textarea id="bio" type="text" class="form-control" v-model="user.bio" placeholder="A short bio about yourself" />
+					<textarea id="bio" v-model="user.bio" type="text" class="form-control"
+						placeholder="A short bio about yourself" />
 				</div>
-				<button class="btn btn-primary" type="submit" :disabled="loading">Save</button>
+				<button :disabled="loading" class="btn btn-primary" type="submit">Save</button>
 			</form>
 
 			<loader v-if="loading" />
-			<div class="alert alert-success text-center" v-if="message">{{message}}</div>
-			<div class="alert alert-danger text-center" v-if="error">{{error}}</div>
+			<div v-if="message" class="alert alert-success text-center">{{ message }}</div>
+			<div v-if="error" class="alert alert-danger text-center">{{ error }}</div>
 		</div>
 	</div>
 </template>
@@ -42,7 +45,7 @@
 			};
 		},
 
-		asyncData: function(store, route) {
+		asyncData: function(store) {
 			return store.dispatch('users/fetchSelf');
 		},
 
@@ -61,7 +64,7 @@
 					username: this.user.username,
 					email: this.user.email,
 					bio: this.user.bio
-				}).then(response => {
+				}).then(() => {
 					this.loading = false;
 					this.$store.dispatch('users/fetchSelf');
 					if (this.originalEmail !== this.email)

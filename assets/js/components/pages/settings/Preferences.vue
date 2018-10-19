@@ -8,28 +8,29 @@
 				<form @submit.prevent="save">
 					<h4 class="mb-4">Code format</h4>
 					<label for="indentation-size">Preferred indentation size</label>
-					<input id="indentation-size" type="number" class="form-control form-control-sm ml-2 d-inline" max="8" min="2"
-						v-model="preferences.indentationSize">
+					<input id="indentation-size" v-model="preferences.indentationSize" type="number"
+						class="form-control form-control-sm ml-2 d-inline"
+						max="8" min="2">
 						
 					<div class="form-check mt-2">
-						<input type="checkbox" class="form-check-input" v-model="preferences.convertTabsToSpaces">
+						<input v-model="preferences.convertTabsToSpaces" type="checkbox" class="form-check-input" >
 						<label class="form-check-label">Auto-convert tabs to spaces</label>
 					</div>
 
 					<h4 class="mb-4 mt-4">Privacy</h4>
 
 					<div class="form-check">
-						<input type="checkbox" class="form-check-input" v-model="preferences.privateEmail">
+						<input v-model="preferences.privateEmail" type="checkbox" class="form-check-input">
 						<label class="form-check-label">Hide email from profile</label>
 					</div>
 
-					<p class="text-muted last-changed mt-4">Last changed {{moment(preferences.updatedAt).fromNow()}}</p>
-					<button class="btn btn-primary" type="submit" :disabled="loading">Save</button>
+					<p class="text-muted last-changed mt-4">Last changed {{ moment(preferences.updatedAt).fromNow() }}</p>
+					<button :disabled="loading" class="btn btn-primary" type="submit">Save</button>
 				</form>
 				<br>
 				<loader v-if="loading" />
-				<div class="alert alert-success text-center" v-if="message">{{message}}</div>
-				<div class="alert alert-danger text-center" v-if="error">{{error}}</div>
+				<div v-if="message" class="alert alert-success text-center">{{ message }}</div>
+				<div v-if="error" class="alert alert-danger text-center">{{ error }}</div>
 			</div>
 		</div>
 	</div>
@@ -40,6 +41,10 @@
 	import Sidenav from './Sidenav';
 
 	export default {
+		components: {
+			'sidenav': Sidenav,
+		},
+
 		data: function () {
 			return {
 				loading: false,
@@ -49,7 +54,7 @@
 			};
 		},
 
-		asyncData: function(store, route) {
+		asyncData: function(store) {
 			return store.dispatch('auth/fetchPreferences');
 		},
 
@@ -67,11 +72,11 @@
 					convert_tabs_to_spaces: this.preferences.convertTabsToSpaces,
 					private_email: this.preferences.privateEmail,
 					indentation_size: this.preferences.indentationSize,
-				}).then(response => {
+				}).then(() => {
 					this.loading = false;
 					this.preferences.updatedAt = Date.now();
 					this.message = 'Saved!';
-					this.$store.dispatch('auth/fetchPreferences').catch(error => {
+					this.$store.dispatch('auth/fetchPreferences').catch(() => {
 						this.$store.dispatch('toasts/addToast', {
 							content: 'Error reloading preferences!',
 							duration: 3000
@@ -92,10 +97,6 @@
 			meta: [
 				{name: 'robots', content: 'noindex'},
 			],
-		},
-
-		components: {
-			'sidenav': Sidenav,
 		},
 	};
 </script>

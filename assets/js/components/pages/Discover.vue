@@ -8,7 +8,7 @@
 			</div>
 			<hr>
 
-			<snippets-deck class="mt-4" :snippets="snippets" v-if="snippets" />
+			<snippets-deck v-if="snippets" :snippets="snippets" class="mt-4" />
 		</div>
 	</div>
 </template>
@@ -18,7 +18,11 @@
 	import SnippetsDeck from '../SnippetsDeck';
 
 	export default {
-		asyncData: function(store, route) {
+		components: {
+			'snippets-deck': SnippetsDeck,
+		},
+		
+		asyncData: function(store) {
 			return store.dispatch('snippets/fetchNew');
 		},
 		
@@ -42,10 +46,6 @@
 				{property: 'og:description', content: 'Discover new and cool snippets made by developers just like you, from around the entire world.'},
 			],
 		},
-
-		components: {
-			'snippets-deck': SnippetsDeck,
-		}
 	};
 </script>
 

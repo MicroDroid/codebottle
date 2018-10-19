@@ -3,41 +3,46 @@
 		<div class="col-xs-12 col-md-11 col-lg-9">
 			<h1>Create snippet</h1>
 			<br>
-			<form @submit.prevent="create" class="mb-5">
+			<form class="mb-5" @submit.prevent="create">
 				<div class="form-group">
 					<label for="title">Title</label>
-					<input id="title" type="text" class="form-control" v-model="title" placeholder="Focus on keywords" autofocus required>
+					<input id="title" v-model="title" type="text" class="form-control"
+						placeholder="Focus on keywords" autofocus required>
 				</div>
 
 				<div class="form-group">
 					<label for="code">Code</label>
-					<textarea id="code" type="text" class="form-control code-input" v-model="code" placeholder="Fancy stuff here" required />
+					<textarea id="code" v-model="code" type="text" class="form-control code-input"
+						placeholder="Fancy stuff here" required />
 				</div>
 
 				<div class="form-group">
 					<label for="description">Description</label>
-					<textarea id="description" type="text" class="form-control description" v-model="description" placeholder="Be brief" />
+					<textarea id="description" v-model="description" type="text" class="form-control description"
+						placeholder="Be brief" />
 				</div>
 
 				<div class="row">
 					<div class="col">
 						<div class="form-group">
 							<label>Language</label>
-							<dropdown label="Language" :options="languages" @on-select="onLanguage" :selective="true" key-field="id" label-field="name" />
+							<dropdown :selective="true" :options="languages" key-field="id" label-field="name"
+								label="Language" @on-select="onLanguage" />
 						</div>
 					</div>
 					<div class="col">
 						<div class="form-group">
 							<label>Snippet type</label>
-							<dropdown label="Type" :options="categories" @on-select="onCategory" :selective="true" key-field="id" label-field="name" />
+							<dropdown :options="categories" :selective="true" key-field="id" label-field="name"
+								label="Type" @on-select="onCategory" />
 						</div>
 					</div>
 				</div>
-				<button class="btn btn-primary" type="submit" :disabled="loading">Create</button>
+				<button :disabled="loading" class="btn btn-primary" type="submit">Create</button>
 			</form>
 
 			<loader v-if="loading" />
-			<div class="alert alert-danger text-center" v-if="error">{{error}}</div>
+			<div v-if="error" class="alert alert-danger text-center">{{ error }}</div>
 		</div>
 	</div>
 </template>
@@ -48,6 +53,10 @@
 	import {extractError, apiUrl} from '../../helpers';
 
 	export default {
+		components: {
+			'dropdown': Dropdown
+		},
+
 		data: function() {
 			return {
 				title: '',
@@ -64,10 +73,6 @@
 			'languages',
 			'categories',
 		]),
-
-		components: {
-			'dropdown': Dropdown
-		},
 
 		methods: {
 			onLanguage: function(item) {

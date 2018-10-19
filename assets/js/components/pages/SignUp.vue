@@ -8,26 +8,28 @@
 					<span class="input-group-prepend">
 						<span class="fas fa-user input-group-text" />
 					</span>
-					<input type="text" class="form-control" placeholder="Username" v-model="username" autofocus>
+					<input v-model="username" type="text" class="form-control" placeholder="Username"
+						autofocus>
 				</div>
 				<div class="input-group">
 					<span class="input-group-prepend">
 						<span class="fas fa-envelope input-group-text" />
 					</span>
-					<input type="email" class="form-control" placeholder="Email" v-model="email">
+					<input v-model="email" type="email" class="form-control" placeholder="Email">
 				</div>
 				<div class="input-group">
 					<span class="input-group-prepend">
 						<span class="fas fa-key input-group-text" />
 					</span>
-					<input type="password" class="form-control" placeholder="Password" v-model="password">
+					<input v-model="password" type="password" class="form-control" placeholder="Password">
 				</div>
 				<br>
-				<invisible-recaptcha sitekey="6Lf3UygUAAAAAMq-bXV5Q6eVzeHD-edRvYbF20bU" :validate="submit" :callback="signup"
-					class="btn btn-primary w-100" type="submit" id="signup-btn" :disabled="loading || created">
+				<invisible-recaptcha id="signup-btn" :validate="submit" :callback="signup" :disabled="loading || created"
+					class="btn btn-primary w-100" type="submit"
+					sitekey="6Lf3UygUAAAAAMq-bXV5Q6eVzeHD-edRvYbF20bU">
 					Create account
 				</invisible-recaptcha>
-				<router-link :to="{name: 'github-signin'}" class="mt-2 btn btn-default w-100" id="github-signin" tag="button">
+				<router-link id="github-signin" :to="{name: 'github-signin'}" class="mt-2 btn btn-default w-100" tag="button">
 					Sign up with GitHub
 				</router-link>
 			</form>
@@ -38,8 +40,8 @@
 			</p>
 			<br>
 			<loader v-if="loading"/>
-			<div class="alert alert-danger" v-if="error">{{error}}</div>
-			<div class="alert alert-success" v-if="message">{{message}}</div>
+			<div v-if="error" class="alert alert-danger">{{ error }}</div>
+			<div v-if="message" class="alert alert-success">{{ message }}</div>
 		</div>
 	</div>
 </template>
@@ -49,6 +51,10 @@
 	import {extractError, apiUrl} from '../../helpers';
 
 	export default {
+		components: {
+			InvisibleRecaptcha,
+		},
+
 		data: () => ({
 			loading: false,
 			error: false,
@@ -72,7 +78,7 @@
 					email: this.email,
 					password: this.password,
 					recaptcha_token: recaptchaToken,
-				}).then(response => {
+				}).then(() => {
 					this.created = true;
 					this.loading = false;
 					this.message = 'Great! Now go to your inbox and verify your email.';
@@ -91,10 +97,6 @@
 				{property: 'og:title', content: 'Create a new account'},
 				{property: 'og:description', content: 'Sign up now to get the most out of CodeBottle. The community needs you and it only takes few seconds to get started.'},
 			],
-		},
-
-		components: {
-			InvisibleRecaptcha,
 		},
 	};
 </script>

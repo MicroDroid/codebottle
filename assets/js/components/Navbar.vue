@@ -7,7 +7,7 @@
 				</router-link>
 
 				<form @submit.prevent="search">
-					<input type="text" class="form-control" placeholder="Search" v-model="keywords">
+					<input v-model="keywords" type="text" class="form-control" placeholder="Search">
 				</form>
 
 				<ul class="nav navbar-nav ml-3 mr-auto">
@@ -20,7 +20,7 @@
 				</ul>
 
 				<!-- Unprotected links -->
-				<ul class="nav navbar-nav" v-if="!isAuthenticated">
+				<ul v-if="!isAuthenticated" class="nav navbar-nav">
 					<li class="nav-item">
 						<router-link :to="{name: 'signup'}" class="nav-link">Sign up</router-link>
 					</li>
@@ -30,10 +30,8 @@
 				</ul>
 
 				<!-- Protected links -->
-				<ul class="nav navbar-nav" v-if="isAuthenticated">
-					<navbar-dropdown :label="'Hey ' + username + '!'"
-						:options="userOptions"
-						@on-select="onUserAction" />
+				<ul v-if="isAuthenticated" class="nav navbar-nav">
+					<navbar-dropdown :label="'Hey ' + username + '!'" :options="userOptions" @on-select="onUserAction" />
 				</ul>
 			</div>
 		</nav>
@@ -48,7 +46,7 @@
 					</div>
 					<div class="col">
 						<form @submit.prevent="search">
-							<input type="text" class="form-control" placeholder="Search" v-model="keywords">
+							<input v-model="keywords" type="text" class="form-control" placeholder="Search">
 						</form>
 					</div>
 				</div>
@@ -63,7 +61,7 @@
 				</div>
 
 				<!-- Unprotected links -->
-				<div class="navbar-menu" v-if="showMenu && !isAuthenticated">
+				<div v-if="showMenu && !isAuthenticated" class="navbar-menu">
 					<router-link :to="{name: 'signup'}" class="nav-link">
 						Sign up
 					</router-link>
@@ -73,7 +71,7 @@
 				</div>
 
 				<!-- Protected links -->
-				<ul class="navbar-menu" v-if="showMenu && isAuthenticated">
+				<ul v-if="showMenu && isAuthenticated" class="navbar-menu" >
 					<navbar-dropdown :label="'Hey ' + username + '!'"
 						:options="userOptions"
 						@on-select="onUserAction" />
@@ -89,6 +87,10 @@
 	import {staticUrl} from '../helpers';
 
 	export default {
+		components: {
+			'navbar-dropdown': NavbarDropdown,
+		},
+
 		data: () => ({
 			showMenu: false,
 			keywords: '',
@@ -108,6 +110,12 @@
 			...mapState({
 				username: state => state.users.self.username,
 			}),
+		},
+
+		mounted: function() {
+			this.$router.afterEach(() => {
+				this.showMenu = false;
+			});
 		},
 
 		methods: {
@@ -141,16 +149,6 @@
 
 			staticUrl,
 		},
-
-		mounted: function() {
-			this.$router.afterEach(() => {
-				this.showMenu = false;
-			});
-		},
-
-		components: {
-			'navbar-dropdown': NavbarDropdown,
-		}
 	};
 </script>
 

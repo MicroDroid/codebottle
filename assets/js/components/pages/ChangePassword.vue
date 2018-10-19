@@ -3,20 +3,21 @@
 		<div class="mini-container text-center mx-auto mt-5">
 			<h1>Change password</h1>
 			<br>
-			<form @submit.prevent="changePassword" class="mt-2">
+			<form class="mt-2" @submit.prevent="changePassword">
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<span class="fas fa-key input-group-text" />
 					</div>
-					<input type="password" class="form-control" placeholder="New password" name="password" ref="passwordInput" v-model="password" required>
+					<input ref="passwordInput" v-model="password" type="password" class="form-control"
+						placeholder="New password" name="password" required>
 				</div>
 				<br>
-				<button class="btn btn-primary w-100" type="submit" :disabled="loading">Submit</button>
+				<button :disabled="loading" class="btn btn-primary w-100" type="submit">Submit</button>
 			</form>
 			<br>
 			<br>
 			<loader v-if="loading"/>
-			<div class="alert alert-danger" v-if="error">{{error}}</div>
+			<div v-if="error" class="alert alert-danger">{{ error }}</div>
 		</div>
 	</div>
 </template>
@@ -31,6 +32,10 @@
 
 			password: '',
 		}),
+
+		mounted: function() {
+			this.$refs.passwordInput.focus();
+		},
 
 		methods: {
 			changePassword() {
@@ -57,10 +62,6 @@
 				{name: 'robots', content: 'noindex'},
 			],
 		},
-
-		mounted: function() {
-			this.$refs.passwordInput.focus();
-		}
 	};
 </script>
 

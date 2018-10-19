@@ -1,11 +1,12 @@
 <template>
-	<div class="dropdown" :class="{show: open}">
+	<div :class="{show: open}" class="dropdown">
 		<button type="button" class="btn btn-primary dropdown-toggle" @click="toggle" @blur="hide">
-			{{selected && selective ? selected : label}} <span class="caret" />
+			{{ selected && selective ? selected : label }}
+			<span class="caret" />
 		</button>
 
-		<div class="dropdown-menu" :class="{show: open}" role="menu">
-			<a class="dropdown-item clickable" v-for="item in options" :key="item[keyField]" @mousedown="select(item)">
+		<div :class="{show: open}" class="dropdown-menu" role="menu">
+			<a v-for="item in options" :key="item[keyField]" class="dropdown-item clickable" @mousedown="select(item)">
 				{{ item[labelField] }}
 			</a>
 		</div>

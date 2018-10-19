@@ -1,5 +1,5 @@
 <template>
-	<div class="container" v-if="user">
+	<div v-if="user" class="container">
 		<!-- Expanded (Desktop) -->
 		<div class="expanded row d-none d-md-flex d-lg-flex d-xl-flex mt-1"
 			itemscope itemtype="http://schema.org/Person">
@@ -8,22 +8,22 @@
 			</div>
 			<div class="col-8">
 				<h1 class="mt-3">
-					<strong itemprop="additionalName">{{user.username}}</strong>
-					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fas fa-flag" /></a>
+					<strong itemprop="additionalName">{{ user.username }}</strong>
+					<a href="javascript:undefined" class="flag-btn" @click.prevent="flag"><span class="fas fa-flag" /></a>
 				</h1>
 				<p class="stats-bar">
 					<span>
 						<span class="far fa-calendar fa-fw" />
-						Joined {{moment(user.createdAt).fromNow()}}
+						Joined {{ moment(user.createdAt).fromNow() }}
 					</span> <br>
 					<span>
 						<span class="far fa-envelope fa-fw" />
-						<span itemprop="email">{{user.email || 'Private email'}}</span>
+						<span itemprop="email">{{ user.email || 'Private email' }}</span>
 					</span> <br>
 					<span v-if="user.github_username">
 						<span class="fab fa-github fa-fw" />
-						<a itemprop="email" class="nostyle" :href="'https://github.com/' + user.github_username">
-							{{user.github_username}}
+						<a :href="'https://github.com/' + user.github_username" itemprop="email" class="nostyle">
+							{{ user.github_username }}
 						</a>
 					</span> <br v-if="user.github_username">
 					<span v-if="user.banned">
@@ -32,7 +32,7 @@
 					</span> <br v-if="user.banned">
 				</p>
 				<p class="bio d-block" itemprop="description">
-					{{user.bio}}
+					{{ user.bio }}
 				</p>
 			</div>
 		</div>
@@ -42,22 +42,22 @@
 			<div class="text-center mx-auto">
 				<img :src="user.profileImage" class="profile-img mx-auto mt-3">
 				<h1 class="mt-3">
-					<strong>{{user.username}}</strong>
-					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fas fa-flag" /></a>
+					<strong>{{ user.username }}</strong>
+					<a href="javascript:undefined" class="flag-btn" @click.prevent="flag"><span class="fas fa-flag" /></a>
 				</h1>
 				<p class="stats-bar">
 					<span>
 						<span class="far fa-calendar fa-fw" />
-						Joined {{moment(user.createdAt).fromNow()}}
+						Joined {{ moment(user.createdAt).fromNow() }}
 					</span> <br>
 					<span>
 						<span class="far fa-envelope fa-fw" />
-						<span>{{user.email || 'Private email'}}</span>
+						<span>{{ user.email || 'Private email' }}</span>
 					</span> <br>
 					<span v-if="user.github_username">
 						<span class="fab fa-github fa-fw" />
-						<a class="nostyle" :href="'https://github.com/' + user.github_username">
-							{{user.github_username}}
+						<a :href="'https://github.com/' + user.github_username" class="nostyle">
+							{{ user.github_username }}
 						</a>
 					</span> <br v-if="user.github_username">
 					<span v-if="user.banned">
@@ -66,17 +66,17 @@
 					</span> <br v-if="user.banned">
 				</p>
 				<p class="bio d-block">
-					{{user.bio}}
+					{{ user.bio }}
 				</p>
 			</div>
 		</div>
 
 		<modal :show="flagModalShown" title="Why are you flagging them?" @on-dismiss="onFlagDismiss">
-			<textarea class="form-control flag-description w-100" ref="flagDescription" placeholder="Explain briefly." />
-			<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
+			<textarea ref="flagDescription" class="form-control flag-description w-100" placeholder="Explain briefly." />
+			<button slot="footer" class="btn btn-primary" @click="submitFlag">Send</button>
 		</modal>
 
-		<snippets-deck class="mt-5" :snippets="user.snippets" v-if="user.snippets" />
+		<snippets-deck v-if="user.snippets" :snippets="user.snippets" class="mt-5" />
 	</div>
 </template>
 
@@ -88,9 +88,27 @@
 	import SnippetsDeck from '../SnippetsDeck';
 
 	export default {
+		components: {
+			'modal': Modal,
+			'loader': Loader,
+			'snippets-deck': SnippetsDeck,
+		},
+
 		data: () => ({
 			flagModalShown: false,
 		}),
+
+		computed: {
+			...mapGetters({
+				isAuthenticated: 'auth/isAuthenticated',
+				preferences: 'auth/preferences',
+				userByUsername: 'users/getByUsername',
+			}),
+
+			user: function() {
+				return this.userByUsername(this.$route.params.username);
+			},
+		},
 
 		methods: {
 			flag: function() {
@@ -116,7 +134,7 @@
 
 				axios.post(apiUrl('/users/' + this.$route.params.username + '/flag'), {
 					description,
-				}).then(response => {
+				}).then(() => {
 					this.$store.dispatch('toasts/addToast', {
 						content: 'Sent!',
 						duration: 2000
@@ -130,18 +148,6 @@
 			},
 
 			moment: moment.utc
-		},
-
-		computed: {
-			...mapGetters({
-				isAuthenticated: 'auth/isAuthenticated',
-				preferences: 'auth/preferences',
-				userByUsername: 'users/getByUsername',
-			}),
-
-			user: function() {
-				return this.userByUsername(this.$route.params.username);
-			},
 		},
 
 		asyncData: function(store, route) {
@@ -172,12 +178,6 @@
 					{property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
 				],
 			};
-		},
-
-		components: {
-			'modal': Modal,
-			'loader': Loader,
-			'snippets-deck': SnippetsDeck,
 		},
 	};
 </script>

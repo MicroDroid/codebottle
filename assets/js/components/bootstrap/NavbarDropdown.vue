@@ -1,11 +1,11 @@
 <template>
-	<li class="dropdown clickable nav-link" :class="{show: open}" @click="toggle" @blur="hide">
+	<li :class="{show: open}" class="dropdown clickable nav-link" @click="toggle" @blur="hide">
 		<a class="dropdown-toggle">
-			{{selected && selective ? selected : label}} <span class="caret" />
+			{{ selected && selective ? selected : label }} <span class="caret" />
 		</a>
-		<div class="dropdown-menu" :class="{show: open}">
-			<a class="dropdown-item clickable" v-for="item in options" :key="item[keyField]" @mousedown="select(item)">
-				{{item[labelField]}}
+		<div :class="{show: open}" class="dropdown-menu">
+			<a v-for="item in options" :key="item[keyField]" class="dropdown-item clickable" @mousedown="select(item)">
+				{{ item[labelField] }}
 			</a>
 		</div>
 	</li>

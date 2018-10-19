@@ -8,13 +8,15 @@
 					<div class="input-group-prepend">
 						<span class="fas fa-envelope input-group-text" />
 					</div>
-					<input type="email" class="form-control" placeholder="Email" name="email" v-model="email" ref="emailInput" required>
+					<input ref="emailInput" v-model="email" type="email" class="form-control"
+						placeholder="Email" name="email" required>
 				</div>
 
 				<br>
 
-				<invisible-recaptcha sitekey="6Lf3UygUAAAAAMq-bXV5Q6eVzeHD-edRvYbF20bU" :validate="submit" :callback="resetPassword"
-					class="btn btn-primary w-100" type="submit" :disabled="loading || sent">
+				<invisible-recaptcha :disabled="loading || sent" :validate="submit" :callback="resetPassword" type="submit"
+					class="btn btn-primary w-100"
+					sitekey="6Lf3UygUAAAAAMq-bXV5Q6eVzeHD-edRvYbF20bU">
 					Submit
 				</invisible-recaptcha>
 			</form>
@@ -26,8 +28,8 @@
 			</p>
 			<br>
 			<loader v-if="loading"/>
-			<div class="alert alert-danger" v-if="error">{{error}}</div>
-			<div class="alert alert-success" v-if="sent">A password reset email has been sent, if the email is valid</div>
+			<div v-if="error" class="alert alert-danger">{{ error }}</div>
+			<div v-if="sent" class="alert alert-success">A password reset email has been sent, if the email is valid</div>
 		</div>
 	</div>
 </template>
@@ -37,6 +39,10 @@
 	import {extractError, apiUrl} from '../../helpers';
 
 	export default {
+		components: {
+			InvisibleRecaptcha,
+		},
+
 		data: () => ({
 			loading: false,
 			error: false,
@@ -44,6 +50,10 @@
 
 			email: '',
 		}),
+
+		mounted: function() {
+			this.$refs.emailInput.focus();
+		},
 
 		methods: {
 			submit() {
@@ -65,20 +75,12 @@
 			}
 		},
 
-		mounted: function() {
-			this.$refs.emailInput.focus();
-		},
-
 		meta: {
 			title: 'Forgot password',
 
 			meta: [
 				{name: 'robots', content: 'noindex'},
 			],
-		},
-
-		components: {
-			InvisibleRecaptcha,
 		},
 	};
 </script>

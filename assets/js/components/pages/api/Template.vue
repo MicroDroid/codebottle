@@ -14,6 +14,10 @@
 	import {highlightCode} from '../../../helpers';
 
 	export default {
+		components: {
+			'sidenav': Sidenav,
+		},
+
 		props: {
 			title: {
 				type: String,
@@ -33,10 +37,6 @@
 			parsed: function() {
 				return marked(this.content);
 			},
-		},
-
-		components: {
-			'sidenav': Sidenav,
 		},
 
 		meta: function() {

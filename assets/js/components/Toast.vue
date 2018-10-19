@@ -1,5 +1,5 @@
 <template>
-	<span class="toast" v-if="show">
+	<span v-if="show" class="toast">
 		{{ toast.content }}
 	</span>
 </template>
@@ -12,6 +12,12 @@
 			return {
 				show: false,
 			};
+		},
+
+		computed: {
+			...mapGetters({
+				toast: 'toasts/firstToast'
+			}),
 		},
 
 		watch: {
@@ -31,12 +37,6 @@
 
 				immediate: true,
 			},
-		},
-
-		computed: {
-			...mapGetters({
-				toast: 'toasts/firstToast'
-			}),
 		},
 	};
 </script>

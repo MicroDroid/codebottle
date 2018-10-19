@@ -1,5 +1,5 @@
 <template>
-	<div class="container" v-if="revision">
+	<div v-if="revision" class="container">
 		<div class="list-group-item d-flex justify-content-between align-items-center">
 			<div class="row no-gutters">
 				<div class="col-auto">
@@ -9,11 +9,11 @@
 					</router-link>
 				</div>
 				<div class="col ml-3">
-					<router-link class="clickable mb-0 whiteLink" :to="{name: 'view-user', params: {username: revision.author}}">
-						{{revision.author}}
+					<router-link :to="{name: 'view-user', params: {username: revision.author}}" class="clickable mb-0 whiteLink">
+						{{ revision.author }}
 					</router-link>
 					<p class="mb-0 text-muted">
-						{{$route.params.id-1 === 0 ? 'Initial revision' : revision.explanation}}
+						{{ $route.params.id-1 === 0 ? 'Initial revision' : revision.explanation }}
 					</p>
 				</div>
 			</div>
@@ -25,19 +25,19 @@
 			</div>
 		</div>
 		<hr>
-		<h2>{{revision.title}}</h2>
+		<h2>{{ revision.title }}</h2>
 		<p class="mb-2">
 			<span>
 				<span class="far fa-bullseye" />
-				<span>{{revision.category.name}}</span>
+				<span>{{ revision.category.name }}</span>
 			</span>
 			<span class="ml-2">
 				<span class="far fa-code" />
-				<span>{{revision.language.name}}</span>
+				<span>{{ revision.language.name }}</span>
 			</span>
 		</p>
-		<pre><code class="p-3" :class="hljsLanguageById(revision.language.id)" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
-		<div class="card description" v-if="revision.description">
+		<pre><code :style="{'tab-size': preferences.indentationSize}" :class="hljsLanguageById(revision.language.id)" class="p-3">{{ computedCode }}</code></pre>
+		<div v-if="revision.description" class="card description">
 			<div class="card-body">
 				<div class="card-text" v-html="marked(revision.description)" />
 			</div>
@@ -52,11 +52,6 @@
 	import {getAbsoluteUrl, extractError, hljsLanguageById, highlightCode} from '../../helpers';
 
 	export default {
-		methods: {
-			diffLines, marked, hljsLanguageById,
-			moment: moment.utc,
-		},
-
 		computed: {
 			...mapGetters({
 				snippetById: 'snippets/getById',
@@ -83,6 +78,15 @@
 			}
 		},
 
+		mounted: function() {
+			highlightCode();
+		},
+
+		methods: {
+			diffLines, marked, hljsLanguageById,
+			moment: moment.utc,
+		},
+
 		asyncData: function(store, route) {
 			return store.dispatch('snippets/fetch', route.params.snippet_id).then(() => {
 				return store.dispatch('snippets/fetchRevisions', route.params.snippet_id).then(revisions => {
@@ -104,10 +108,6 @@
 					duration: 3000
 				});
 			});
-		},
-
-		mounted: function() {
-			highlightCode();
 		},
 
 		meta: function() {

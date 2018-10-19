@@ -2,34 +2,36 @@
 	<div class="container">
 		<div class="mini-container text-center mx-auto mt-5">
 			<h1>Welcome back!</h1>
-			<br/>
+			<br>
 			<form @submit.prevent="login">
 				<div class="input-group">
 					<span class="input-group-prepend">
-						<span class="fas fa-user input-group-text"></span>
+						<span class="fas fa-user input-group-text"/>
 					</span>
-					<input type="text" class="form-control" placeholder="Username" name="username" v-model="username" ref="usernameInput">
+					<input ref="usernameInput" v-model="username" type="text" class="form-control"
+						placeholder="Username" name="username">
 				</div>
 				<div class="input-group">
 					<span class="input-group-prepend">
-						<span class="fas fa-key input-group-text"></span>
+						<span class="fas fa-key input-group-text" />
 					</span>
-					<input type="password" class="form-control" placeholder="Password" name="password" v-model="password">
+					<input v-model="password" type="password" class="form-control" placeholder="Password"
+						name="password">
 				</div>
-				<br/>
-				<button class="btn btn-primary signin-btn w-100" type="submit" :disabled="loading">Sign in</button>
+				<br>
+				<button :disabled="loading" class="btn btn-primary signin-btn w-100" type="submit">Sign in</button>
 				<router-link :to="{name: 'github-signin'}" class="mt-2 btn btn-default github-signin-btn w-100" tag="button">
 					Sign in with GitHub
 				</router-link>
 			</form>
-			<br/>
+			<br>
 			<p>
-				New user? <router-link :to="{name: 'signup'}">Register now</router-link> <br/>
+				New user? <router-link :to="{name: 'signup'}">Register now</router-link> <br>
 				Or, forgot your password? <router-link :to="{name: 'forgot-password'}">No problem</router-link>
 			</p>
-			<br/>
+			<br>
 			<loader v-if="loading"/>
-			<div class="alert alert-danger" v-if="error">{{error}}</div>
+			<div v-if="error" class="alert alert-danger">{{ error }}</div>
 		</div>
 	</div>
 </template>
@@ -45,6 +47,10 @@
 			username: '',
 			password: '',
 		}),
+
+		mounted: function() {
+			this.$refs.usernameInput.focus();
+		},
 
 		methods: {
 			login() {
@@ -64,7 +70,7 @@
 					}).catch(error => {
 						this.loading = false;
 						this.error = extractError(error);
-					});
+				});
 			},
 		},
 
@@ -77,10 +83,6 @@
 				{property: 'og:description', content: 'Sign in back to your account to get the most out of CodeBottle. Use social buttons for an instantaneous sign in.'},
 			],
 		},
-
-		mounted: function() {
-			this.$refs.usernameInput.focus();
-		}
 	};
 </script>
 

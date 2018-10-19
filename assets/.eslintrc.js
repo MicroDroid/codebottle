@@ -10,6 +10,7 @@ module.exports = {
         "plugin:vue/recommended"
     ],
     "parserOptions": {
+		"ecmaVersion": 2018,
         "sourceType": "module"
     },
     "rules": {
@@ -34,11 +35,14 @@ module.exports = {
         "vue/html-indent": [
             "error",
             "tab",
-        ],
-        "vue/order-in-components": "off",
-        "vue/mustache-interpolation-spacing": "off",
-        "vue/attributes-order": "off",
-        "vue/max-attributes-per-line": "off",
+		],
+		"vue/max-attributes-per-line": [2, {
+			"singleline": 4,
+			"multiline": {
+				"max": 4,
+				"allowFirstLine": true,
+			}
+		}]
     },
     "globals": {
         "axios": false,
