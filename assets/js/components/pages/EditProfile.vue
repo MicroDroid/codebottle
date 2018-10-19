@@ -3,27 +3,27 @@
 		<div class="col-xs-12 col-md-7">
 			<h1>Edit profile</h1>
 			<br>
-			<form @submit.prevent="save">
+			<form @submit.prevent="save" class="mb-5">
 				<div class="form-group">
 					<label for="username">Username</label>
-					<input type="text" class="form-control" id="username" v-model="user.username" placeholder="Username" autofocus required>
+					<input id="username" type="text" class="form-control" v-model="user.username" placeholder="Username" autofocus required>
 				</div>
 
 				<div class="form-group">
 					<label for="email">Email</label>
-					<input type="email" class="form-control" id="email" v-model="user.email" placeholder="Email" required>
+					<input id="email" type="email" class="form-control" v-model="user.email" placeholder="Email" required>
 				</div>
 
 				<div class="form-group">
 					<label for="bio">Bio</label>
-					<textarea type="text" class="form-control" id="bio" v-model="user.bio" placeholder="A short bio about yourself" />
+					<textarea id="bio" type="text" class="form-control" v-model="user.bio" placeholder="A short bio about yourself" />
 				</div>
 				<button class="btn btn-primary" type="submit" :disabled="loading">Save</button>
 			</form>
 
 			<loader v-if="loading" />
-			<div class="alert alert-success center-text" v-if="message">{{message}}</div>
-			<div class="alert alert-danger center-text" v-if="error">{{error}}</div>
+			<div class="alert alert-success text-center" v-if="message">{{message}}</div>
+			<div class="alert alert-danger text-center" v-if="error">{{error}}</div>
 		</div>
 	</div>
 </template>
@@ -87,9 +87,3 @@
 		},
 	};
 </script>
-
-<style type="text/css" scoped>
-	form {
-		margin-bottom: 42px;
-	}
-</style>

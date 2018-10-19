@@ -14,6 +14,8 @@
 @import '~highlight.js/styles/railscasts.css';
 @import './mobile-navbar';
 @import './alerts';
+@import './footer';
+@import 'helpers';
 
 html, body, #app {
 	height: 100%;
@@ -30,33 +32,6 @@ body {
 
 #main-content {
 	flex: 1 0 auto;
-}
-
-footer {
-	padding: 20px;
-	text-align: center;
-
-	.fa-globe {
-		color: #FFEB3B;
-	}
-
-	.fa-heart {
-		color: #E91E63;
-	}
-
-	#discord-invite {
-		color: #7187d2;
-	}
-}
-
-footer * {
-	color: #A0A0A7;
-	font-size: 12px;
-
-	&:hover, &:focus, &:visited {
-		color: #A0A0A7;
-		font-size: 12px;
-	}
 }
 
 @include media-breakpoint-down(sm) {
@@ -87,26 +62,8 @@ footer * {
 	tab-size: 4;
 }
 
-.clickable {
-	cursor: pointer;
-}
-
 .dropdown-menu {
 	border-radius: 1px;
-}
-
-.center-text {
-	text-align: center;
-}
-
-.center-block {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.alert-transparent {
-	background: transparent;
 }
 
 hr {
@@ -120,14 +77,6 @@ a.nostyle, a.nostyle:hover, a.nostyle:visited {
 
 a.whiteLink {
 	color: inherit;
-}
-
-.unselectable {
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	-o-user-select: none;
-	user-select: none;
 }
 
 .btn {

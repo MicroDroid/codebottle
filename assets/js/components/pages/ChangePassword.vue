@@ -1,17 +1,17 @@
 <template>
 	<div class="container">
-		<div id="mini-container">
+		<div class="mini-container text-center mx-auto mt-5">
 			<h1>Change password</h1>
 			<br>
-			<form @submit.prevent="changePassword">
+			<form @submit.prevent="changePassword" class="mt-2">
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<span class="fas fa-key input-group-text" />
 					</div>
-					<input type="password" class="form-control" placeholder="New password" name="password" id="password" v-model="password" ref="passwordInput" required>
+					<input type="password" class="form-control" placeholder="New password" name="password" ref="passwordInput" v-model="password" required>
 				</div>
 				<br>
-				<button class="btn btn-primary" type="submit" id="submit-btn" :disabled="loading">Submit</button>
+				<button class="btn btn-primary w-100" type="submit" :disabled="loading">Submit</button>
 			</form>
 			<br>
 			<br>
@@ -64,20 +64,12 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	#mini-container {
+<style lang="scss" scoped>
+	.mini-container {
 		max-width: 340px;
-		text-align: center;
-		margin: auto;
-		margin-top: 84px;
 	}
 
-	form {
-		margin-top: 12px;
-	}
-
-	#submit-btn {
-		width: 100%;
+	button[type='submit'] {
 		text-transform: uppercase;
 	}
 </style>

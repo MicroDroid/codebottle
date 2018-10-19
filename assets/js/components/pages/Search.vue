@@ -1,40 +1,43 @@
 <template>
 	<div class="container">
 		<div class="row">
-			<div>
-				<div class="col-xs-12 col-sm-10 col-md-9 col-lg-7" id="form-wrapper">
-					<form @submit.prevent="search" id="search-form">
-						<input type="text" v-model="keywords" 
-							id="searchbox" placeholder="Search snippets" ref="searchbox"
-							class="form-control stretched">
+			<div class="col-xs-12 col-sm-10 col-md-9 col-lg-7">
+				<form @submit.prevent="search" class="mb-2">
+					<div class="row no-gutters">
+						<div class="col">
+							<input type="text" v-model="keywords" 
+								placeholder="Search snippets" ref="searchbox"
+								class="form-control w-100">
+						</div>
+						<div class="col-auto">
+							<div class="btn-group ml-2" role="group">
+								<dropdown label="Language" :options="languageOptions"
+									@on-select="onLanguage"
+									:selective="true"
+									key-field="id"
+									label-field="name" />
+								<button type="submit" class="btn btn-primary">Search</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
 
-						<div class="btn-group" role="group" id="btns">
-							<dropdown label="Language" :options="languageOptions"
-								@on-select="onLanguage"
-								:selective="true"
-								key-field="id"
-								label-field="name" />
-							<button type="submit" class="btn btn-primary">Search</button>
-						</div>
-					</form>
-				</div>
-				<hr>
-				<div id="results-container">
-					<div class="alert alert-danger" v-if="error">{{error}}</div>
-					<div class="alert alert-warning alert-transparent" v-if="!loading && !error && (!results || results.length < 1)">
-						No results
-					</div>
-					<div :style="{opacity: loading ? 0.7 : 1.0}">
-						<div v-for="result in results" :key="result.id">
-							<router-link :to="{name: 'view-snippet', params: {id: result.id}}">
-								{{result.title}}
-							</router-link>
-							<p>
-								{{shorten(summarize(result.description), 350)}}
-							</p>
-						</div>
-					</div>
-				</div>
+		<hr>
+
+		<div class="alert alert-danger" v-if="error">{{error}}</div>
+		<div class="alert alert-warning alert-transparent" v-if="!loading && !error && (!results || results.length < 1)">
+			No results
+		</div>
+		<div :style="{opacity: loading ? 0.7 : 1.0}">
+			<div v-for="result in results" :key="result.id">
+				<router-link :to="{name: 'view-snippet', params: {id: result.id}}">
+					{{result.title}}
+				</router-link>
+				<p>
+					{{shorten(summarize(result.description), 350)}}
+				</p>
 			</div>
 		</div>
 	</div>
@@ -153,53 +156,10 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	#logo {
-		position: absolute;
-	}
-
-	#logo-wrapper {
-		margin-top: 3vh;
-		padding-bottom: 46.22%;
-		position: relative;
-	}
-
-	#search-form {
-		display: flex;
-		margin-bottom: 16px;
-	}
-
-	#search-form #btns {
-		margin-left: 8px;
-	}
-
-	#search-form #searchbox {
-		flex: 2;
-	}
-
-	#results-container {
-		margin-top: 24px;
-	}
-
-	#form-wrapper {
-		padding-left: 0;
-	}
-
-	#results-container .alert {
+<style lang="scss" scoped>
+	.alert {
 		background: none;
 		border: none;
 		padding: 8px;
-	}
-
-	.stretched {
-		width: 100%;
-	}
-
-	.result {
-		margin-bottom: 32px;
-	}
-
-	.container > .row > div {
-		width: 100%;
 	}
 </style>

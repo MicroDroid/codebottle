@@ -8,27 +8,28 @@
 				<form @submit.prevent="save">
 					<h4 class="mb-4">Code format</h4>
 					<label for="indentation-size">Preferred indentation size</label>
-					<input type="number" id="indentation-size" class="form-control form-control-sm ml-2" max="8" min="2"
+					<input id="indentation-size" type="number" class="form-control form-control-sm ml-2 d-inline" max="8" min="2"
 						v-model="preferences.indentationSize">
-					<br>
-					<label class="custom-control custom-checkbox mt-2">
-						<input type="checkbox" class="custom-control-input" v-model="preferences.convertTabsToSpaces">
-						<span class="custom-control-indicator" />
-						<span class="custom-control-description">Auto-convert tabs to spaces</span>
-					</label>
+						
+					<div class="form-check mt-2">
+						<input type="checkbox" class="form-check-input" v-model="preferences.convertTabsToSpaces">
+						<label class="form-check-label">Auto-convert tabs to spaces</label>
+					</div>
+
 					<h4 class="mb-4 mt-4">Privacy</h4>
-					<label class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" v-model="preferences.privateEmail">
-						<span class="custom-control-indicator" />
-						<span class="custom-control-description">Hide email from profile</span>
-					</label>
-					<p class="text-muted mt-4" id="last-changed">Last changed {{moment(preferences.updatedAt).fromNow()}}</p>
+
+					<div class="form-check">
+						<input type="checkbox" class="form-check-input" v-model="preferences.privateEmail">
+						<label class="form-check-label">Hide email from profile</label>
+					</div>
+
+					<p class="text-muted last-changed mt-4">Last changed {{moment(preferences.updatedAt).fromNow()}}</p>
 					<button class="btn btn-primary" type="submit" :disabled="loading">Save</button>
 				</form>
 				<br>
 				<loader v-if="loading" />
-				<div class="alert alert-success center-text" v-if="message">{{message}}</div>
-				<div class="alert alert-danger center-text" v-if="error">{{error}}</div>
+				<div class="alert alert-success text-center" v-if="message">{{message}}</div>
+				<div class="alert alert-danger text-center" v-if="error">{{error}}</div>
 			</div>
 		</div>
 	</div>
@@ -99,13 +100,12 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	#last-changed {
-		font-size: 14px;
+<style lang="scss" scoped>
+	.last-changed {
+		font-size: 0.875rem;
 	}
 
 	#indentation-size {
-		display: inline;
 		max-width: 72px;
 	}
 </style>

@@ -4,10 +4,10 @@
 		<div class="expanded row d-none d-md-flex d-lg-flex d-xl-flex mt-1"
 			itemscope itemtype="http://schema.org/Person">
 			<div class="col-4">
-				<img :src="user.profileImage" class="profile-img">
+				<img :src="user.profileImage" class="profile-img w-100">
 			</div>
 			<div class="col-8">
-				<h1 class="username">
+				<h1 class="mt-3">
 					<strong itemprop="additionalName">{{user.username}}</strong>
 					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fas fa-flag" /></a>
 				</h1>
@@ -31,7 +31,7 @@
 						This user is banned
 					</span> <br v-if="user.banned">
 				</p>
-				<p class="bio" itemprop="description">
+				<p class="bio d-block" itemprop="description">
 					{{user.bio}}
 				</p>
 			</div>
@@ -39,9 +39,9 @@
 
 		<!-- Collapsed (Mobile) -->
 		<div class="collapsed row d-md-none d-lg-none d-xl-none">
-			<div class="center-text">
-				<img :src="user.profileImage" class="profile-img center-block">
-				<h1 class="username">
+			<div class="text-center mx-auto">
+				<img :src="user.profileImage" class="profile-img mx-auto mt-3">
+				<h1 class="mt-3">
 					<strong>{{user.username}}</strong>
 					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn"><span class="fas fa-flag" /></a>
 				</h1>
@@ -65,18 +65,18 @@
 						This user is banned
 					</span> <br v-if="user.banned">
 				</p>
-				<p class="bio">
+				<p class="bio d-block">
 					{{user.bio}}
 				</p>
 			</div>
 		</div>
 
 		<modal :show="flagModalShown" title="Why are you flagging them?" @on-dismiss="onFlagDismiss">
-			<textarea class="form-control flag-description" ref="flagDescription" placeholder="Explain briefly." />
+			<textarea class="form-control flag-description w-100" ref="flagDescription" placeholder="Explain briefly." />
 			<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
 		</modal>
 
-		<snippets-deck id="snippets-deck" :snippets="user.snippets" v-if="user.snippets" />
+		<snippets-deck class="mt-5" :snippets="user.snippets" v-if="user.snippets" />
 	</div>
 </template>
 
@@ -182,41 +182,26 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	.username {
-		margin-top: 16px;
-	}
-
+<style lang="scss" scoped>
 	.bio {
 		max-width: 520px;
-		display: inline-block;
 	}
 
 	.profile-img {
 		box-shadow: 0px 0px 2px 1px rgba(172,172,172,0.2);
 	}
 
-	.expanded .profile-img {
-		width: 100%;
-	}
-
 	.collapsed .profile-img {
 		max-width: 320px;
-		margin-top: 24px;
 	}
 
 	.flag-description {
 		min-height: 10vh;
-		width: 100%;
 	}
 
 	.flag-btn {
 		color: #BC2C1A;
-		font-size: 16px;
+		font-size: 1rem;
 		vertical-align: super;
-	}
-
-	#snippets-deck {
-		margin-top: 72px;
 	}
 </style>

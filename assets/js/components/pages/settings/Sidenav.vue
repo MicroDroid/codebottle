@@ -1,6 +1,6 @@
 <template>
-	<ul class="nav nav-pills nav-fill flex-column" id="sidenav">
-		<li class="nav-item">
+	<ul class="nav nav-pills nav-fill flex-column mb-3">
+		<li class="nav-item text-center text-md-left">
 			<router-link :to="{name: 'settings.preferences'}" class="nav-link">
 				Preferences
 			</router-link>
@@ -17,19 +17,3 @@
 		</li> -->
 	</ul>
 </template>
-
-<style type="text/css" scoped>
-	#sidenav li {
-		text-align: left;
-	}
-
-	@media (max-width: 767px) {
-		#sidenav li {
-			text-align: center;
-		}
-
-		#sidenav {
-			margin-bottom: 24px;
-		}
-	}
-</style>

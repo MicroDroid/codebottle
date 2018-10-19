@@ -1,0 +1,30 @@
+footer {
+	padding: 20px;
+	text-align: center;
+
+	.fa-globe {
+		color: #FFEB3B;
+	}
+
+	.fa-heart {
+		color: #E91E63;
+	}
+
+	.discord-invite {
+		color: #7187d2;
+	}
+
+	.support-link {
+		color: #ffeb3b;
+	}
+}
+
+footer * {
+	color: #A0A0A7;
+	font-size: 12px;
+
+	&:hover, &:focus, &:visited {
+		color: #A0A0A7;
+		font-size: 12px;
+	}
+}

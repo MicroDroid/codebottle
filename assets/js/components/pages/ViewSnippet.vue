@@ -2,21 +2,16 @@
 	<div class="container">
 		<div class="row" v-if="snippet" itemscope itemtype="http://schema.org/SoftwareSourceCode">
 			<div class="col-xs-12 col-auto">
-				<div id="voting-buttons">
-					<span :class="{
-						'fas': true,
-						'fa-chevron-up': true,
-						'clickable': true,
-						'voted': snippet.currentVote && snippet.currentVote == 1
-					}" @click="vote(1)" />
+				<div class="text-center voting-buttons">
+					<span class="fas fa-chevron-up clickable" @click="vote(1)"
+						:class="{voted: snippet.currentVote && snippet.currentVote == 1}"/>
 					<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 						<span itemprop="ratingValue">{{snippet.votes}}</span>
 					</span>
-					<span :class="'fas fa-chevron-down clickable'
-						+ ((snippet.currentVote && snippet.currentVote == -1) ?
-					' voted' : '')" @click="vote(-1)" />
+					<span class="fas fa-chevron-down clickable"
+						:class="{voted: snippet.currentVote && snippet.currentVote == -1}" @click="vote(-1)" />
 				</div>
-				<div id="action-bar">
+				<div class="action-bar mt-4">
 					<button class="btn btn-info btn-sm" v-clipboard="computedCode" @click="showCopiedToast">
 						<span class="far fa-copy" /> Copy
 					</button>
@@ -29,28 +24,30 @@
 					</button>
 				</div>
 			</div>
-			<div class="col-xs-12 col" id="data-container">
+			<div class="col-xs-12 col">
 				<h2 itemprop="about">
 					{{snippet.title}}
-					<a @click.prevent="flag" href="javascript:undefined" id="flag-btn"><span class="fas fa-flag" /></a>
+					<a @click.prevent="flag" href="javascript:undefined" class="flag-btn">
+						<span class="fas fa-flag" />
+					</a>
 				</h2>
-				<div id="stats-bar" class="text-muted mb-2">
+				<div class="text-muted mb-2">
 					<span>
-						<span class="far fa-bullseye" />
+						<span class="far fa-bullseye mr-1" />
 						<span itemprop="codeSampleType">{{snippet.category.name}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-code" />
+						<span class="far fa-code mr-1" />
 						<span itemprop="programmingLanguage">{{snippet.language.name}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-user" />
+						<span class="far fa-user mr-1" />
 						<router-link :to="{name: 'view-user', params: {username: snippet.username}}" itemprop="author">
 							{{snippet.username}}
 						</router-link>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-sync" />
+						<span class="far fa-sync mr-1" />
 						<span>
 							<router-link :to="{name: 'snippet-revisions', params: {snippet_id: snippet.id}}">
 								{{ snippet.revisions_count }} revisions
@@ -58,20 +55,20 @@
 						</span>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-eye" />
+						<span class="far fa-eye mr-1" />
 						<span>{{snippet.views}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-clock" />
+						<span class="far fa-clock mr-1" />
 						<span itemprop="dateCreated">{{moment(snippet.createdAt).fromNow()}}</span>
 					</span>
 					<span class="ml-2">
-						<span class="far fa-edit" />
+						<span class="far fa-edit mr-1" />
 						<span itemprop="dateModified">{{moment(snippet.updatedAt).fromNow()}}</span>
 					</span>
 				</div>
-				<pre><code itemprop="text" :class="hljsLanguageById(snippet.language.id)" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
-				<div class="card" v-if="snippet.description" id="description">
+				<pre><code itemprop="text" class="p-3" :class="hljsLanguageById(snippet.language.id)" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
+				<div class="card description" v-if="snippet.description">
 					<div class="card-body">
 						<div class="card-text" v-html="marked(snippet.description)" itemprop="description" />
 					</div>
@@ -80,7 +77,7 @@
 		</div>
 
 		<modal :show="flagModalShown" title="Why are you flagging this snippet?" @on-dismiss="onFlagDismiss">
-			<textarea class="form-control" id="flag-description" ref="flagDescription" placeholder="Explain briefly." />
+			<textarea class="form-control flag-description w-100" ref="flagDescription" placeholder="Explain briefly." />
 			<button class="btn btn-primary" slot="footer" @click="submitFlag">Send</button>
 		</modal>
 
@@ -257,50 +254,26 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	#data-container {
-		min-width: 0;
-	}
-
+<style lang="scss" scoped>
 	.voted {
 		color: #e91e63;
 	}
 
-	code {
-		padding: 1.25rem;
-	}
-
-	#flag-description {
+	.flag-description {
 		min-height: 10vh;
-		width: 100%;
 	}
 
-	#flag-btn {
+	.flag-btn {
 		color: #BC2C1A;
-		font-size: 16px;
+		font-size: 1rem;
 		vertical-align: super;
 	}
 
-	#description >>> img {
+	.description >>> img {
 		max-width: 100%;
 	}
 
-	#stats-bar {
-		margin-bottom: 12px;
-	}
-
-	#stats-bar .fas,
-	#stats-bar .far,
-	#stats-bar .fal,
-	#stats-bar .fab {
-		margin-right: 2px;
-	}
-
-	#action-bar {
-		margin-top: 32px;
-	}
-
-	#action-bar button {
+	.action-bar button {
 		margin-bottom: 4px;
 		border-radius: 1px;
 		min-width: 90px;
@@ -308,11 +281,7 @@
 		display: block;
 	}
 
-	#voting-buttons {
-		text-align: center;
-	}
-
-	#voting-buttons > span {
+	.voting-buttons > span {
 		display: block;
 		font-size: 2.5rem;
 	}

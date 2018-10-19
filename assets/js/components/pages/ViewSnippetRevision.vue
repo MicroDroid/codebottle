@@ -26,7 +26,7 @@
 		</div>
 		<hr>
 		<h2>{{revision.title}}</h2>
-		<p id="stats-bar">
+		<p class="mb-2">
 			<span>
 				<span class="far fa-bullseye" />
 				<span>{{revision.category.name}}</span>
@@ -36,8 +36,8 @@
 				<span>{{revision.language.name}}</span>
 			</span>
 		</p>
-		<pre><code :class="hljsLanguageById(revision.language.id)" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
-		<div class="card" v-if="revision.description" id="description">
+		<pre><code class="p-3" :class="hljsLanguageById(revision.language.id)" :style="{'tab-size': preferences.indentationSize}">{{ computedCode }}</code></pre>
+		<div class="card description" v-if="revision.description">
 			<div class="card-body">
 				<div class="card-text" v-html="marked(revision.description)" />
 			</div>
@@ -130,20 +130,8 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	#revisions {
-		margin-top: 32px;
-	}
-
-	code {
-		padding: 1.25rem;
-	}
-
-	#description >>> img {
+<style lang="scss" scoped>
+	.description >>> img {
 		max-width: 100%;
-	}
-
-	#stats-bar {
-		margin-bottom: 12px;
 	}
 </style>

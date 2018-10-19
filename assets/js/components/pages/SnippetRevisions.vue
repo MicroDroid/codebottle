@@ -2,7 +2,7 @@
 	<div class="container" v-if="snippet && revisions">
 		<h2>{{snippet.title}}</h2>
 		<h5 class="text-muted">{{snippet.revisions_count}} revisions</h5>
-		<ul class="list-group" id="revisions">
+		<ul class="list-group mt-3">
 			<router-link tag="li" v-for="(revision, index) in revisions" :key="revision.createdAt"
 				:to="index+1 === revisions.length 
 					? {name: 'view-snippet', params: {id: snippet.id}}
@@ -111,8 +111,3 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	#revisions {
-		margin-top: 32px;
-	}
-</style>

@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<div id="mini-container">
+		<div class="mini-container text-center mx-auto mt-5">
 			<h1>Welcome back!</h1>
 			<br/>
 			<form @submit.prevent="login">
@@ -17,8 +17,8 @@
 					<input type="password" class="form-control" placeholder="Password" name="password" v-model="password">
 				</div>
 				<br/>
-				<button class="btn btn-primary" type="submit" id="signin-btn" :disabled="loading">Sign in</button>
-				<router-link :to="{name: 'github-signin'}" class="mt-2 btn btn-default" id="github-signin" tag="button">
+				<button class="btn btn-primary signin-btn w-100" type="submit" :disabled="loading">Sign in</button>
+				<router-link :to="{name: 'github-signin'}" class="mt-2 btn btn-default github-signin-btn w-100" tag="button">
 					Sign in with GitHub
 				</router-link>
 			</form>
@@ -84,26 +84,21 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	#mini-container {
+<style lang="scss" scoped>
+	.mini-container {
 		max-width: 340px;
-		text-align: center;
-		margin: auto;
-		margin-top: 84px;
 	}
 
-	#signin-btn {
-		width: 100%;
+	.signin-btn {
 		text-transform: uppercase;
 	}
 
-	#github-signin {
+	.github-signin-btn {
 		color: white !important;
 		background: #303030;
-		width: 100%;
-	}
 
-	#github-signin:hover {
-		background: #373737;
+		&:hover {
+			background: #373737;
+		}
 	}
 </style>

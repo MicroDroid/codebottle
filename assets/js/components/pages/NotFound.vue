@@ -1,6 +1,6 @@
 <template>
-	<div class="container">
-		<h1 id="title">404</h1>
+	<div class="container text-center">
+		<h1>404</h1>
 		<h3>You've taken the wrong route.</h3>
 	</div>
 </template>
@@ -18,12 +18,8 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	.container {
-		text-align: center;
-	}
-
-	#title {
+<style lang="scss" scoped>
+	h1 {
 		font-weight: bold;
 		font-size: 72px;
 	}

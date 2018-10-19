@@ -1,15 +1,15 @@
 <template>
 	<div>
-		<div id="snippets-container" class="row">
+		<div class="snippets-container row">
 			<div class="col-xs-12 col-sm-6 col-md-4" v-for="snippet in snippets" :key="snippet.id">
 				<router-link :to="{name: 'view-snippet', params: {id: snippet.id}}" class="nostyle">
-					<div class="card">
+					<div class="card mb-4">
 						<div class="card-body">
 							<h5 class="card-title">{{snippet.title}}</h5>
 							<h6 class="card-subtitle mb-2 text-muted">
 								<span class="far fa-star" /> {{snippet.votes}}
-								<span class="far fa-code" /> {{snippet.language.name}}
-								<span class="far fa-eye" /> {{snippet.views}}
+								<span class="far fa-code ml-2" /> {{snippet.language.name}}
+								<span class="far fa-eye ml-2" /> {{snippet.views}}
 								<!-- <span class="far fa-clock" /> {{moment(snippet.updatedAt).fromNow()}} -->
 							</h6>
 							<div class="card-text">
@@ -47,19 +47,10 @@
 	};
 </script>
 
-<style scoped>
-	#snippets-container .card {
+<style lang="scss" scoped>
+	.snippets-container .card {
 		height: 280px;
-		margin-bottom: 48px;
 		overflow: hidden;
-	}
-
-	.card-subtitle span {
-		margin-left: 8px;
-	}
-
-	.card-subtitle span:first-child {
-		margin-left: 0;
 	}
 
 	.no-description {

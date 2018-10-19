@@ -1,11 +1,11 @@
 <template>
-	<div :class="{'modal': true, show}">
+	<div class="modal" :class="{show}">
 		<div class="modal-dialog" v-if="show">
-			<div class="modal-content">
+			<div class="modal-content text-left">
 				<div class="modal-header">
 					<slot name="header" />
 					<h5 class="modal-title" v-if="title">{{title}}</h5>
-					<button type="button" class="close" @click="dismiss">
+					<button type="button" class="close text-muted" @click="dismiss">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -43,7 +43,7 @@
 	};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 	.modal.show {
 		display: block;
 		background: rgba(0,0,0,0.6);
@@ -51,10 +51,5 @@
 
 	.modal-content {
 		top: 10vh;
-		text-align: left;
-	}
-
-	.close {
-		color: #CCC;
 	}
 </style>

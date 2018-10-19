@@ -1,21 +1,20 @@
 <template>
 	<div class="container">
-		<div id="mini-container">
+		<div class="mini-container text-center mx-auto mt-5">
 			<h1>Reset password</h1>
 			<br>
-			<form>
+			<form class="mt-2">
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<span class="fas fa-envelope input-group-text" />
 					</div>
-					<input type="email" class="form-control" placeholder="Email" name="email" id="email" v-model="email" ref="emailInput" required>
+					<input type="email" class="form-control" placeholder="Email" name="email" v-model="email" ref="emailInput" required>
 				</div>
+
 				<br>
 
-				<!-- <button class="btn btn-primary" type="submit" id="submit-btn" :disabled="loading || sent">Submit</button> -->
-
 				<invisible-recaptcha sitekey="6Lf3UygUAAAAAMq-bXV5Q6eVzeHD-edRvYbF20bU" :validate="submit" :callback="resetPassword"
-					class="btn btn-primary" type="submit" id="submit-btn" :disabled="loading || sent">
+					class="btn btn-primary w-100" type="submit" :disabled="loading || sent">
 					Submit
 				</invisible-recaptcha>
 			</form>
@@ -84,20 +83,12 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	#mini-container {
+<style lang="scss" scoped>
+	.mini-container {
 		max-width: 340px;
-		text-align: center;
-		margin: auto;
-		margin-top: 84px;
 	}
 
-	form {
-		margin-top: 12px;
-	}
-
-	#submit-btn {
-		width: 100%;
+	button[type='submit'] {
 		text-transform: uppercase;
 	}
 </style>

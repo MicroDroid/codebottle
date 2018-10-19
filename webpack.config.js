@@ -34,6 +34,13 @@ const common = {
 			test: /\.css$/,
 			loaders: ['vue-style-loader', 'css-loader']
 		},
+		// For SCSS in Vue components
+		{
+			test: /\.scss$/,
+			include: [path.join(__dirname, 'assets', 'js')],
+			use: ['vue-style-loader', 'css-loader', 'sass-loader'],
+		},
+		// For other SCSS files
 		{
 			test: /\.scss$/,
 			include: [/node_modules/, path.join(__dirname, 'assets', 'scss')],

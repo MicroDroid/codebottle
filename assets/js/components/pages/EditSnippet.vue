@@ -3,25 +3,25 @@
 		<div class="col-xs-12 col-md-11 col-lg-9">
 			<h1>Edit snippet</h1>
 			<br>
-			<form @submit.prevent="edit">
+			<form @submit.prevent="edit" class="mb-5">
 				<div class="form-group">
 					<label for="title">Title</label>
-					<input type="text" class="form-control" id="title" v-model="title" placeholder="Focus on keywords" autofocus required>
+					<input id="title" type="text" class="form-control" v-model="title" placeholder="Focus on keywords" autofocus required>
 				</div>
 
 				<div class="form-group">
 					<label for="code">Code</label>
-					<textarea type="text" class="form-control code-input" id="code" v-model="code" placeholder="Fancy stuff here" required />
+					<textarea id="code" type="text" class="form-control code-input" v-model="code" placeholder="Fancy stuff here" required />
 				</div>
 
 				<div class="form-group">
 					<label for="description">Description</label>
-					<textarea type="text" class="form-control" id="description" v-model="description" placeholder="Be brief" />
+					<textarea id="description" type="text" class="form-control description" v-model="description" placeholder="Be brief" />
 				</div>
 
 				<div class="form-group">
 					<label for="explanation">Explanation</label>
-					<input type="text" class="form-control" id="explanation" v-model="explanation" placeholder="Why did you make this edit?">
+					<input id="explanation" type="text" class="form-control" v-model="explanation" placeholder="Why did you make this edit?">
 				</div>
 
 				<div class="row">
@@ -44,7 +44,7 @@
 			</form>
 
 			<loader v-if="loading" />
-			<div class="alert alert-danger center-text" v-if="error">{{error}}</div>
+			<div class="alert alert-danger text-center" v-if="error">{{error}}</div>
 		</div>
 	</div>
 </template>
@@ -136,16 +136,12 @@
 	};
 </script>
 
-<style type="text/css" scoped>
-	#code {
+<style lang="scss" scoped>
+	.code-input {
 		height: 30vh;
 	}
 
-	#description {
+	.description {
 		height: 20vh;
-	}
-
-	form {
-		margin-bottom: 42px;
 	}
 </style>

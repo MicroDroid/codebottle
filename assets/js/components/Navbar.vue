@@ -154,10 +154,9 @@
 	};
 </script>
 
-<style type="text/css" scoped>
+<style lang="scss" scoped>
 	.form-control {
-		max-width: 320px;
-		padding: .5rem .75rem;
+		max-width: 380px;
 	}
 
 	form {

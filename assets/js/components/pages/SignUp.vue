@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<div id="mini-container">
+		<div id="mini-container" class="text-center mx-auto mt-5">
 			<h1>Create an account</h1>
 			<br>
 			<form>
@@ -24,10 +24,10 @@
 				</div>
 				<br>
 				<invisible-recaptcha sitekey="6Lf3UygUAAAAAMq-bXV5Q6eVzeHD-edRvYbF20bU" :validate="submit" :callback="signup"
-					class="btn btn-primary" type="submit" id="signup-btn" :disabled="loading || created">
+					class="btn btn-primary w-100" type="submit" id="signup-btn" :disabled="loading || created">
 					Create account
 				</invisible-recaptcha>
-				<router-link :to="{name: 'github-signin'}" class="mt-2 btn btn-default" id="github-signin" tag="button">
+				<router-link :to="{name: 'github-signin'}" class="mt-2 btn btn-default w-100" id="github-signin" tag="button">
 					Sign up with GitHub
 				</router-link>
 			</form>
@@ -99,23 +99,18 @@
 	};
 </script>
 
-<style type="text/css" scoped>
+<style lang="scss" scoped>
 	#mini-container {
 		max-width: 340px;
-		text-align: center;
-		margin: auto;
-		margin-top: 84px;
 	}
 
 	#signup-btn {
-		width: 100%;
 		text-transform: uppercase;
 	}
 
 	#github-signin {
 		color: white !important;
 		background: #303030;
-		width: 100%;
 	}
 
 	#github-signin:hover {

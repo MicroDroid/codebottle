@@ -1,14 +1,14 @@
 <template>
 	<div class="container">
 		<div class="row">
-			<div class="center-text col">
+			<div class="text-center col">
 				<h2>Amplified Productivity</h2>
 				<h4 class="text-muted">Modular reusable code <span class="green-text">+</span> code examples.</h4>
 				<h4 class="text-muted">By the awesome community.</h4>
 			</div>
 			<hr>
 
-			<snippets-deck id="deck" :snippets="snippets" v-if="snippets" />
+			<snippets-deck class="mt-4" :snippets="snippets" v-if="snippets" />
 		</div>
 	</div>
 </template>
@@ -49,12 +49,8 @@
 	};
 </script>
 
-<style type="text/css" scoped>
+<style lang="scss" scoped>
 	.green-text {
 		color: #4caf50;
-	}
-
-	#deck {
-		margin-top: 24px;
 	}
 </style>
