@@ -36,7 +36,6 @@
 
 <script type="text/javascript">
 	import {extractError} from '../../helpers';
-	import store from '../../store';
 
 	export default {
 		data: () => ({
@@ -59,8 +58,8 @@
 
 				this.$store.dispatch('auth/login', credentials)
 					.then(async () => {
-						await store.dispatch('users/fetchSelf');
-						await store.dispatch('auth/fetchPreferences');
+						await this.$store.dispatch('users/fetchSelf');
+						await this.$store.dispatch('auth/fetchPreferences');
 						this.$router.push({name: 'discover'});
 					}).catch(error => {
 						this.loading = false;

@@ -18,7 +18,46 @@ const koaEtag = require('koa-etag');
 const koaStatic = require('koa-static');
 const koaCompress = require('koa-compress');
 
+const LRU = require('lru-cache');
+const debounce = require('lodash.debounce');
+
 const {createBundleRenderer} = require('vue-server-renderer');
+
+function createAppRenderer() {
+	const template = fs.readFileSync(path.join(__dirname, 'build', 'index.html'), 'utf8');
+	const ssrManifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'build', 'vue-ssr-server-bundle.json'), 'utf8'));
+
+	return createBundleRenderer(ssrManifest, {
+		runInNewContext: false,
+		template,
+		cache: LRU({
+			max: 100,
+			maxAge: 1000,
+		}),
+	});
+}
+
+async function renderApp(ctx) {
+	const context = {
+		url: ctx.url.endsWith('?') ? ctx.url.slice(0, -1) : ctx.url, // It crashes otherwise
+		hostname: ctx.hostname,
+		protocol: ctx.protocol,
+		apiHost: `api.${ctx.hostname}`,
+		authCookie: ctx.cookies.get('auth'),
+	};
+
+	return await renderer.renderToStream(context);
+}
+
+let renderer = createAppRenderer();
+
+const refreshRenderer = debounce(() => {
+	renderer = createAppRenderer();
+	logger.info('Refreshed app renderer');
+}, 500);
+
+fs.watch(path.join(__dirname, 'build', 'index.html'), refreshRenderer);
+fs.watch(path.join(__dirname, 'build', 'vue-ssr-server-bundle.json'), refreshRenderer);
 
 app.use(handler);
 app.use(koaCompress({
@@ -30,26 +69,6 @@ app.use(koaConditional());
 app.use(koaEtag());
 
 app.use(loggerMiddleware);
-
-const renderApp = async ctx => {
-	const template = await fs.readFile(path.join(__dirname, 'build', 'index.html'), 'utf8');
-	const ssrManifest = JSON.parse(await fs.readFile('./build/vue-ssr-server-bundle.json', 'utf8'));
-
-	const renderer = createBundleRenderer(ssrManifest, {
-		runInNewContext: false,
-		template,
-	});
-
-	const context = {
-		url: ctx.url.endsWith('?') ? ctx.url.slice(0, -1) : ctx.url, // It crashes otherwise
-		hostname: ctx.hostname,
-		protocol: ctx.protocol,
-		apiHost: `api.${ctx.hostname}`,
-		authCookie: ctx.cookies.get('auth'),
-	};
-
-	return await renderer.renderToStream(context);
-};
 
 
 // I am too lazy to split this code anywhere

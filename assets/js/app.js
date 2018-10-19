@@ -12,12 +12,11 @@ import Navbar from './components/Navbar';
 import root from 'window-or-global';
 
 import routes from './routes';
-import store from './store';
+import {createStore} from './store';
 import {EAT_TOAST} from './store/mutation-types';
 import {setStore, cookToast} from './helpers';
 
-
-setStore(store);
+Vue.use(Vuex);
 
 Vue.use(VueMeta, {
 	keyName: 'meta',
@@ -30,48 +29,51 @@ Vue.use(VueClipboards);
 Vue.component('navbar', Navbar);
 Vue.component('loader', Loader);
 
-root.axios.interceptors.response.use(response => response, error => {
-	if (error && error.response && error.response.status === 401 && store.getters['auth/isAuthenticated']) {
-		cookToast('You\'ve been logged out!', 4500);
-		store.dispatch('auth/logout');
-	}
+export function createApp() {
+	const store = createStore();
+	setStore(store);
 
-	return Promise.reject(error);
-});
+	root.axios.interceptors.response.use(response => response, error => {
+		if (error && error.response && error.response.status === 401 && store.getters['auth/isAuthenticated']) {
+			cookToast('You\'ve been logged out!', 4500);
+			store.dispatch('auth/logout');
+		}
 
-const router = new VueRouter({
-	mode: 'history',
-	linkActiveClass: 'active',
-	routes,
-	scrollBehavior: (to, from, savedPosition) => ({x: 0, y: 0}),
-});
-
-
-if (typeof(window) !== 'undefined' && window.__INITIAL_STATE__) {
-	store.replaceState(window.__INITIAL_STATE__);
-	if (store.getters.toast.content)
-		setTimeout(() => {
-			store.commit(EAT_TOAST);
-		}, store.getters.toast.duration);
-}
-
-router.beforeEach((to, from, next) => {
-	if (to.meta.requiresAuth && !store.getters['auth/isAuthenticated']) {
-		next({name: 'signin'});
-		cookToast('Sign in first', 2000);
-	} else if ((to.name === 'signin' || to.name === 'signup') && store.getters['auth/isAuthenticated']) {
-		next({name: 'discover'});
-		cookToast('You are already signed in!', 2000);
-	} else next();
-});
-
-if (process.env.NODE_ENV === 'production')
-	Vue.use(VueAnalytics, {
-		id: 'UA-80585608-1',
-		router,
+		return Promise.reject(error);
 	});
 
-export function createApp() {
+	const router = new VueRouter({
+		mode: 'history',
+		linkActiveClass: 'active',
+		routes,
+		scrollBehavior: (to, from, savedPosition) => ({x: 0, y: 0}),
+	});
+
+
+	if (typeof(window) !== 'undefined' && window.__INITIAL_STATE__) {
+		store.replaceState(window.__INITIAL_STATE__);
+		if (store.getters.toast.content)
+			setTimeout(() => {
+				store.commit(EAT_TOAST);
+			}, store.getters.toast.duration);
+	}
+
+	router.beforeEach((to, from, next) => {
+		if (to.meta.requiresAuth && !store.getters['auth/isAuthenticated']) {
+			next({name: 'signin'});
+			cookToast('Sign in first', 2000);
+		} else if ((to.name === 'signin' || to.name === 'signup') && store.getters['auth/isAuthenticated']) {
+			next({name: 'discover'});
+			cookToast('You are already signed in!', 2000);
+		} else next();
+	});
+
+	if (process.env.NODE_ENV === 'production')
+		Vue.use(VueAnalytics, {
+			id: 'UA-80585608-1',
+			router,
+		});
+
 	const app = new Vue({
 		render: h => h(App),
 		router,

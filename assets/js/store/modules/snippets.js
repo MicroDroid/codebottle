@@ -1,10 +1,10 @@
 import * as types from '../mutation-types';
 import {apiUrl} from '../../helpers';
 
-const state = {
+const state = () => ({
 	new: [],
 	snippets: [],
-};
+});
 
 const actions = {
 	fetchNew: ({commit}) => {

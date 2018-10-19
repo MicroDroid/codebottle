@@ -2,7 +2,7 @@ import * as types from '../mutation-types';
 import root from 'window-or-global';
 import {apiUrl} from '../../helpers';
 
-const state = {
+const state = () => ({
 	accessToken: null,
 	expiresIn: 0,
 	obtainedAt: 0,
@@ -10,7 +10,7 @@ const state = {
 		convert_tabs_to_spaces: false,
 		indentation_size: 4,
 	},
-};
+});
 
 const actions = {
 	login: ({commit}, credentials) => {
