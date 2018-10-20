@@ -2,8 +2,8 @@
 	<div class="container">
 		<div class="mini-container text-center mx-auto mt-5">
 			<h1>Change password</h1>
-			<br>
-			<form class="mt-2" @submit.prevent="changePassword">
+			
+			<form class="mt-5" @submit.prevent="changePassword">
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<span class="fas fa-key input-group-text" />
@@ -11,13 +11,12 @@
 					<input ref="passwordInput" v-model="password" type="password" class="form-control"
 						placeholder="New password" name="password" required>
 				</div>
-				<br>
-				<button :disabled="loading" class="btn btn-primary w-100" type="submit">Submit</button>
+				
+				<button :disabled="loading" class="btn btn-primary w-100 mt-4" type="submit">Submit</button>
 			</form>
-			<br>
-			<br>
-			<loader v-if="loading"/>
-			<div v-if="error" class="alert alert-danger">{{ error }}</div>
+			
+			<loader v-if="loading" class="mt-5"/>
+			<div v-if="error" class="alert alert-danger mt-5">{{ error }}</div>
 		</div>
 	</div>
 </template>

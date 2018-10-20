@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="snippets-container row">
-			<div v-for="snippet in snippets" :key="snippet.id" class="col-xs-12 col-sm-6 col-md-4">
+			<div v-for="snippet in snippets" :key="snippet.id" class="col-12 col-sm-6 col-md-4">
 				<router-link :to="{name: 'view-snippet', params: {id: snippet.id}}" class="nostyle">
 					<div class="card mb-4">
 						<div class="card-body">

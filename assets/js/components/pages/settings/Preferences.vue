@@ -1,10 +1,10 @@
 <template>
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12 col-md-3">
+			<div class="col-12 col-md-3">
 				<sidenav />
 			</div>
-			<div class="col-xs-12 col-md-9">
+			<div class="col-12 col-md-9">
 				<form @submit.prevent="save">
 					<h4 class="mb-4">Code format</h4>
 					<label for="indentation-size">Preferred indentation size</label>
@@ -27,10 +27,10 @@
 					<p class="text-muted last-changed mt-4">Last changed {{ moment(preferences.updatedAt).fromNow() }}</p>
 					<button :disabled="loading" class="btn btn-primary" type="submit">Save</button>
 				</form>
-				<br>
-				<loader v-if="loading" />
-				<div v-if="message" class="alert alert-success text-center">{{ message }}</div>
-				<div v-if="error" class="alert alert-danger text-center">{{ error }}</div>
+				
+				<loader v-if="loading" class="mt-5" />
+				<div v-if="message" class="alert alert-success text-center mt-5">{{ message }}</div>
+				<div v-if="error" class="alert alert-danger text-center mt-5">{{ error }}</div>
 			</div>
 		</div>
 	</div>

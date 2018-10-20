@@ -2,8 +2,8 @@
 	<div class="container">
 		<div id="mini-container" class="text-center mx-auto mt-5">
 			<h1>Create an account</h1>
-			<br>
-			<form>
+			
+			<form class="mt-5">
 				<div class="input-group">
 					<span class="input-group-prepend">
 						<span class="fas fa-user input-group-text" />
@@ -23,9 +23,9 @@
 					</span>
 					<input v-model="password" type="password" class="form-control" placeholder="Password">
 				</div>
-				<br>
+				
 				<invisible-recaptcha id="signup-btn" :validate="submit" :callback="signup" :disabled="loading || created"
-					class="btn btn-primary w-100" type="submit"
+					class="btn btn-primary mt-4 w-100" type="submit"
 					sitekey="6Lf3UygUAAAAAMq-bXV5Q6eVzeHD-edRvYbF20bU">
 					Create account
 				</invisible-recaptcha>
@@ -33,15 +33,14 @@
 					Sign up with GitHub
 				</router-link>
 			</form>
-			<br>
 			
-			<p>
+			<p class="mt-5">
 				Existing user? <router-link :to="{name: 'signin'}">Sign in here</router-link><br>
 			</p>
-			<br>
-			<loader v-if="loading"/>
-			<div v-if="error" class="alert alert-danger">{{ error }}</div>
-			<div v-if="message" class="alert alert-success">{{ message }}</div>
+			
+			<loader v-if="loading" class="mt-5"/>
+			<div v-if="error" class="alert alert-danger mt-5">{{ error }}</div>
+			<div v-if="message" class="alert alert-success mt-5">{{ message }}</div>
 		</div>
 	</div>
 </template>

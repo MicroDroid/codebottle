@@ -1,9 +1,9 @@
 <template>
 	<div class="container">
-		<div class="col-xs-12 col-md-7">
+		<div class="col-12 col-md-7">
 			<h1>Edit profile</h1>
-			<br>
-			<form class="mb-5" @submit.prevent="save">
+			
+			<form class="mt-4" @submit.prevent="save">
 				<div class="form-group">
 					<label for="username">Username</label>
 					<input id="username" v-model="user.username" type="text" class="form-control"
@@ -25,8 +25,8 @@
 			</form>
 
 			<loader v-if="loading" />
-			<div v-if="message" class="alert alert-success text-center">{{ message }}</div>
-			<div v-if="error" class="alert alert-danger text-center">{{ error }}</div>
+			<div v-if="message" class="alert alert-success text-center mt-5">{{ message }}</div>
+			<div v-if="error" class="alert alert-danger text-center mt-5">{{ error }}</div>
 		</div>
 	</div>
 </template>

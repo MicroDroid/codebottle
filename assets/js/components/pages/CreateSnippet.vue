@@ -1,9 +1,9 @@
 <template>
 	<div class="container">
-		<div class="col-xs-12 col-md-11 col-lg-9">
+		<div class="col-12 col-md-11 col-lg-9">
 			<h1>Create snippet</h1>
-			<br>
-			<form class="mb-5" @submit.prevent="create">
+			
+			<form class="mt-4" @submit.prevent="create">
 				<div class="form-group">
 					<label for="title">Title</label>
 					<input id="title" v-model="title" type="text" class="form-control"
@@ -41,8 +41,8 @@
 				<button :disabled="loading" class="btn btn-primary" type="submit">Create</button>
 			</form>
 
-			<loader v-if="loading" />
-			<div v-if="error" class="alert alert-danger text-center">{{ error }}</div>
+			<loader v-if="loading" class="mt-5" />
+			<div v-if="error" class="alert alert-danger text-center mt-5">{{ error }}</div>
 		</div>
 	</div>
 </template>

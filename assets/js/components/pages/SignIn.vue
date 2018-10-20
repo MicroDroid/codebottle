@@ -2,8 +2,8 @@
 	<div class="container">
 		<div class="mini-container text-center mx-auto mt-5">
 			<h1>Welcome back!</h1>
-			<br>
-			<form @submit.prevent="login">
+
+			<form class="mt-5" @submit.prevent="login">
 				<div class="input-group">
 					<span class="input-group-prepend">
 						<span class="fas fa-user input-group-text"/>
@@ -18,20 +18,20 @@
 					<input v-model="password" type="password" class="form-control" placeholder="Password"
 						name="password">
 				</div>
-				<br>
-				<button :disabled="loading" class="btn btn-primary signin-btn w-100" type="submit">Sign in</button>
-				<router-link :to="{name: 'github-signin'}" class="mt-2 btn btn-default github-signin-btn w-100" tag="button">
+				
+				<button :disabled="loading" class="btn btn-primary signin-btn mt-3 w-100" type="submit">Sign in</button>
+				<router-link :to="{name: 'github-signin'}" class="btn btn-default github-signin-btn mt-2 w-100" tag="button">
 					Sign in with GitHub
 				</router-link>
 			</form>
-			<br>
-			<p>
+			
+			<p class="mt-5">
 				New user? <router-link :to="{name: 'signup'}">Register now</router-link> <br>
 				Or, forgot your password? <router-link :to="{name: 'forgot-password'}">No problem</router-link>
 			</p>
-			<br>
-			<loader v-if="loading"/>
-			<div v-if="error" class="alert alert-danger">{{ error }}</div>
+			
+			<loader v-if="loading" class="mt-5"/>
+			<div v-if="error" class="alert alert-danger mt-5">{{ error }}</div>
 		</div>
 	</div>
 </template>

@@ -2,8 +2,8 @@
 	<div class="container">
 		<div class="mini-container text-center mx-auto mt-5">
 			<h1>Reset password</h1>
-			<br>
-			<form class="mt-2">
+
+			<form class="mt-5">
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<span class="fas fa-envelope input-group-text" />
@@ -12,24 +12,20 @@
 						placeholder="Email" name="email" required>
 				</div>
 
-				<br>
-
 				<invisible-recaptcha :disabled="loading || sent" :validate="submit" :callback="resetPassword" type="submit"
-					class="btn btn-primary w-100"
+					class="btn btn-primary w-100 mt-3"
 					sitekey="6Lf3UygUAAAAAMq-bXV5Q6eVzeHD-edRvYbF20bU">
 					Submit
 				</invisible-recaptcha>
 			</form>
-			<br>
-			<br>
 			
-			<p>
+			<p class="mt-5">
 				Did you remember it? <router-link :to="{name: 'signin'}">Try signing in then</router-link>
 			</p>
-			<br>
-			<loader v-if="loading"/>
-			<div v-if="error" class="alert alert-danger">{{ error }}</div>
-			<div v-if="sent" class="alert alert-success">A password reset email has been sent, if the email is valid</div>
+			
+			<loader v-if="loading" class=" mt-5"/>
+			<div v-if="error" class="alert alert-danger mt-5">{{ error }}</div>
+			<div v-if="sent" class="alert alert-success mt-5">A password reset email has been sent, if the email is valid</div>
 		</div>
 	</div>
 </template>

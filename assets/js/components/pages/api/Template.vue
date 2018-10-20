@@ -1,10 +1,10 @@
 <template>
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12 col-4 order-xs-1 order-2">
+			<div class="col-12 col-4 order-xs-1 order-2">
 				<sidenav />
 			</div>
-			<div class="col-xs-12 col-8 order-xs-2 order-1" v-html="parsed" />
+			<div class="col-12 col-8 order-xs-2 order-1" v-html="parsed" />
 		</div>
 	</div>
 </template>

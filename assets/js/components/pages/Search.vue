@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12 col-sm-10 col-md-9 col-lg-7">
+			<div class="col-12 col-sm-10 col-md-9 col-lg-7">
 				<form class="mb-2" @submit.prevent="search">
 					<div class="row no-gutters">
 						<div class="col">

@@ -6,6 +6,7 @@
 				<h4 class="text-muted">Modular reusable code <span class="green-text">+</span> code examples.</h4>
 				<h4 class="text-muted">By the awesome community.</h4>
 			</div>
+			
 			<hr>
 
 			<snippets-deck v-if="snippets" :snippets="snippets" class="mt-4" />
