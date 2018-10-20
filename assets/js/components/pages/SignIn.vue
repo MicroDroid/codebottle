@@ -20,7 +20,7 @@
 				</div>
 				
 				<button :disabled="loading" class="btn btn-primary signin-btn mt-3 w-100" type="submit">Sign in</button>
-				<router-link :to="{name: 'github-signin'}" class="btn btn-default github-signin-btn mt-2 w-100" tag="button">
+				<router-link :to="{name: 'github-signin', params: {oldRoute}}" class="btn btn-default github-signin-btn mt-2 w-100" tag="button">
 					Sign in with GitHub
 				</router-link>
 			</form>
@@ -46,7 +46,20 @@
 
 			username: '',
 			password: '',
+
+			oldRoute: null,
 		}),
+
+		beforeRouteEnter(to, from, next) {
+			return next(vm => {
+				if (from && from.name)
+					vm.oldRoute = {
+						name: from.name,
+						query: from.query,
+						params: from.params,
+					};
+			});
+		},
 
 		mounted: function() {
 			this.$refs.usernameInput.focus();
@@ -66,7 +79,11 @@
 					.then(async () => {
 						await this.$store.dispatch('users/fetchSelf');
 						await this.$store.dispatch('auth/fetchPreferences');
-						this.$router.push({name: 'discover'});
+
+						if (this.oldRoute)
+							this.$router.push(this.oldRoute);
+						else
+							this.$router.push({name: 'discover'});
 					}).catch(error => {
 						this.loading = false;
 						this.error = extractError(error);

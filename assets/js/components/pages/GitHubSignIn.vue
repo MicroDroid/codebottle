@@ -33,8 +33,15 @@
 					state: originalState,
 					code
 				}).then(() => {
-					this.$router.push({name: 'discover'});
+					try {
+						const oldRoute = JSON.parse(localStorage.getItem('signin_old_route'));
+						localStorage.removeItem('signin_old_route');
+						this.$router.push(oldRoute || {name: 'discover'});
+					} catch (error) {
+						this.$router.push({name: 'discover'});
+					}
 				}).catch(error => {
+					localStorage.removeItem('signin_old_route');
 					this.$store.dispatch('toasts/addToast', {
 						content: extractError(error),
 						duration: 3000
@@ -44,6 +51,7 @@
 			} else {
 				const state = genRandomString(24);
 				localStorage.setItem('github_oauth_state', btoa(state));
+				localStorage.setItem('signin_old_route', JSON.stringify(this.$route.params.oldRoute));
 				
 				window.location = 'http://github.com/login/oauth/authorize?' + cookGetParameters({
 					client_id: process.env.OAUTH_GITHUB_CLIENT_ID,
