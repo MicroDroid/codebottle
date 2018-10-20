@@ -26,7 +26,7 @@
 		<div v-if="!loading && !error && (!results || results.length < 1)" class="alert alert-warning alert-transparent">
 			No results
 		</div>
-		<div :style="{opacity: loading ? 0.7 : 1.0}">
+		<div :class="{loading}">
 			<div v-for="result in results" :key="result.id">
 				<router-link :to="{name: 'view-snippet', params: {id: result.id}}">
 					{{ result.title }}
@@ -157,5 +157,9 @@
 		background: none;
 		border: none;
 		padding: 8px;
+	}
+
+	.loading {
+		opacity: 0.7;
 	}
 </style>
