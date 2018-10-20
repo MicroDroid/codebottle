@@ -1,13 +1,19 @@
 <template>
 	<div class="container">
-		<h1>Verifying your account..</h1>
+		<h1>{{ status }}</h1>
 	</div>
 </template>
 
 <script type="text/javascript">
-	import {apiUrl} from '../../helpers';
+	import {apiUrl, extractError} from '../../helpers';
 	
 	export default {
+		data() {
+			return {
+				status: 'Verifying your account…',
+			};
+		},
+
 		mounted: function() {
 			axios.post(apiUrl('/users/email-verifications'), {
 				token: window.location.hash.substr(1),
@@ -17,8 +23,8 @@
 					duration: 3000
 				});
 				this.$router.push({name: 'discover'});
-			}).catch(() => {
-				// idk, show something up
+			}).catch(error => {
+				this.status = extractError(error);
 			});
 		},
 
