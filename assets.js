@@ -41,8 +41,8 @@ async function renderApp(ctx) {
 	const context = {
 		url: ctx.url.endsWith('?') ? ctx.url.slice(0, -1) : ctx.url, // It crashes otherwise
 		hostname: ctx.hostname,
-		protocol: ctx.protocol,
-		apiHost: `api.${ctx.hostname}`,
+		protocol: 'http',
+		apiHost: `127.0.0.1:${process.env.API_PORT}`,
 		authCookie: ctx.cookies.get('auth'),
 	};
 
