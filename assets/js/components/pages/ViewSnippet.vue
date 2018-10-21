@@ -269,7 +269,7 @@
 		vertical-align: super;
 	}
 
-	.description >>> img {
+	.description /deep/ img {
 		max-width: 100%;
 	}
 
