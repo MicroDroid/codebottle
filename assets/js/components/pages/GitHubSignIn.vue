@@ -32,7 +32,9 @@
 				this.$store.dispatch('auth/githubLogin', {
 					state: originalState,
 					code
-				}).then(() => {
+				}).then(async () => {
+					await this.$store.dispatch('users/fetchSelf');
+					await this.$store.dispatch('auth/fetchPreferences');
 					try {
 						const oldRoute = JSON.parse(localStorage.getItem('signin_old_route'));
 						localStorage.removeItem('signin_old_route');
