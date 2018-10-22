@@ -133,7 +133,7 @@
 				case 'sign-out':
 					this.$store.dispatch('auth/logout');
 					if (this.$route.meta.requiresAuth)
-						this.$router.push({name: 'search'});
+						this.$router.push({name: 'discover'});
 					break;
 				case 'settings':
 					this.$router.push({name: 'settings.preferences'});
