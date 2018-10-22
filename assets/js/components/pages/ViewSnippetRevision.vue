@@ -39,7 +39,7 @@
 		<pre><code :style="{'tab-size': preferences.indentationSize}" :class="hljsLanguageById(revision.language.id)" class="p-3">{{ computedCode }}</code></pre>
 		<div v-if="revision.description" class="card description">
 			<div class="card-body">
-				<div class="card-text" v-html="marked(revision.description)" />
+				<div class="card-text" v-html="marked(revision.description, {sanitize: true})" />
 			</div>
 		</div>
 	</div>
@@ -111,7 +111,7 @@
 		},
 
 		meta: function() {
-			const description = striptags(marked(this.revision ? this.revision.description : 'No description provided.'), '<pre>');
+			const description = striptags(marked(this.revision ? this.revision.description : 'No description provided.', {sanitize: true}), '<pre>');
 			return {
 				title: this.revision
 					? `Revision #${this.$route.params.id-1}: ${this.revision.title}`

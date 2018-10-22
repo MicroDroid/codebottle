@@ -70,7 +70,7 @@
 				<pre><code :style="{'tab-size': preferences.indentationSize}" :class="hljsLanguageById(snippet.language.id)" itemprop="text" class="p-3">{{ computedCode }}</code></pre>
 				<div v-if="snippet.description" class="card description">
 					<div class="card-body">
-						<div class="card-text" itemprop="description" v-html="marked(snippet.description)" />
+						<div class="card-text" itemprop="description" v-html="marked(snippet.description, {sanitize: true})" />
 					</div>
 				</div>
 			</div>
@@ -236,7 +236,7 @@
 		meta: function() {
 			const description = striptags(marked(this.snippet
 				? (this.snippet.description ? this.snippet.description : 'No description provided')
-			: 'Description loading..'), '<pre>');
+			: 'Description loading..', {sanitize: true}), '<pre>');
 			return {
 				title: this.snippet
 					? this.snippet.language.name + ' - ' + this.snippet.title

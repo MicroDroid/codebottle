@@ -93,7 +93,7 @@
 		},
 
 		meta: function() {
-			const description = striptags(marked(this.snippet && this.snippet.description ? this.snippet.description : 'No description provided.'), '<pre>');
+			const description = striptags(marked(this.snippet && this.snippet.description ? this.snippet.description : 'No description provided.', {sanitize: true}), '<pre>');
 			return {
 				title: this.snippet
 					? 'Revisions: ' + this.snippet.title
