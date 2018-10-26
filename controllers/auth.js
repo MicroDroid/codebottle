@@ -196,6 +196,13 @@ Time: ${(new Date()).toISOString()}
 				throw new ApiError(422, 'Error retrieving GitHub data');
 			});
 
+		if (!githubUser.email) {
+			const email = (await helpers.getGitHubUserEmails(token.access_token)).find(email => email.primary);
+			if (!email.verified)
+				throw new ApiError(422, 'Verify your email on GitHub first');
+			githubUser.email = email.email;
+		}
+
 		let socialConnection = 	await models.socialConnection.findOne({
 			where: {service: 'github',  service_id: githubUser.id},
 			attributes: ['id', 'user_id', 'service', 'service_id', 'token', 'token_type'],

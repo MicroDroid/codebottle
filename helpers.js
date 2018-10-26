@@ -56,6 +56,21 @@ const helpers = {
 		return response.data;
 	},
 
+	getGitHubUserEmails: async (token) => {
+		/* istanbul ignore next */
+		const response = await axios.get(`https://api.github.com/user/emails?access_token=${token}`)
+			.catch(error => {
+				if (error.response && error.response.data)
+					logger.warn(`GitHub OAuth2.0 failed: [${error.response.status}] ${error.response.data.message}`);
+				else
+					logger.err('GitHub OAuth2.0 failed: Network error');
+
+				throw error;
+			});
+
+		return response.data;
+	},
+
 	getGitHubUsername: async id => {
 		const githubConnection = (await models.socialConnection.findAll({
 			where: {
