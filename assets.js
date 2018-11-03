@@ -123,7 +123,6 @@ app.use(async (ctx, next) => {
 		if (isStatic) {
 			ctx.status = 404;
 			ctx.body = 'Not found';
-			logger.warn(`Access to main static URL by ${ctx.ip}`);
 		} else {
 			ctx.type = 'text/html; charset=utf-8';
 			ctx.body = await renderApp(ctx);
@@ -131,7 +130,6 @@ app.use(async (ctx, next) => {
 	} else if (ctx.path === '/index.ejs' || ctx.path === '/sitemap.ejs') {
 		ctx.status = 404;
 		ctx.body = 'Not found';
-		logger.warn(`Access to .ejs file by ${ctx.ip}`);
 	} else return next();
 });
 
