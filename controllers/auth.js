@@ -198,7 +198,7 @@ Time: ${(new Date()).toISOString()}
 
 		if (!githubUser.email) {
 			const email = (await helpers.getGitHubUserEmails(token.access_token)).find(email => email.primary);
-			if (!email.verified)
+			if (!email || !email.verified)
 				throw new ApiError(422, 'Verify your email on GitHub first');
 			githubUser.email = email.email;
 		}

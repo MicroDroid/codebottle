@@ -452,6 +452,7 @@ describe('Auth controller', () => {
 		const oauthCreateStub = this.stub(simpleOAuth, 'create');
 		const getTokenStub = this.stub();
 		const getGitHubUserStub = this.stub(helpers, 'getGitHubUser');
+		const getGitHubEmailsStub = this.stub(helpers, 'getGitHubUserEmails');
 		const jwtStub = this.stub(jwt, 'sign');
 		const findConnectionStub = this.stub(models.socialConnection, 'findOne');
 		const saveConnectionStub = this.stub();
@@ -489,6 +490,11 @@ describe('Auth controller', () => {
 		getGitHubUserStub.resolves({
 			data: githubUser
 		});
+		getGitHubEmailsStub.resolves([{
+			email: overcoder.email,
+			verified: true,
+			primary: true,
+		}]);
 		findConnectionStub.resolves({
 			save: saveConnectionStub,
 			getUser: getConnectionUserStub,
