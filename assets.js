@@ -22,6 +22,7 @@ const LRU = require('lru-cache');
 const debounce = require('lodash.debounce');
 
 const {createBundleRenderer} = require('vue-server-renderer');
+const isProd = process.env.NODE_ENV === 'production';
 
 function createAppRenderer() {
 	const template = fs.readFileSync(path.join(__dirname, 'build', 'index.html'), 'utf8');
@@ -54,7 +55,7 @@ let renderer = createAppRenderer();
 const refreshRenderer = debounce(() => {
 	renderer = createAppRenderer();
 	logger.info('Refreshed app renderer');
-}, 500);
+}, isProd ? 500 : 20);
 
 fs.watch(path.join(__dirname, 'build', 'index.html'), refreshRenderer);
 fs.watch(path.join(__dirname, 'build', 'vue-ssr-server-bundle.json'), refreshRenderer);
