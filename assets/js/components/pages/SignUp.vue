@@ -2,28 +2,34 @@
 	<div class="container">
 		<div id="mini-container" class="text-center mx-auto mt-5">
 			<h1>Create an account</h1>
-			
+
 			<form class="mt-5">
 				<div class="input-group">
 					<span class="input-group-prepend">
-						<span class="fas fa-user input-group-text" />
+						<div class="input-group-text">
+							<span class="fas fa-fw fa-user" />
+						</div>
 					</span>
 					<input v-model="username" type="text" class="form-control" placeholder="Username"
 						autofocus>
 				</div>
 				<div class="input-group">
 					<span class="input-group-prepend">
-						<span class="fas fa-envelope input-group-text" />
+						<div class="input-group-text">
+							<span class="fas fa-fw fa-envelope" />
+						</div>
 					</span>
 					<input v-model="email" type="email" class="form-control" placeholder="Email">
 				</div>
 				<div class="input-group">
 					<span class="input-group-prepend">
-						<span class="fas fa-key input-group-text" />
+						<div class="input-group-text">
+							<span class="fas fa-fw fa-key" />
+						</div>
 					</span>
 					<input v-model="password" type="password" class="form-control" placeholder="Password">
 				</div>
-				
+
 				<invisible-recaptcha id="signup-btn" :validate="submit" :callback="signup" :disabled="loading || created"
 					class="btn btn-primary mt-4 w-100" type="submit"
 					sitekey="6Lf3UygUAAAAAMq-bXV5Q6eVzeHD-edRvYbF20bU">
@@ -33,11 +39,11 @@
 					Sign up with GitHub
 				</router-link>
 			</form>
-			
+
 			<p class="mt-5">
 				Existing user? <router-link :to="{name: 'signin'}">Sign in here</router-link><br>
 			</p>
-			
+
 			<loader v-if="loading" class="mt-5"/>
 			<div v-if="error" class="alert alert-danger mt-5">{{ error }}</div>
 			<div v-if="message" class="alert alert-success mt-5">{{ message }}</div>

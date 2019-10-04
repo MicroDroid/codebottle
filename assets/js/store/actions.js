@@ -3,7 +3,7 @@ import {apiUrl} from '../helpers';
 
 export default {
 	fetchLanguages: ({commit}) => {
-		axios.get(apiUrl('/languages'))
+		return axios.get(apiUrl('/languages'))
 			.then(response => {
 				commit(types.STORE_LANGUAGES, response.data);
 			}).catch(error => {
@@ -12,7 +12,7 @@ export default {
 	},
 
 	fetchCategories: ({commit}) => {
-		axios.get(apiUrl('/categories'))
+		return axios.get(apiUrl('/categories'))
 			.then(response => {
 				commit(types.STORE_CATEGORIES, response.data);
 			}).catch(error => {

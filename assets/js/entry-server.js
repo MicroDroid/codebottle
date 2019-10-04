@@ -6,7 +6,7 @@ export default context => {
 		protocol: context.protocol + ':',
 		hostname: context.hostname,
 	};
-	
+
 	root.serverRendering = true;
 	root.apiHost = context.apiHost;
 

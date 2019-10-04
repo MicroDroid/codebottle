@@ -6,30 +6,34 @@
 			<form class="mt-5" @submit.prevent="login">
 				<div class="input-group">
 					<span class="input-group-prepend">
-						<span class="fas fa-user input-group-text"/>
+						<span class="input-group-text">
+							<span class="fas fa-fw fa-user"/>
+						</span>
 					</span>
 					<input ref="usernameInput" v-model="username" type="text" class="form-control"
 						placeholder="Username" name="username">
 				</div>
 				<div class="input-group">
 					<span class="input-group-prepend">
-						<span class="fas fa-key input-group-text" />
+						<span class="input-group-text">
+							<span class="fas fa-fw fa-key" />
+						</span>
 					</span>
 					<input v-model="password" type="password" class="form-control" placeholder="Password"
 						name="password">
 				</div>
-				
+
 				<button :disabled="loading" class="btn btn-primary signin-btn mt-3 w-100" type="submit">Sign in</button>
 				<router-link :to="{name: 'github-signin', params: {oldRoute}}" class="btn btn-default github-signin-btn mt-2 w-100" tag="button">
 					Sign in with GitHub
 				</router-link>
 			</form>
-			
+
 			<p class="mt-5">
 				New user? <router-link :to="{name: 'signup'}">Register now</router-link> <br>
 				Or, forgot your password? <router-link :to="{name: 'forgot-password'}">No problem</router-link>
 			</p>
-			
+
 			<loader v-if="loading" class="mt-5"/>
 			<div v-if="error" class="alert alert-danger mt-5">{{ error }}</div>
 		</div>

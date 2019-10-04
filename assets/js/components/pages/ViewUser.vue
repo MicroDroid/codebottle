@@ -76,7 +76,13 @@
 			<button slot="footer" class="btn btn-primary" @click="submitFlag">Send</button>
 		</modal>
 
-		<snippets-deck v-if="user.snippets" :snippets="user.snippets" class="mt-5" />
+		<template v-if="user.snippets">
+			<h3 class="font-weight-bold mt-5">
+				Snippets
+			</h3>
+
+			<snippets-board :snippets="user.snippets" class="mt-3" />
+		</template>
 	</div>
 </template>
 
@@ -85,13 +91,13 @@
 	import {apiUrl, getAbsoluteUrl, extractError} from '../../helpers';
 	import Modal from '../bootstrap/Modal';
 	import Loader from '../Loader';
-	import SnippetsDeck from '../SnippetsDeck';
+	import SnippetsBoard from '../SnippetsBoard';
 
 	export default {
 		components: {
 			'modal': Modal,
 			'loader': Loader,
-			'snippets-deck': SnippetsDeck,
+			'snippets-board': SnippetsBoard,
 		},
 
 		data: () => ({
@@ -157,7 +163,7 @@
 						store.dispatch('toasts/addToast', {
 							content: extractError(e),
 							duration: 3000,
-						});			
+						});
 				});
 			}).catch(e => {
 				store.dispatch('toasts/addToast', {

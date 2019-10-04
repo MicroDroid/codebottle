@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
-		<div v-if="snippet" class="row" itemscope itemtype="http://schema.org/SoftwareSourceCode">
-			<div class="col-12 col-sm-auto mb-4">
+		<div class="row snippet-details">
+			<div class="col-auto">
 				<div class="text-center voting-buttons">
 					<span :class="{voted: snippet.currentVote && snippet.currentVote == 1}"
 						class="fas fa-chevron-up clickable" @click="vote(1)" />
@@ -11,20 +11,9 @@
 					<span :class="{voted: snippet.currentVote && snippet.currentVote == -1}"
 						class="fas fa-chevron-down clickable" @click="vote(-1)" />
 				</div>
-				<div class="action-bar mt-4">
-					<button v-clipboard="computedCode" class="btn btn-info btn-sm" @click="showCopiedToast">
-						<span class="far fa-copy" /> Copy
-					</button>
-					<router-link v-if="currentUsername === snippet.username" :to="{name: 'edit-snippet', params: {id: snippet.id}}"
-						tag="button" class="btn btn-warning btn-sm">
-						<span class="far fa-pencil" /> Edit
-					</router-link>
-					<button v-if="currentUsername === snippet.username" class="btn btn-danger btn-sm" @click="deleteSnippet">
-						<span class="far fa-trash" /> Delete
-					</button>
-				</div>
 			</div>
-			<div class="col-12 col-sm snippet-data-container">
+
+			<div class="col">
 				<h2 itemprop="about">
 					{{ snippet.title }}
 					<a href="javascript:undefined" class="flag-btn" @click.prevent="flag">
@@ -67,12 +56,31 @@
 						<span itemprop="dateModified">{{ moment(snippet.updatedAt).fromNow() }}</span>
 					</span>
 				</div>
-				<pre><code :style="{'tab-size': preferences.indentationSize}" :class="hljsLanguageById(snippet.language.id)" itemprop="text" class="p-3">{{ computedCode }}</code></pre>
-				<div v-if="snippet.description" class="card description">
-					<div class="card-body">
-						<div class="card-text" itemprop="description" v-html="marked(snippet.description, {sanitize: true})" />
-					</div>
+
+
+				<div class="action-bar mt-3">
+					<button v-clipboard="computedCode" class="btn btn-info btn-sm" @click="showCopiedToast">
+						<span class="far fa-copy" /> Copy
+					</button>
+					<router-link v-if="currentUsername === snippet.username" :to="{name: 'edit-snippet', params: {id: snippet.id}}"
+						tag="button" class="btn btn-warning btn-sm">
+						<span class="far fa-pencil" /> Edit
+					</router-link>
+					<button v-if="currentUsername === snippet.username" class="btn btn-danger btn-sm" @click="deleteSnippet">
+						<span class="far fa-trash" /> Delete
+					</button>
 				</div>
+			</div>
+		</div>
+
+		<pre><code :style="{'tab-size': preferences.indentationSize}"
+			:class="hljsLanguageById(snippet.language.id)"
+			itemprop="text"
+			class="p-3 mt-4">{{ computedCode }}</code></pre>
+
+		<div v-if="snippet.description" class="card description">
+			<div class="card-body">
+				<div class="card-text" itemprop="description" v-html="marked(snippet.description, {sanitize: true})" />
 			</div>
 		</div>
 
@@ -114,7 +122,7 @@
 				preferences: 'auth/preferences',
 				snippetById: 'snippets/getById',
 			}),
-			
+
 			...mapState({
 				currentUsername: state => state.users.self.username,
 			}),
@@ -129,7 +137,7 @@
 				return this.snippet.code;
 			},
 		},
-		
+
 		mounted: function() {
 			highlightCode();
 		},
@@ -153,7 +161,7 @@
 					.then(() => {
 						this.$store.commit(`snippets/${UPDATE_SNIPPET_CURRENT_VOTE}`, {
 							id: this.snippet.id,
-							vote 
+							vote
 						});
 					}).catch(error => {
 						this.$store.dispatch('toasts/addToast', {
@@ -197,7 +205,7 @@
 						this.$store.dispatch('toasts/addToast', {
 							content: extractError(e),
 							duration: 4000
-						});	
+						});
 				});
 			},
 
@@ -274,19 +282,15 @@
 	}
 
 	.action-bar button {
-		margin-bottom: 4px;
+		margin-right: 0.5rem;
 		border-radius: 1px;
 		min-width: 90px;
-		width: 100%;
-		display: block;
+		display: inline-block;
 	}
 
 	.voting-buttons > span {
 		display: block;
 		font-size: 2.5rem;
-	}
-
-	.snippet-data-container {
-		min-width: 0; // No idea why I have to put this for columns to work
+		line-height: 1;
 	}
 </style>

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top d-xs-none d-sm-none d-md-block d-lg-block d-xl-block navbar-expand-md navbar-expand-lg navbar-expand-xl">
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top d-none d-sm-none d-md-block d-lg-block d-xl-block navbar-expand-md navbar-expand-lg navbar-expand-xl">
 			<div class="container">
 				<router-link :to="{name: 'discover'}" class="navbar-brand">
 					<img :src="staticUrl('/images/bottle_square.png')" alt="CB" height="34" title="CodeBottle">
@@ -11,7 +11,7 @@
 				</form>
 
 				<ul class="nav navbar-nav ml-3 mr-auto">
-					<router-link :to="{name: 'discover'}" tag="li" class="nav-item">
+					<router-link :to="{name: 'discover'}" tag="li" class="nav-item" exact>
 						<a class="nav-link">Discover</a>
 					</router-link>
 					<router-link :to="{name: 'create'}" tag="li" class="nav-item">
@@ -36,7 +36,7 @@
 			</div>
 		</nav>
 
-		<nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top mobile-navbar d-xs-block d-sm-block d-md-none d-lg-none d-xl-none">
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top mobile-navbar d-block d-sm-block d-md-none d-lg-none d-xl-none">
 			<div>
 				<div class="row">
 					<div class="col-auto">
@@ -159,5 +159,9 @@
 
 	form {
 		margin-bottom: 0;
+	}
+
+	.active {
+		font-weight: 700;
 	}
 </style>
