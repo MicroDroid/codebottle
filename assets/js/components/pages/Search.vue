@@ -40,8 +40,8 @@
 </template>
 
 <script type="text/javascript">
-	import {shorten, extractError, cookGetParameters, apiUrl, staticUrl} from '../../helpers';
-	import {mapState} from 'vuex';
+	import {shorten, extractError, staticUrl} from '../../helpers';
+	import {mapState, mapGetters} from 'vuex';
 	import Dropdown from '../bootstrap/Dropdown';
 	import summarize from 'summarize-markdown';
 	import debounce from 'lodash.debounce';
@@ -50,14 +50,13 @@
 		components: {
 			'dropdown': Dropdown,
 		},
-		
-		data: function () {
+
+		data() {
 			return {
 				loading: false,
 				error: false,
 				keywords: '',
-				language: -1,
-				results: {},
+				language: null,
 				axiosSource: null,
 				searchDebounce: null,
 			};
@@ -68,24 +67,43 @@
 				'languages',
 			]),
 
-			languageOptions: function() {
+			...mapGetters('snippets', {
+				getResults: 'getSearchResults',
+			}),
+
+			results() {
+				return this.getResults({
+					keywords: this.keywords,
+					language: this.language,
+				});
+			},
+
+			languageOptions() {
 				return [
-					{id: -1, name: 'All languages'},
+					{id: null, name: 'All languages'},
 					...this.languages,
 				];
 			},
 		},
 
 		watch: {
-			$route: function() {
+			$route() {
 				if (this.$route.query.q) {
 					this.keywords = this.$route.query.q;
 					this.search();
-					this.$refs.searchbox.focus();					
+					this.$refs.searchbox.focus();
 				}
 			},
 
-			keywords: function() {
+			keywords() {
+				if (this.searchDebounce)
+					this.searchDebounce.cancel();
+
+				this.searchDebounce = debounce(this.search, 250);
+				this.searchDebounce();
+			},
+
+			language() {
 				if (this.searchDebounce)
 					this.searchDebounce.cancel();
 
@@ -94,25 +112,22 @@
 			}
 		},
 
-		mounted: function() {
+		mounted() {
 			this.keywords = this.$route.query.q ? this.$route.query.q : '';
 			this.$refs.searchbox.focus();
 		},
 
 		methods: {
-			onLanguage: function(language) {
+			onLanguage(language) {
 				this.language = language.id;
 			},
 
-			search: function() {
-				this.$router.replace({name: 'search', query: {q: this.keywords}});
+			search() {
+				if (this.$route.query.q !== this.keywords)
+					this.$router.replace({name: 'search', query: {q: this.keywords}});
+
 				this.error = false;
 				this.loading = true;
-
-				var params = {keywords: this.keywords};
-
-				if (this.language !== -1)
-					params.language = this.language;
 
 				if (this.axiosSource)
 					this.axiosSource.cancel();
@@ -120,16 +135,15 @@
 				const CancelToken = axios.CancelToken;
 				this.axiosSource = CancelToken.source();
 
-				axios.get(apiUrl('/snippets?' + cookGetParameters(params)), {
-					cancelToken: this.axiosSource.token,
-				}).then(response => {
+				this.$store.dispatch('snippets/search', {
+					keywords: this.keywords,
+					language: this.language,
+				}).then(() => {
 					this.loading = false;
-					this.results = response.data;
 				}).catch(error => {
 					if (axios.isCancel(error)) {
 						// Do nothing, I guess.
 					} else {
-						this.results = [];
 						this.loading = false;
 						this.error = extractError(error);
 					}
@@ -139,7 +153,7 @@
 			shorten, staticUrl, summarize
 		},
 
-		meta: function() {
+		meta() {
 			return {
 				title: `'${this.keywords || this.$route.query.q}'`,
 				meta: [

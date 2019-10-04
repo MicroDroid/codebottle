@@ -36,12 +36,24 @@
 			New Snippets
 		</h3>
 
-		<SnippetsBoard :snippets="snippets" class="mt-3" />
+		<SnippetsBoard :snippets="snippets._new" class="mt-3" />
+
+		<h3 class="font-weight-bold mt-5">
+			Discord things
+		</h3>
+
+		<SnippetsBoard :snippets="snippets.discord" class="mt-3" />
+
+		<h3 class="font-weight-bold mt-5">
+			Dart is evolving!
+		</h3>
+
+		<SnippetsBoard :snippets="snippets.dart" class="mt-3" />
 	</div>
 </template>
 
 <script type="text/javascript">
-	import {mapState} from 'vuex';
+	import {mapGetters} from 'vuex';
 	import {staticUrl} from '../../helpers';
 	import SnippetsBoard from '../SnippetsBoard';
 
@@ -51,7 +63,11 @@
 		},
 
 		asyncData: function(store) {
-			return store.dispatch('snippets/fetchNew');
+			return Promise.all([
+				store.dispatch('snippets/fetchNew'),
+				store.dispatch('snippets/search', {language: null, keywords: 'Discord'}),
+				store.dispatch('snippets/search', {language: null, keywords: 'Dart'}),
+			]);
 		},
 
 		data: function () {
@@ -61,9 +77,20 @@
 			};
 		},
 
-		computed: mapState({
-			snippets: state => state.snippets.new,
-		}),
+		computed: {
+			...mapGetters('snippets', {
+				newSnippets: 'getNew',
+				getResults: 'getSearchResults',
+			}),
+
+			snippets() {
+				return {
+					_new: this.newSnippets.slice(0, 10),
+					discord: this.getResults({keywords: 'Discord', language: null}).slice(0, 10),
+					dart: this.getResults({keywords: 'Dart', language: null}).slice(0, 10),
+				};
+			},
+		},
 
 		methods: {
 			staticUrl,

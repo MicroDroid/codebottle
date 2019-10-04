@@ -54,6 +54,7 @@
 
 	.table {
 		border-collapse: collapse;
+		table-layout: fixed;
 
 		> a {
 			border-bottom: 1px solid #252525;
@@ -66,8 +67,18 @@
 				padding-top: 0.5rem;
 				padding-bottom: 0.5rem;
 
+				&:not(:first-child) {
+					width: 128px;
+				}
+
 				&:first-child {
 					padding-left: 0;
+					padding-right: 1rem;
+
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					width: auto;
 				}
 
 				&:last-child {
