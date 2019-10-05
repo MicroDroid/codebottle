@@ -4,7 +4,7 @@
 			{{ selected && selective ? selected : label }} <span class="caret" />
 		</a>
 		<div :class="{show: open}" class="dropdown-menu">
-			<a v-for="item in options" :key="item[keyField]" class="dropdown-item clickable" @mousedown="select(item)">
+			<a v-for="item in options" :key="item[keyField]" class="dropdown-item clickable" @click="select(item)">
 				{{ item[labelField] }}
 			</a>
 		</div>
