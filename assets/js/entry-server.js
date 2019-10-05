@@ -8,6 +8,7 @@ export default context => {
 	};
 
 	root.serverRendering = true;
+	root.apiProtocol = context.apiProtocol;
 	root.apiHost = context.apiHost;
 
 	return new Promise(async (resolve, reject) => {

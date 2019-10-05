@@ -51,7 +51,7 @@ export function updateUrlParameter(param, value) {
 }
 
 export function apiUrl(url) {
-	return root.location.protocol
+	return root.serverRendering ? root.apiProtocol : root.location.protocol
 		+ '//'
 		+ (root.serverRendering ? root.apiHost : ('api.' + root.location.hostname))
 		+ '/'
