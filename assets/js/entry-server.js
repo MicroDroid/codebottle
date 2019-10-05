@@ -3,7 +3,7 @@ import {createApp} from './app';
 
 export default context => {
 	root.location = {
-		protocol: context.protocol + ':',
+		protocol: context.protocol,
 		hostname: context.hostname,
 	};
 
