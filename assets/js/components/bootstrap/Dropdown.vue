@@ -1,6 +1,6 @@
 <template>
-	<div :class="{show: open}" class="dropdown">
-		<button type="button" class="btn btn-primary dropdown-toggle" @click="toggle" @blur="hide">
+	<div ref="dropdown" :class="{show: open}" class="dropdown">
+		<button type="button" class="btn btn-primary dropdown-toggle" @click="toggle">
 			{{ selected && selective ? selected : label }}
 			<span class="caret" />
 		</button>
@@ -47,13 +47,22 @@
 			selected: false,
 		}),
 
+		mounted() {
+			document.addEventListener('click', this.handleDocumentClick);
+		},
+
+		beforeDestroy() {
+			document.removeEventListener('click', this.handleDocumentClick);
+		},
+
 		methods: {
 			toggle() {
 				this.open = !this.open;
 			},
 
-			hide() {
-				this.open = false;
+			handleDocumentClick(e) {
+				if (!this.$refs.dropdown.contains(e.target))
+					this.open = false;
 			},
 
 			select: function (item) {

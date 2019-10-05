@@ -1,5 +1,5 @@
 <template>
-	<li :class="{show: open}" class="dropdown clickable nav-link" @click="toggle" @blur="hide">
+	<li ref="dropdown" :class="{show: open}" class="dropdown clickable nav-link" @click="toggle">
 		<a class="dropdown-toggle">
 			{{ selected && selective ? selected : label }} <span class="caret" />
 		</a>
@@ -45,13 +45,22 @@
 			selected: false,
 		}),
 
+		mounted() {
+			document.addEventListener('click', this.handleDocumentClick);
+		},
+
+		beforeDestroy() {
+			document.removeEventListener('click', this.handleDocumentClick);
+		},
+
 		methods: {
-			toggle() {
-				this.open = !this.open;
+			handleDocumentClick(e) {
+				if (!this.$refs.dropdown.contains(e.target))
+					this.open = false;
 			},
 
-			hide() {
-				this.open = false;
+			toggle() {
+				this.open = !this.open;
 			},
 
 			select: function (item) {
