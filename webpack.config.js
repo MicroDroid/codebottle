@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const os = require('os');
+
 const config = require('./config');
 const path = require('path');
 const webpack = require('webpack');
@@ -15,7 +17,7 @@ const hljsLanguages = ['java', 'cpp', 'cs', 'css', 'python', 'php', 'javascript'
 	'sql', 'html', 'xml', 'yaml', 'crystal', 'dart'];
 
 const isProd = process.env.NODE_ENV === 'production';
-	
+
 const common = {
 	mode: isProd ? 'production' : 'development',
 	module: {
@@ -112,7 +114,7 @@ module.exports = [
 				minimizer: [
 					new TerserWebpackPlugin({
 						cache: true,
-						parallel: true,
+						parallel: os.cpus().length,
 						sourceMap: false,
 					}),
 					new OptimizeCssAssetsPlugin(),
@@ -148,7 +150,7 @@ module.exports = [
 				/highlight\.js\/lib\/languages$/,
 				new RegExp(`^./(${hljsLanguages.join('|')})$`)
 			),
-			
+
 			new VueSSRServerPlugin(),
 		],
 
