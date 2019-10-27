@@ -16,7 +16,7 @@ module.exports = {
 		timezone: process.env.TIMEZONE || '+00:00',
 
 		operatorsAliases: false,
-		
+
 		define: {
 			underscored: true,
 			underscoredAll: true,
@@ -24,6 +24,13 @@ module.exports = {
 
 		logging: process.env.LOGGING ? (process.env.LOGGING === 'true' ? console.log : null)
 			: process.env.NODE_ENV === 'development' ? console.log : null,
+
+		pool: {
+			min: 1, // min connections
+			max: 10, // max connections
+			acquire: 20000, // connection timeout
+			idle: 60000, // Idle connections are dmuped after this
+		},
 	},
 
 	logging: {
