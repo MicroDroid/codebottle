@@ -27,7 +27,7 @@
 			title: '404',
 			titleTemplate: '%s / CodeBottle',
 			meta: [
-				{property: 'og:image', content: '/images/bottle_square.png', vmid: 'image'},
+				{ property: 'og:image', content: '/images/bottle_square.png', vmid: 'image' },
 			],
 		},
 
@@ -45,6 +45,8 @@
 		bottom: -406px;
 
 		transition: bottom 0.3s ease;
+
+		z-index: 10000;
 
 		&:hover {
 			bottom: 0px;
