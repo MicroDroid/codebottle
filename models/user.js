@@ -29,6 +29,11 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING(191),
 			allowNull: true
 		},
+		admin: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			defaultValue: false
+		},
 		banned: {
 			type: DataTypes.BOOLEAN,
 			allowNull: false,
@@ -81,6 +86,7 @@ module.exports = (sequelize, DataTypes) => {
 			bio: user.bio,
 			profileImage: gravatar.url(user.email, {s: 512, d: 'mm', r: 'g'}, true),
 			banned: user.banned,
+			admin: user.admin,
 			createdAt: user.created_at
 		};
 	};

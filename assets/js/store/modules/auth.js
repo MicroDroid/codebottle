@@ -23,10 +23,10 @@ const actions = {
 				expiresIn: response.data.expiresIn * 1000,
 				obtainedAt: Date.now(),
 			};
-			
+
 			document.cookie = `auth=${JSON.stringify(auth)}; path=/`;
 			root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
-			
+
 			commit(types.LOGIN, auth);
 		});
 	},
@@ -55,7 +55,7 @@ const actions = {
 
 				document.cookie = `auth=${JSON.stringify(auth)}; path=/`;
 				root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
-				
+
 				commit(types.LOGIN, auth);
 		});
 	},
@@ -81,7 +81,7 @@ const mutations = {
 		state.preferences = {
 			convertTabsToSpaces: false,
 			indentationSize: 4,
-		}; 
+		};
 	},
 
 	[types.STORE_PREFERENCES] (state, prefs) {
@@ -92,7 +92,7 @@ const mutations = {
 const getters = {
 	isAuthenticated: state => state.accessToken ? ((state.obtainedAt + state.expiresIn > Date.now())
 		? true
-		: false) 
+		: false)
 	: false,
 	preferences: state => state.preferences,
 };

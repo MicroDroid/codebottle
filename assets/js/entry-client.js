@@ -14,7 +14,7 @@ const authCookie = getCookie('auth');
 if (authCookie) {
 	try {
 		const auth = JSON.parse(authCookie);
-		
+
 		if (auth.token && auth.obtainedAt + auth.expiresIn > Date.now()) {
 			store.commit('auth/LOGIN', auth);
 			root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;

@@ -1,11 +1,11 @@
 <template>
-	<span v-if="show" class="toast">
+	<span v-if="show" class="bread">
 		{{ toast.content }}
 	</span>
 </template>
 
 <script type="text/javascript">
-	import {mapGetters} from 'vuex';
+	import { mapGetters } from 'vuex';
 
 	export default {
 		data() {
@@ -16,7 +16,7 @@
 
 		computed: {
 			...mapGetters({
-				toast: 'toasts/firstToast'
+				toast: 'toasts/firstToast',
 			}),
 		},
 
@@ -42,7 +42,8 @@
 </script>
 
 <style scoped>
-	.toast {
+	/* thanks bootstrap */
+	.bread {
 		position: absolute;
 		top: 5vh;
 		left: 50%;
@@ -53,6 +54,6 @@
 		z-index: 10000;
 		box-shadow: 0px 3px 3px rgba(0,0,0,.25);
 		border: 1px solid #e0d050;
-		color: #444;
+		color: #443e0f;
 	}
 </style>

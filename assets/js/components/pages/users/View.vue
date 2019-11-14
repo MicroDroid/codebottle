@@ -88,10 +88,11 @@
 
 <script type="text/javascript">
 	import {mapGetters} from 'vuex';
-	import {apiUrl, getAbsoluteUrl, extractError} from '../../helpers';
-	import Modal from '../bootstrap/Modal';
-	import Loader from '../Loader';
-	import SnippetsBoard from '../SnippetsBoard';
+
+	import {apiUrl, getAbsoluteUrl, extractError} from '../../../helpers';
+	import Modal from '../../bootstrap/Modal';
+	import Loader from '../../Loader';
+	import SnippetsBoard from '../../SnippetsBoard';
 
 	export default {
 		components: {

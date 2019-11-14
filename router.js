@@ -7,6 +7,7 @@ const jwt = require('koa-jwt');
 const auth = require('./middleware/auth');
 const throttle = require('./middleware/throttle');
 const denyBanned = require('./middleware/deny-banned');
+const adminOnly = require('./middleware/admin-only');
 
 const CategoryController = require('./controllers/category');
 const LanguageController = require('./controllers/language');
@@ -31,7 +32,9 @@ module.exports = () => {
 	router.get('/categories/:id', throttle(), CategoryController.get);
 
 	router.get('/languages', throttle(), LanguageController.getAll);
+	router.post('/languages', throttle(), protect(), adminOnly, LanguageController.create);
 	router.get('/languages/:id', throttle(), LanguageController.get);
+	router.delete('/languages/:id', throttle(), protect(), adminOnly, LanguageController.delete);
 
 	router.get('/snippets', throttle(), SnippetController.index);
 	router.get('/snippets/:id', throttle(), protect(true), SnippetController.get);

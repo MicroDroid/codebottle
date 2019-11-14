@@ -1,5 +1,5 @@
 import root from 'window-or-global';
-import {createApp} from './app';
+import { createApp } from './app';
 
 export default context => {
 	root.location = {
@@ -12,13 +12,13 @@ export default context => {
 	root.apiHost = context.apiHost;
 
 	return new Promise(async (resolve, reject) => {
-		const {app, router, store} = createApp();
+		const { app, router, store } = createApp();
 
 		// Used to parallelize requests
 		const requests = [];
 
-		requests.push(store.dispatch('fetchLanguages'));
-		requests.push(store.dispatch('fetchCategories'));
+		requests.push(store.dispatch('languages/fetchAll'));
+		requests.push(store.dispatch('categories/fetchAll'));
 
 		if (context.authCookie) {
 			try {
@@ -27,19 +27,21 @@ export default context => {
 					root.document = {cookie: `auth=${context.authCookie}`};
 					store.commit('auth/LOGIN', auth);
 					root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
-					requests.push(store.dispatch('auth/fetchPreferences'));
 					requests.push(store.dispatch('users/fetchSelf'));
+					requests.push(store.dispatch('auth/fetchPreferences'));
 				}
 			} catch (e) {
 				console.log('Invalid auth cookie passed to SSR');
 			}
 		}
 
-		const {url} = context;
-		const {fullPath} = router.resolve(url).route;
+		await Promise.all(requests);
 
-		if (fullPath !== url)
-			return reject({url: fullPath});
+		const { url } = context;
+		// const { fullPath } = router.resolve(url).route;
+
+		// if (fullPath !== url)
+		// 	return reject({ url: fullPath });
 
 		router.push(url);
 
@@ -51,13 +53,12 @@ export default context => {
 			if (!matchedComponents.length)
 				return reject({ code: 404 });
 
-			Promise.all([
-				...requests,
-				...matchedComponents.map(({ asyncData }) => asyncData && asyncData(
+			Promise.all(
+				matchedComponents.map(({ asyncData }) => asyncData && asyncData(
 					store,
 					router.currentRoute
-				))
-			]).then(() => {
+				)
+			)).then(() => {
 				context.state = store.state;
 				resolve(app);
 			}).catch(reject);

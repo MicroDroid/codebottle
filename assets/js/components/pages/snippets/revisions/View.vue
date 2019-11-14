@@ -19,7 +19,7 @@
 			</div>
 			<div>
 				<span class="text-muted">
-					{{ moment(revision.createdAt).fromNow() }} / 
+					{{ moment(revision.createdAt).fromNow() }} /
 					{{ $route.params.id-1 === 0 ? 'Original' : diffLines(revisions[$route.params.id-1].code, revision.code).map(o => o.value).join('').split('\n').length + ' changes' }}
 				</span>
 			</div>
@@ -49,7 +49,8 @@
 	import striptags from 'striptags';
 	import {diffLines} from 'diff';
 	import {mapGetters} from 'vuex';
-	import {getAbsoluteUrl, extractError, hljsLanguageById, highlightCode} from '../../helpers';
+
+	import {getAbsoluteUrl, extractError, hljsLanguageById, highlightCode} from '../../../../helpers';
 
 	export default {
 		computed: {
@@ -94,13 +95,13 @@
 						store.dispatch('toasts/addToast', {
 							content: extractError(e),
 							duration: 3000
-						});	
-					});	
+						});
+					});
 				}).catch(e => {
 					store.dispatch('toasts/addToast', {
 						content: extractError(e),
 						duration: 3000
-					});			
+					});
 				});
 			}).catch(e => {
 				store.dispatch('toasts/addToast', {

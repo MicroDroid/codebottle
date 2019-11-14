@@ -1,24 +1,47 @@
 import Discover from './components/pages/Discover';
 import Search from './components/pages/Search';
-import Support from './components/pages/Support';
-import ViewSnippet from './components/pages/ViewSnippet';
-import EditSnippet from './components/pages/EditSnippet';
-import SnippetRevisions from './components/pages/SnippetRevisions';
-import ViewSnippetRevision from './components/pages/ViewSnippetRevision';
-import ViewUser from './components/pages/ViewUser';
-import CreateSnippet from './components/pages/CreateSnippet';
-import EditProfile from './components/pages/EditProfile';
 import Embedding from './components/pages/Embedding';
-import SignIn from './components/pages/SignIn';
-import GitHubSignIn from './components/pages/GitHubSignIn';
-import SignUp from './components/pages/SignUp';
-import VerifyEmail from './components/pages/VerifyEmail';
-import ForgotPassword from './components/pages/ForgotPassword';
-import ChangePassword from './components/pages/ChangePassword';
-import PrivacyPolicy from './components/pages/PrivacyPolicy';
-import Preferences from './components/pages/settings/Preferences';
-import ApiDocs from './components/pages/api/Template';
+
+import Support from './components/pages/Support';
 import NotFound from './components/pages/NotFound';
+import PrivacyPolicy from './components/pages/PrivacyPolicy';
+
+// Auth
+
+import SignIn from './components/pages/auth/SignIn';
+import GitHubSignIn from './components/pages/auth/GitHubSignIn';
+import SignUp from './components/pages/auth/SignUp';
+import VerifyEmail from './components/pages/auth/VerifyEmail';
+import ForgotPassword from './components/pages/auth/ForgotPassword';
+import ChangePassword from './components/pages/auth/ChangePassword';
+
+// Snippets
+
+import CreateSnippet from './components/pages/snippets/Create';
+import ViewSnippet from './components/pages/snippets/View';
+import EditSnippet from './components/pages/snippets/Edit';
+
+// Snippet revisions
+
+import SnippetRevisions from './components/pages/snippets/revisions/Index';
+import ViewSnippetRevision from './components/pages/snippets/revisions/View';
+
+// Users
+
+import ViewUser from './components/pages/users/View';
+import EditProfile from './components/pages/users/EditProfile';
+
+// Languages
+
+import Languages from './components/pages/languages/Index';
+
+// Settings
+
+import Preferences from './components/pages/settings/Preferences';
+
+// API docs
+
+import ApiDocs from './components/pages/api/Template';
 
 export default [
 	{
@@ -58,14 +81,22 @@ export default [
 		path: '/create',
 		component: CreateSnippet,
 		meta: {
-			requiresAuth: true
+			requiresAuth: true,
 		},
 	}, {
 		name: 'edit-profile',
 		path: '/edit-profile',
 		component: EditProfile,
 		meta: {
-			requiresAuth: true
+			requiresAuth: true,
+		},
+	},  {
+		name: 'languages',
+		path: '/languages',
+		component: Languages,
+		meta: {
+			requiresAuth: true,
+			requiresAdmin: true,
 		},
 	}, {
 		name: 'embedding',
@@ -100,7 +131,7 @@ export default [
 		path: '/privacy-policy',
 		component: PrivacyPolicy,
 	},
-	
+
 
 	{
 		name: 'settings.preferences',
@@ -172,27 +203,32 @@ export default [
 	// Error handling
 
 	{
-		name: 'NotFound',
-		path: '*',
+		name: 'not-found',
+		path: '/404',
 		component: NotFound,
 	},
 
 	// Redirects
-	
+
 	{
 		path: '/settings',
 		redirect: {
-			name: 'settings.preferences'
-		}
+			name: 'settings.preferences',
+		},
 	}, {
 		path: '/api',
 		redirect: {
-			name: 'api.getting-started'
-		}
+			name: 'api.getting-started',
+		},
 	}, {
 		path: '/api/docs',
 		redirect: {
-			name: 'api.getting-started'
-		}
+			name: 'api.getting-started',
+		},
+	}, {
+		path: '*',
+		redirect: {
+			name: 'not-found',
+		},
 	},
 ];

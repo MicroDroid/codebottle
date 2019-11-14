@@ -41,7 +41,7 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError} from '../../helpers';
+	import {extractError} from '../../../helpers';
 
 	export default {
 		data: () => ({

@@ -10,6 +10,7 @@ const ejs = require('ejs');
 const helpers = require('./helpers');
 const models = require('./models');
 const handler = require('./middleware/handler');
+const errorHandler = require('./utils/error-handler');
 const loggerMiddleware = require('./middleware/logger')('res');
 const logger = require('./utils/logger');
 
@@ -21,7 +22,7 @@ const koaCompress = require('koa-compress');
 const LRU = require('lru-cache');
 const debounce = require('lodash.debounce');
 
-const {createBundleRenderer} = require('vue-server-renderer');
+const { createBundleRenderer } = require('vue-server-renderer');
 const isProd = process.env.NODE_ENV === 'production';
 
 function createAppRenderer() {
@@ -31,14 +32,14 @@ function createAppRenderer() {
 	return createBundleRenderer(ssrManifest, {
 		runInNewContext: false,
 		template,
-		cache: LRU({
+		cache: new LRU({
 			max: 100,
 			maxAge: 1000,
 		}),
 	});
 }
 
-async function renderApp(ctx) {
+function renderApp(ctx) {
 	const context = {
 		url: ctx.url.endsWith('?') ? ctx.url.slice(0, -1) : ctx.url, // It crashes otherwise
 		hostname: ctx.hostname,
@@ -49,7 +50,7 @@ async function renderApp(ctx) {
 		authCookie: ctx.cookies.get('auth'),
 	};
 
-	return await renderer.renderToStream(context);
+	return renderer.renderToString(context);
 }
 
 let renderer = createAppRenderer();
@@ -62,17 +63,16 @@ const refreshRenderer = debounce(() => {
 fs.watch(path.join(__dirname, 'build', 'index.html'), refreshRenderer);
 fs.watch(path.join(__dirname, 'build', 'vue-ssr-server-bundle.json'), refreshRenderer);
 
-app.use(handler);
 app.use(koaCompress({
 	threshold: 2048,
-	flush: require('zlib').Z_SYNC_FLUSH
+	flush: require('zlib').Z_SYNC_FLUSH,
 }));
 
 app.use(koaConditional());
 app.use(koaEtag());
 
+app.use(handler);
 app.use(loggerMiddleware);
-
 
 // I am too lazy to split this code anywhere
 app.use(async (ctx, next) => {
@@ -106,9 +106,9 @@ app.use(async (ctx, next) => {
 
 			let where = {
 				[Sequelize.Op.or]: [
-					{title:       {[Sequelize.Op.like]: '%' + ctx.query.keywords + '%'}},
-					{description: {[Sequelize.Op.like]: '%' + ctx.query.keywords + '%'}},
-				]
+					{ title:       { [Sequelize.Op.like]: '%' + ctx.query.keywords + '%' } },
+					{ description: { [Sequelize.Op.like]: '%' + ctx.query.keywords + '%' } },
+				],
 			};
 
 			if (ctx.query.language)
@@ -128,7 +128,7 @@ app.use(async (ctx, next) => {
 			ctx.body = 'Not found';
 		} else {
 			ctx.type = 'text/html; charset=utf-8';
-			ctx.body = await renderApp(ctx);
+			ctx.body = renderApp(ctx);
 		}
 	} else if (ctx.path === '/index.ejs' || ctx.path === '/sitemap.ejs') {
 		ctx.status = 404;
@@ -141,12 +141,25 @@ app.use(koaStatic('./public', {
 }));
 
 app.use(async (ctx, next) => {
-	await next();
 	const isStatic = ctx.origin.startsWith('http://static.') || ctx.origin.startsWith('https://static.');
 	if (ctx.status === 404 && !isStatic) {
 		ctx.type = 'text/html; charset=utf-8';
-		ctx.body = await renderApp(ctx);
+
+		try {
+			if (ctx.path === '/404')
+				ctx.status = 404;
+
+			ctx.body = await renderApp(ctx);
+		} catch (error) {
+			if (error.status === 404) {
+				ctx.redirect('/404');
+			} else {
+				ctx.body = 'Internal Server Error';
+			}
+		}
 	}
 });
+
+app.on('error', errorHandler);
 
 module.exports = app;

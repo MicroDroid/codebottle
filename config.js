@@ -15,8 +15,6 @@ module.exports = {
 
 		timezone: process.env.TIMEZONE || '+00:00',
 
-		operatorsAliases: false,
-
 		define: {
 			underscored: true,
 			underscoredAll: true,

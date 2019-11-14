@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const headersCheck = require('./middleware/headers-check');
 const handler = require('./middleware/handler');
+const errorHandler = require('./utils/error-handler');
 const logger = require('./middleware/logger')('api');
 const cors = require('koa2-cors');
 const koaBody = require('koa-body');
@@ -17,7 +18,7 @@ app
 	.use(logger)
 	.use(koaCompress({
 		threshold: 2048,
-		flush: require('zlib').Z_SYNC_FLUSH
+		flush: require('zlib').Z_SYNC_FLUSH,
 	}))
 	.use(koaConditional())
 	.use(koaEtag())
@@ -30,5 +31,7 @@ app
 	.use(koaBody())
 	.use(router.routes())
 	.use(router.allowedMethods());
+
+app.on('error', errorHandler);
 
 module.exports = app;

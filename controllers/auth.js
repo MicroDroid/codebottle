@@ -38,7 +38,7 @@ module.exports = {
 			throw new ApiError(401, 'Verify your email first');
 
 		const priv = cryptojs.SHA256(JSON.stringify(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated']))).toString();
-		
+
 		ctx.body = {
 			token: jwt.sign({
 				id: user.id,
@@ -133,7 +133,7 @@ IP address: ${ctx.ip}
 Client: ${ctx.get('User-Agent')}
 Time: ${(new Date()).toISOString()}
 `,
-					html: 
+					html:
 					`<div>
 						<p>
 							Hi,
@@ -164,7 +164,7 @@ Time: ${(new Date()).toISOString()}
 		}
 
 		ctx.status = 204;
-		
+
 		return next();
 	},
 
@@ -252,7 +252,7 @@ Time: ${(new Date()).toISOString()}
 			// 			where: {username},
 			// 			attributes: ['id', 'username', 'email'],
 			// 		});
-					
+
 			// 		if (existingUser && username.length >= 16)
 			// 			throw new Error('Username exists')
 			// 		if (existingUser && username.length < 16)

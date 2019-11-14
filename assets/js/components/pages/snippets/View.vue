@@ -4,12 +4,12 @@
 			<div class="col-auto">
 				<div class="text-center voting-buttons">
 					<span :class="{voted: snippet.currentVote && snippet.currentVote == 1}"
-						class="fas fa-chevron-up clickable" @click="vote(1)" />
+						class="fas fa-chevron-up clickable" @click="vote(1)"/>
 					<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 						<span itemprop="ratingValue">{{ snippet.votes }}</span>
 					</span>
 					<span :class="{voted: snippet.currentVote && snippet.currentVote == -1}"
-						class="fas fa-chevron-down clickable" @click="vote(-1)" />
+						class="fas fa-chevron-down clickable" @click="vote(-1)"/>
 				</div>
 			</div>
 
@@ -62,11 +62,14 @@
 					<button v-clipboard="computedCode" class="btn btn-info btn-sm" @click="showCopiedToast">
 						<span class="far fa-copy" /> Copy
 					</button>
-					<router-link v-if="currentUsername === snippet.username" :to="{name: 'edit-snippet', params: {id: snippet.id}}"
-						tag="button" class="btn btn-warning btn-sm">
+					<router-link v-if="currentUsername === snippet.username"
+						:to="{name: 'edit-snippet', params: {id: snippet.id}}"
+						tag="button" class="btn btn-warning btn-sm"
+					>
 						<span class="far fa-pencil" /> Edit
 					</router-link>
-					<button v-if="currentUsername === snippet.username" class="btn btn-danger btn-sm" @click="deleteSnippet">
+					<button v-if="currentUsername === snippet.username" class="btn btn-danger btn-sm"
+						@click="deleteSnippet">
 						<span class="far fa-trash" /> Delete
 					</button>
 				</div>
@@ -84,32 +87,41 @@
 			</div>
 		</div>
 
-		<modal :show="flagModalShown" title="Why are you flagging this snippet?" @on-dismiss="onFlagDismiss">
+		<modal :show="flagModalShown" title="Why are you flagging this snippet?"
+			@on-dismiss="onFlagDismiss">
 			<textarea ref="flagDescription" class="form-control flag-description w-100" placeholder="Explain briefly." />
-			<button slot="footer" class="btn btn-primary" @click="submitFlag">Send</button>
+			<button slot="footer" class="btn btn-primary" @click="submitFlag">
+				Send
+			</button>
 		</modal>
 
-		<modal :show="deleteModalShown" title="Are you sure you want to delete this snippet?" @on-dismiss="onDeleteDismiss">
+		<modal :show="deleteModalShown" title="Are you sure you want to delete this snippet?"
+			@on-dismiss="onDeleteDismiss">
 			<p>This is irreversible.</p>
-			<button slot="footer" class="btn btn-primary" @click="confirmDeletion">Delete it</button>
-			<button slot="footer" class="btn btn-primary" @click="onDeleteDismiss">Cancel</button>
+			<button slot="footer" class="btn btn-primary" @click="confirmDeletion">
+				Delete it
+			</button>
+			<button slot="footer" class="btn btn-primary" @click="onDeleteDismiss">
+				Cancel
+			</button>
 		</modal>
 	</div>
 </template>
 
 <script type="text/javascript">
 	import striptags from 'striptags';
-	import {mapGetters, mapState} from 'vuex';
-	import {apiUrl, getAbsoluteUrl, extractError, hljsLanguageById, highlightCode} from '../../helpers';
-	import Modal from '../bootstrap/Modal';
-	import {UPDATE_SNIPPET_CURRENT_VOTE} from '../../store/mutation-types';
+	import { mapGetters, mapState } from 'vuex';
+
+	import { apiUrl, getAbsoluteUrl, extractError, hljsLanguageById, highlightCode } from '../../../helpers';
+	import Modal from '../../bootstrap/Modal';
+	import { UPDATE_SNIPPET_CURRENT_VOTE } from '../../../store/mutation-types';
 
 	export default {
 		components: {
 			Modal,
 		},
 
-		data: function() {
+		data() {
 			return {
 				flagModalShown: false,
 				deleteModalShown: false,
@@ -127,18 +139,18 @@
 				currentUsername: state => state.users.self.username,
 			}),
 
-			snippet: function() {
+			snippet() {
 				return this.snippetById(this.$route.params.id);
 			},
 
-			computedCode: function() {
+			computedCode() {
 				if (this.preferences.convertTabsToSpaces)
 					return this.snippet.code.replace(/\t/g, Array(this.preferences.indentationSize + 1).join(' '));
 				return this.snippet.code;
 			},
 		},
 
-		mounted: function() {
+		mounted() {
 			highlightCode();
 		},
 
@@ -146,34 +158,34 @@
 			showCopiedToast() {
 				this.$store.dispatch('toasts/addToast', {
 					content: 'Copied!',
-					duration: 1500
+					duration: 1500,
 				});
 			},
 
-			vote: function(vote) {
+			vote(vote) {
 				if (!this.isAuthenticated)
-					return this.$router.push({name: 'signin'});
+					return this.$router.push({ name: 'signin' });
 
 				if (vote === this.snippet.currentVote)
 					vote = 0;
 
-				axios.post(apiUrl('/snippets/' + this.$route.params.id + '/vote'), {vote})
+				axios.post(apiUrl('/snippets/' + this.$route.params.id + '/vote'), { vote })
 					.then(() => {
 						this.$store.commit(`snippets/${UPDATE_SNIPPET_CURRENT_VOTE}`, {
 							id: this.snippet.id,
-							vote
+							vote,
 						});
 					}).catch(error => {
 						this.$store.dispatch('toasts/addToast', {
 							content: extractError(error),
-							duration: 4000
+							duration: 4000,
 						});
-				});
+					});
 			},
 
 			flag: function() {
 				if (!this.isAuthenticated)
-					return this.$router.push({name: 'signin'});
+					return this.$router.push({ name: 'signin' });
 
 				this.flagModalShown = true;
 				setTimeout(() => { // I have no idea what else could I have done to focus it before it has rendered
@@ -198,15 +210,15 @@
 					.then(() => {
 						this.$store.dispatch('toasts/addToast', {
 							content: 'Deleted!',
-							duration: 4000
+							duration: 4000,
 						});
-						this.$router.push({name: 'discover'});
+						this.$router.push({ name: 'discover' });
 					}).catch(e => {
 						this.$store.dispatch('toasts/addToast', {
 							content: extractError(e),
-							duration: 4000
+							duration: 4000,
 						});
-				});
+					});
 			},
 
 			submitFlag: function() {
@@ -214,7 +226,7 @@
 				this.flagModalShown = false;
 				this.$store.dispatch('toasts/addToast', {
 					content: 'Sending..',
-					duration: 30000
+					duration: 30000,
 				});
 
 				axios.post(apiUrl('/snippets/' + this.$route.params.id + '/flag'), {
@@ -222,12 +234,12 @@
 				}).then(() => {
 					this.$store.dispatch('toasts/addToast', {
 						content: 'Sent!',
-						duration: 2000
+						duration: 2000,
 					});
 				}).catch(error => {
 					this.$store.dispatch('toasts/addToast', {
 						content: extractError(error),
-						duration: 3000
+						duration: 3000,
 					});
 				});
 			},
@@ -238,25 +250,31 @@
 		},
 
 		asyncData: function(store, route) {
-			return store.dispatch('snippets/fetch', route.params.id);
+			return store.dispatch('snippets/fetch', route.params.id)
+				.catch(error => {
+					if (error.response && error.response.status === 404)
+						throw { status: 404 };
+					else
+						throw error;
+				});
 		},
 
 		meta: function() {
 			const description = striptags(marked(this.snippet
 				? (this.snippet.description ? this.snippet.description : 'No description provided')
-			: 'Description loading..', {sanitize: true}), '<pre>');
+				: 'Description loading..', { sanitize: true }), '<pre>');
 			return {
 				title: this.snippet
 					? this.snippet.language.name + ' - ' + this.snippet.title
 					: 'View snippet',
 				meta: [
-					{name: 'description', content: description ? description : 'No description provided.'},
-					{property: 'og:description', content: description ? description : 'No description provided.'},
-					{property: 'og:title', content: this.snippet
+					{ name: 'description', content: description ? description : 'No description provided.' },
+					{ property: 'og:description', content: description ? description : 'No description provided.' },
+					{ property: 'og:title', content: this.snippet
 						? this.snippet.language.name + ' - ' + this.snippet.title
-						: 'View snippet'},
-					{property: 'og:url', content: getAbsoluteUrl(this.$route.path)},
-				]
+						: 'View snippet' },
+					{ property: 'og:url', content: getAbsoluteUrl(this.$route.path) },
+				],
 			};
 		},
 	};

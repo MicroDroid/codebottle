@@ -47,9 +47,9 @@
 		},
 
 		computed: {
-			...mapState([
-				'languages',
-			]),
+			...mapState('languages', {
+				languages: state => state.languages,
+			}),
 
 			languageOptions: function() {
 				return [

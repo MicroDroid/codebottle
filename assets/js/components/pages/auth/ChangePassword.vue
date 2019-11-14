@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="mini-container text-center mx-auto mt-5">
 			<h1>Change password</h1>
-			
+
 			<form class="mt-5" @submit.prevent="changePassword">
 				<div class="input-group">
 					<div class="input-group-prepend">
@@ -11,10 +11,10 @@
 					<input ref="passwordInput" v-model="password" type="password" class="form-control"
 						placeholder="New password" name="password" required>
 				</div>
-				
+
 				<button :disabled="loading" class="btn btn-primary w-100 mt-4" type="submit">Submit</button>
 			</form>
-			
+
 			<loader v-if="loading" class="mt-5"/>
 			<div v-if="error" class="alert alert-danger mt-5">{{ error }}</div>
 		</div>
@@ -22,7 +22,7 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError, apiUrl} from '../../helpers';
+	import {extractError, apiUrl} from '../../../helpers';
 
 	export default {
 		data: () => ({

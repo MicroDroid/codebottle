@@ -5,8 +5,8 @@
 </template>
 
 <script type="text/javascript">
-	import {apiUrl, extractError} from '../../helpers';
-	
+	import {apiUrl, extractError} from '../../../helpers';
+
 	export default {
 		data() {
 			return {

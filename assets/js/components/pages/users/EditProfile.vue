@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="col-12 col-md-7">
 			<h1>Edit profile</h1>
-			
+
 			<form class="mt-4" @submit.prevent="save">
 				<div class="form-group">
 					<label for="username">Username</label>
@@ -32,7 +32,7 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError, apiUrl} from '../../helpers';
+	import {extractError, apiUrl} from '../../../helpers';
 
 	export default {
 		data: function() {

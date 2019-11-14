@@ -5,7 +5,7 @@
 </template>
 
 <script type="text/javascript">
-	import {extractError, findGetParameter, genRandomString, cookGetParameters} from '../../helpers';
+	import {extractError, findGetParameter, genRandomString, cookGetParameters} from '../../../helpers';
 
 	export default {
 		meta: {
@@ -54,7 +54,7 @@
 				const state = genRandomString(24);
 				localStorage.setItem('github_oauth_state', btoa(state));
 				localStorage.setItem('signin_old_route', JSON.stringify(this.$route.params.oldRoute));
-				
+
 				window.location = 'http://github.com/login/oauth/authorize?' + cookGetParameters({
 					client_id: process.env.OAUTH_GITHUB_CLIENT_ID,
 					redirect_uri: process.env.OAUTH_GITHUB_REDIRECT_URI,

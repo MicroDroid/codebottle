@@ -1,8 +1,12 @@
 import Vuex from 'vuex';
+
 import auth from './modules/auth';
 import snippets from './modules/snippets';
 import users from './modules/users';
 import toasts from './modules/toasts';
+import languages from './modules/languages';
+import categories from './modules/categories';
+
 import actions from './actions';
 import mutations from './mutations';
 import * as getters from './getters';
@@ -14,16 +18,14 @@ export function createStore() {
 		actions,
 		mutations,
 		getters,
+
 		modules: {
 			snippets,
 			users,
 			auth,
 			toasts,
-		},
-
-		state: {
-			languages: [],
-			categories: [],
+			languages,
+			categories,
 		},
 
 		strict: debugging

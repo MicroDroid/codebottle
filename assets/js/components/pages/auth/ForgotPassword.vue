@@ -18,11 +18,11 @@
 					Submit
 				</invisible-recaptcha>
 			</form>
-			
+
 			<p class="mt-5">
 				Did you remember it? <router-link :to="{name: 'signin'}">Try signing in then</router-link>
 			</p>
-			
+
 			<loader v-if="loading" class=" mt-5"/>
 			<div v-if="error" class="alert alert-danger mt-5">{{ error }}</div>
 			<div v-if="sent" class="alert alert-success mt-5">A password reset email has been sent, if the email is valid</div>
@@ -32,7 +32,7 @@
 
 <script type="text/javascript">
 	import InvisibleRecaptcha from 'vue-invisible-recaptcha';
-	import {extractError, apiUrl} from '../../helpers';
+	import {extractError, apiUrl} from '../../../helpers';
 
 	export default {
 		components: {

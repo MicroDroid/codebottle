@@ -1,21 +1,21 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu:400,500,700&display=swap');
 
 @import 'variables';
-@import '~bootstrap/scss/bootstrap';
+@import 'bootstrap/scss/bootstrap';
 
-@import '~@fortawesome/fontawesome-pro/scss/fontawesome';
-@import '~@fortawesome/fontawesome-pro/scss/light';
-@import '~@fortawesome/fontawesome-pro/scss/regular';
-@import '~@fortawesome/fontawesome-pro/scss/solid';
-@import '~@fortawesome/fontawesome-pro/scss/brands';
+@import '@fortawesome/fontawesome-pro/scss/fontawesome';
+@import '@fortawesome/fontawesome-pro/scss/light';
+@import '@fortawesome/fontawesome-pro/scss/regular';
+@import '@fortawesome/fontawesome-pro/scss/solid';
+@import '@fortawesome/fontawesome-pro/scss/brands';
+@import '~highlight.js/styles/railscasts.css';
 
 @import './pace';
 @import './loader';
-@import '~highlight.js/styles/railscasts.css';
 @import './mobile-navbar';
 @import './alerts';
 @import './footer';
-@import 'helpers';
+@import './helpers';
 
 html, body, #app {
 	height: 100%;

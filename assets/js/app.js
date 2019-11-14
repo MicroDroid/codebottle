@@ -60,6 +60,9 @@ export function createApp() {
 				content: 'Sign in first',
 				duration: 2000
 			});
+		} else if (to.meta.requiresAdmin && !store.state.users.self.admin) {
+			// pretend nothing happened lol
+			next({name: 'not-found'});
 		} else if ((to.name === 'signin' || to.name === 'signup') && store.getters['auth/isAuthenticated']) {
 			next({name: 'discover'});
 			store.dispatch('toasts/addToast', {

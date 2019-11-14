@@ -1,9 +1,9 @@
 <template>
 	<div class="container">
 		<div class="col-12 col-md-11 col-lg-9">
-			<h1>Edit snippet</h1>
-			
-			<form class="mt-4" @submit.prevent="edit">
+			<h1>Create snippet</h1>
+
+			<form class="mt-4" @submit.prevent="create">
 				<div class="form-group">
 					<label for="title">Title</label>
 					<input id="title" v-model="title" type="text" class="form-control"
@@ -22,31 +22,23 @@
 						placeholder="Be brief" />
 				</div>
 
-				<div class="form-group">
-					<label for="explanation">Explanation</label>
-					<input id="explanation" v-model="explanation" type="text" class="form-control"
-						placeholder="Why did you make this edit?">
-				</div>
-
 				<div class="row">
 					<div class="col">
 						<div class="form-group">
 							<label>Language</label>
-							<dropdown :label="(languages.filter(l => l.id === language)[0] ? languages.filter(l => l.id === language)[0].name : 'Language')"
-								:options="languages" :selective="true" key-field="id" label-field="name"
-								@on-select="onLanguage" @j="k" />
+							<dropdown :selective="true" :options="languages" key-field="id" label-field="name"
+								label="Language" @on-select="onLanguage" />
 						</div>
 					</div>
 					<div class="col">
 						<div class="form-group">
 							<label>Snippet type</label>
-							<dropdown :label="(categories.filter(c => c.id === category)[0] ? categories.filter(l => l.id === category)[0].name : 'Type')"
-								:options="categories" :selective="true" key-field="id" label-field="name"
-								@on-select="onCategory" />
+							<dropdown :options="categories" :selective="true" key-field="id" label-field="name"
+								label="Type" @on-select="onCategory" />
 						</div>
 					</div>
 				</div>
-				<button :disabled="loading" class="btn btn-primary" type="submit">Save</button>
+				<button :disabled="loading" class="btn btn-primary" type="submit">Create</button>
 			</form>
 
 			<loader v-if="loading" class="mt-5" />
@@ -56,9 +48,10 @@
 </template>
 
 <script type="text/javascript">
-	import Dropdown from '../bootstrap/Dropdown';
-	import {mapState, mapGetters} from 'vuex';
-	import {extractError, apiUrl} from '../../helpers';
+	import {mapState} from 'vuex';
+
+	import Dropdown from '../../bootstrap/Dropdown';
+	import {extractError, apiUrl} from '../../../helpers';
 
 	export default {
 		components: {
@@ -72,33 +65,19 @@
 				code: '',
 				language: -1,
 				category: -1,
-				explanation: '',
 				loading: false,
 				error: false,
 			};
 		},
 
 		computed: {
-			...mapState([
-				'languages',
-				'categories',
-			]),
-			...mapGetters({
-				snippetById: 'snippets/getById',
+			...mapState('languages', {
+				languages: state => state.languages,
 			}),
-		},
 
-		asyncData: function(store, route) {
-			return store.dispatch('snippets/fetch', route.params.id);
-		},
-
-		mounted: function() {
-			const snippet = this.snippetById(this.$route.params.id);
-			this.title = snippet.title;
-			this.description = snippet.description;
-			this.code = snippet.code;
-			this.language = snippet.language.id;
-			this.category = snippet.category.id;
+			...mapState('categories', {
+				categories: state => state.categories,
+			}),
 		},
 
 		methods: {
@@ -110,17 +89,16 @@
 				this.category = item.id;
 			},
 
-			edit: function() {
+			create: function() {
 				this.error = false;
 				this.loading = true;
 
-				axios.put(apiUrl('/snippets/' + this.$route.params.id), {
+				axios.post(apiUrl('/snippets'), {
 					title: this.title,
 					description: this.description,
 					code: this.code,
 					language: this.language,
 					category: this.category,
-					explanation: this.explanation,
 				}).then(response => {
 					this.$router.push({name: 'view-snippet', params: {
 						id: response.data.id

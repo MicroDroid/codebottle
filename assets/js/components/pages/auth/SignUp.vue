@@ -53,7 +53,7 @@
 
 <script type="text/javascript">
 	import InvisibleRecaptcha from 'vue-invisible-recaptcha';
-	import {extractError, apiUrl} from '../../helpers';
+	import {extractError, apiUrl} from '../../../helpers';
 
 	export default {
 		components: {

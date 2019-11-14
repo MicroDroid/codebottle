@@ -5,28 +5,21 @@ module.exports = {
         "commonjs": true,
         "es6": true
     },
+
     "extends": [
-        "eslint:recommended",
         "plugin:vue/recommended"
     ],
+
     "parserOptions": {
-		"ecmaVersion": 2018,
         "sourceType": "module"
     },
+
     "rules": {
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ],
+        "require-atomic-updates": ["error"],
+
+        // We're using vue/*-indent instead
         "indent": "off",
+
         "vue/script-indent": [
             "error",
             "tab",
@@ -42,16 +35,15 @@ module.exports = {
 				"max": 4,
 				"allowFirstLine": true,
 			}
-		}]
+		}],
+
+        "vue/order-in-components": "off"
     },
+
     "globals": {
-        "axios": false,
-        "marked": false,
-        "moment": false,
-        "$": false,
-        "hljs": false,
-        "process": false,
-        "_": false,
+        "axios": "readonly",
+        "process": "readonly",
+        "$": false
     }
 };
 

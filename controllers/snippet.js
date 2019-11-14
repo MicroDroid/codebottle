@@ -81,7 +81,7 @@ const controller = {
 			throw new ApiError(422, 'Invalid language selected');
 		else if (!category)
 			throw new ApiError(422, 'Invalid category selected');
-		
+
 		if (title != snippet.title
 			|| code != snippet.code
 			|| description != snippet.description
@@ -128,7 +128,7 @@ const controller = {
 			if (!language)
 				throw new ApiError(422, 'Invalid language');
 		}
-		
+
 		let where = {
 			[Sequelize.Op.or]: [
 				{title:       {[Sequelize.Op.like]: '%' + ctx.query.keywords + '%'}},
@@ -216,10 +216,10 @@ const controller = {
 
 		if (!snippet)
 			throw new ApiError(404, 'Not found');
-		
+
 		if (ctx.state.user.id !== snippet.user.id)
 			throw new ApiError(403, 'You can only delete your snippets');
-		
+
 		snippet.destroy();
 
 		ctx.status = 204;

@@ -2,7 +2,7 @@
 module.exports = {
 	up: (queryInterface, Sequelize) => {
 		const TIMESTAMP = require('sequelize-mysql-timestamp')(queryInterface.sequelize);
-		
+
 		return queryInterface.createTable('users', {
 			id: {
 				allowNull: false,

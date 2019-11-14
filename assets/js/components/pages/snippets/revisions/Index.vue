@@ -4,7 +4,7 @@
 		<h5 class="text-muted">{{ snippet.revisions_count }} revisions</h5>
 		<ul class="list-group mt-3">
 			<router-link v-for="(revision, index) in revisions"
-				:to="index+1 === revisions.length 
+				:to="index+1 === revisions.length
 					? {name: 'view-snippet', params: {id: snippet.id}}
 				: {name: 'view-snippet-revision', params: {snippet_id: snippet.id, id: index+1}}"
 				:key="revision.createdAt" tag="li"
@@ -28,7 +28,7 @@
 				<div>
 					<span v-if="index+1 === revisions.length" class="badge badge-primary mr-2">Current</span>
 					<span class="text-muted">
-						{{ moment(revision.createdAt).fromNow() }} / 
+						{{ moment(revision.createdAt).fromNow() }} /
 						{{ index === 0 ? 'Original' : diffLines(revisions[index-1].code, revision.code).map(o => o.value).join('').split('\n').length + ' changes' }}
 					</span>
 				</div>
@@ -41,7 +41,8 @@
 	import striptags from 'striptags';
 	import {diffLines} from 'diff';
 	import {mapGetters} from 'vuex';
-	import {getAbsoluteUrl, extractError} from '../../helpers';
+
+	import {getAbsoluteUrl, extractError} from '../../../../helpers';
 
 	export default {
 		computed: {
@@ -69,7 +70,7 @@
 				return store.dispatch('snippets/fetchRevisions', route.params.snippet_id).then(revisions => {
 					const authors = [];
 					const promises = [];
-					
+
 					for (let revision of revisions) {
 						if (authors.indexOf(revision.author) === -1) {
 							promises.push(store.dispatch('users/fetch', revision.author));
@@ -82,7 +83,7 @@
 					store.dispatch('toasts/addToast', {
 						content: extractError(e),
 						duration: 3000
-					});			
+					});
 				});
 			}).catch(e => {
 				store.dispatch('toasts/addToast', {
