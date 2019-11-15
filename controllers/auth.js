@@ -183,10 +183,10 @@ Time: ${(new Date()).toISOString()}
 				tokenHost: 'https://github.com',
 				tokenPath: '/login/oauth/access_token',
 				authorizePath: '/login/oauth/authorize',
-			}
+			},
 		});
 
-		const token = await githubOAuth.authorizationCode.getToken({code})
+		const token = await githubOAuth.authorizationCode.getToken({ code })
 			.catch(() => {
 				throw new ApiError(422, 'Error retrieving GitHub data');
 			});
@@ -204,25 +204,25 @@ Time: ${(new Date()).toISOString()}
 		}
 
 		let socialConnection = 	await models.socialConnection.findOne({
-			where: {service: 'github',  service_id: githubUser.id},
+			where: { service: 'github',  service_id: githubUser.id },
 			attributes: ['id', 'user_id', 'service', 'service_id', 'token', 'token_type'],
+			include: [models.user],
 		});
 
 		if (socialConnection) {
-			const user = await socialConnection.getUser();
 			socialConnection.token = token.access_token;
 			await socialConnection.save();
 
-			const priv = cryptojs.SHA256(JSON.stringify(_.pick(user, ['id', 'username', 'email', 'password', 'banned', 'activated']))).toString();
+			const priv = cryptojs.SHA256(JSON.stringify(_.pick(socialConnection.user, ['id', 'username', 'email', 'password', 'banned', 'activated']))).toString();
 
 			ctx.body = {
-				username: user.username,
+				username: socialConnection.user.username,
 				expiresIn: 84600 * 90,
 				tokenType: 'Bearer',
 				token: jwt.sign({
-					id: user.id,
+					id: socialConnection.user.id,
 					priv,
-				}, config.jwt.secret, {expiresIn: '90d'}),
+				}, config.jwt.secret, { expiresIn: '90d' }),
 			};
 		} else {
 			const usernameRegex = /[^0-9A-Za-z]/g;
@@ -233,9 +233,9 @@ Time: ${(new Date()).toISOString()}
 			let existingUser = await models.user.findOne({
 				where: {
 					[Sequelize.Op.or]: [
-						{username},
-						{email: githubUser.email},
-					]
+						{ username },
+						{ email: githubUser.email },
+					],
 				},
 				attributes: ['id', 'username', 'email', 'password', 'banned', 'activated'],
 			});
@@ -291,7 +291,7 @@ Time: ${(new Date()).toISOString()}
 				token: jwt.sign({
 					id: user.id,
 					priv,
-				}, config.jwt.secret, {expiresIn: '90d'}),
+				}, config.jwt.secret, { expiresIn: '90d' }),
 			};
 		}
 
