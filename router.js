@@ -11,6 +11,7 @@ const adminOnly = require('./middleware/admin-only');
 
 const CategoryController = require('./controllers/category');
 const LanguageController = require('./controllers/language');
+const TagController = require('./controllers/tag');
 const UserController = require('./controllers/user');
 const AuthController = require('./controllers/auth');
 const SnippetController = require('./controllers/snippet');
@@ -21,7 +22,7 @@ const UserPreferencesController = require('./controllers/user-preferences');
 
 const protect = (passthrough = false) => {
 	return compose([
-		jwt({secret: config.jwt.secret, passthrough}),
+		jwt({ secret: config.jwt.secret, passthrough }),
 		auth(passthrough),
 		denyBanned,
 	]);
@@ -36,8 +37,16 @@ module.exports = () => {
 	router.get('/languages/:id', throttle(), LanguageController.get);
 	router.delete('/languages/:id', throttle(), protect(), adminOnly, LanguageController.delete);
 
+	router.get('/tags', throttle(), TagController.getAll);
+	router.get('/tags/:id', throttle(), TagController.get);
+	router.post('/tags', throttle(), protect(), adminOnly, TagController.create);
+	router.delete('/tags/:id', throttle(), protect(), adminOnly, TagController.delete);
+
+	router.get('/tags/:id/snippets', throttle(), TagController.getSnippets);
+
 	router.get('/snippets', throttle(), SnippetController.index);
 	router.get('/snippets/:id', throttle(), protect(true), SnippetController.get);
+	router.put('/snippets/:id/tags', throttle(), protect(), SnippetController.setTags);
 	router.get('/snippets/:snippet_id/revisions', throttle(), SnippetRevisionController.getAll);
 	router.get('/snippets/:snippet_id/revisions/:id', throttle(), SnippetRevisionController.get);
 

@@ -115,6 +115,7 @@
 					{ label: 'Edit profile', key: 'edit-profile' },
 					{ label: 'Settings', key: 'settings' },
 					...(this.isAuthenticated && this.admin ? [{ label: 'Manage languages', key: 'manage-languages' }] : []),
+					...(this.isAuthenticated && this.admin ? [{ label: 'Manage tags', key: 'manage-tags' }] : []),
 					{ label: 'Sign out', key: 'sign-out' },
 				];
 			},
@@ -149,6 +150,9 @@
 					break;
 				case 'manage-languages':
 					this.$router.push({ name: 'languages' });
+					break;
+				case 'manage-tags':
+					this.$router.push({ name: 'tags' });
 					break;
 				case 'sign-out':
 					this.$store.dispatch('auth/logout');

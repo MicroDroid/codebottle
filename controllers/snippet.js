@@ -14,8 +14,15 @@ const controller = {
 
 	get: async (ctx, next) => {
 		const snippet = await models.snippet.findOne({
-			where: {'public_id': ctx.params.id},
-			include: [models.language, models.category, models.vote, models.user, models.snippetRevision]
+			where: { public_id: ctx.params.id },
+			include: [
+				models.language,
+				models.category,
+				models.vote,
+				models.user,
+				models.snippetRevision,
+				models.tag,
+			],
 		});
 
 		if (!snippet)
@@ -44,10 +51,53 @@ const controller = {
 		return next();
 	},
 
+	async setTags(ctx, next) {
+		const snippet = await models.snippet.findOne({
+			where: { public_id: ctx.params.id },
+			include: [
+				models.tag,
+			],
+		});
+
+		const tagIds = Array.isArray(ctx.request.body.tags)
+			? ctx.request.body.tags
+			: [ctx.request.body.tags];
+
+		if (!snippet)
+			throw new ApiError(404, 'Not found');
+
+		if (ctx.state.user.id !== snippet.user_id)
+			throw new ApiError(403, 'Access denied');
+
+		if (!tagIds)
+			throw new ApiError(422, 'Tags field is required');
+
+		const tags = await models.tag.findAll({
+			where: {
+				id: { [Sequelize.Op.in]: tagIds },
+			},
+		});
+
+		// Missing tags?
+		if (tags.length !== tagIds.length)
+			throw new ApiError(422, 'Invalid tags');
+
+		snippet.setTags(tags);
+
+		ctx.status = 204;
+	},
+
 	edit: async (ctx, next) => {
 		const snippet = await models.snippet.findOne({
 			where: { 'public_id': ctx.params.id },
-			include: [models.user, models.language, models.category, models.snippetRevision, models.vote]
+			include: [
+				models.user,
+				models.language,
+				models.category,
+				models.snippetRevision,
+				models.vote,
+				models.tag,
+			],
 		});
 
 		if (!snippet)
@@ -124,16 +174,16 @@ const controller = {
 			throw new ApiError(422, 'Keywords too short');
 
 		if (ctx.query.language) {
-			const language = await models.language.findOne({where: {id: ctx.query.language}});
+			const language = await models.language.findOne({ where: { id: ctx.query.language } });
 			if (!language)
 				throw new ApiError(422, 'Invalid language');
 		}
 
 		let where = {
 			[Sequelize.Op.or]: [
-				{title:       {[Sequelize.Op.like]: '%' + ctx.query.keywords + '%'}},
-				{description: {[Sequelize.Op.like]: '%' + ctx.query.keywords + '%'}},
-			]
+				{ title:       { [Sequelize.Op.like]: '%' + ctx.query.keywords + '%' } },
+				{ description: { [Sequelize.Op.like]: '%' + ctx.query.keywords + '%' } },
+			],
 		};
 
 		if (ctx.query.language)
@@ -142,7 +192,13 @@ const controller = {
 		const snippets = await models.snippet.findAll({
 			where,
 			limit: 10,
-			include: [models.language, models.category, models.vote, models.user]
+			include: [
+				models.language,
+				models.category,
+				models.vote,
+				models.user,
+				models.tag,
+			],
 		});
 
 		ctx.body = snippets.map(s => models.snippet.transform(s));
@@ -156,7 +212,13 @@ const controller = {
 			order: [
 				['created_at', 'DESC'],
 			],
-			include: [models.language, models.category, models.vote, models.user],
+			include: [
+				models.language,
+				models.category,
+				models.vote,
+				models.user,
+				models.tag,
+			],
 		});
 
 		ctx.body = snippets.map(s => models.snippet.transform(s));
@@ -179,11 +241,11 @@ const controller = {
 			throw new ApiError(422, 'Code field is required');
 
 		const language = await models.language.findOne({
-			where: {id: ctx.request.body.language},
+			where: { id: ctx.request.body.language },
 		});
 
 		const category = await models.category.findOne({
-			where: {id: ctx.request.body.category},
+			where: { id: ctx.request.body.category },
 		});
 
 		if (!language)
@@ -200,7 +262,13 @@ const controller = {
 		});
 
 		await snippet.reload({
-			include: [models.language, models.category, models.vote, models.snippetRevision]
+			include: [
+				models.language,
+				models.category,
+				models.vote,
+				models.snippetRevision,
+				models.tag,
+			],
 		});
 
 		ctx.body = models.snippet.transform(snippet, 0);
@@ -211,7 +279,13 @@ const controller = {
 	delete: async (ctx, next) => {
 		const snippet = await models.snippet.findOne({
 			where: { 'public_id': ctx.params.id },
-			include: [models.language, models.category, models.vote, models.user]
+			include: [
+				models.language,
+				models.category,
+				models.vote,
+				models.user,
+				models.tag,
+			],
 		});
 
 		if (!snippet)
@@ -225,7 +299,7 @@ const controller = {
 		ctx.status = 204;
 
 		return next();
-	}
+	},
 };
 
 module.exports = controller;

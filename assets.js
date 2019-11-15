@@ -97,7 +97,7 @@ app.use(async (ctx, next) => {
 			ctx.body = helpers.genBadge('Error', 'Keywords too short', '#f44336');
 		else {
 			if (ctx.query.language) {
-				const language = await models.language.findOne({where: {id: ctx.query.language}});
+				const language = await models.language.findOne({ where: { id: ctx.query.language } });
 				if (!language) {
 					ctx.body = helpers.genBadge('Error', 'Invalid language', '#f44336');
 					return;
@@ -117,7 +117,6 @@ app.use(async (ctx, next) => {
 			const snippetsCount = await models.snippet.count({
 				where,
 				limit: 10,
-				include: [models.language, models.category, models.vote]
 			});
 
 			ctx.body = helpers.genBadge('CodeBottle', `${snippetsCount} snippets`, '#673ab7');
@@ -128,7 +127,7 @@ app.use(async (ctx, next) => {
 			ctx.body = 'Not found';
 		} else {
 			ctx.type = 'text/html; charset=utf-8';
-			ctx.body = renderApp(ctx);
+			ctx.body = await renderApp(ctx);
 		}
 	} else if (ctx.path === '/index.ejs' || ctx.path === '/sitemap.ejs') {
 		ctx.status = 404;

@@ -40,7 +40,17 @@ const common = {
 		{
 			test: /\.scss$/,
 			include: [path.join(__dirname, 'assets', 'js')],
-			use: ['vue-style-loader', 'css-loader', 'sass-loader'],
+			use: [
+				'vue-style-loader',
+				'css-loader',
+				'sass-loader',
+				{
+					loader: 'sass-resources-loader',
+					options: {
+						resources: path.resolve(__dirname, 'assets/scss/_variables.scss'),
+					},
+				},
+			],
 		},
 		// For other SCSS files
 		{

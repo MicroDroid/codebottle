@@ -76,7 +76,7 @@ const helpers = {
 			where: {
 				user_id: id,
 				service: 'github',
-			}
+			},
 		}))[0];
 
 		if (!githubConnection)

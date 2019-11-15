@@ -36,19 +36,15 @@ const validateEmail = email => {
 module.exports = {
 	get: async (ctx, next) => {
 		const user = await models.user.findOne({
-			where: {username: ctx.params.username},
-			attributes: ['username', 'email', 'bio', 'banned', 'created_at'],
-			include: [models.userPreferences]
+			where: { username: ctx.params.username },
+			attributes: ['id', 'username', 'email', 'bio', 'banned', 'created_at'],
+			include: [models.userPreferences],
 		});
 
 		if (!user)
 			throw new ApiError(404, 'Not found');
-		
-		ctx.body = models.user.transform(user, user.userPreferences.private_email == true, await helpers.getGitHubUsername(user.id));
 
-		// No idea why I have to ignore this
-		/* istanbul ignore next */
-		return next();
+		ctx.body = models.user.transform(user, user.userPreferences.private_email == true, await helpers.getGitHubUsername(user.id));
 	},
 
 	getSnippets: async (ctx, next) => {
@@ -62,7 +58,7 @@ module.exports = {
 				}
 			]
 		});
-		
+
 		if (!user)
 			throw new ApiError(404, 'Not found');
 
@@ -79,7 +75,7 @@ module.exports = {
 
 		validateUsername(ctx.request.body.username);
 		validateEmail(ctx.request.body.email);
-		
+
 		if (!ctx.request.body.password)
 			throw new ApiError(422, 'Missing password');
 		if (ctx.request.body.password.length < 6)
@@ -136,7 +132,7 @@ IP address: ${ctx.ip}
 Client: ${ctx.get('User-Agent')}
 Time: ${(new Date()).toISOString()}
 `,
-			html: 
+			html:
 			`<div>
 				<p>
 					Hi,
@@ -265,7 +261,7 @@ IP address: ${ctx.ip}
 Client: ${ctx.get('User-Agent')}
 Time: ${(new Date()).toISOString()}
 `,
-					html: 
+					html:
 						`<div>
 							<p>
 								Hi,

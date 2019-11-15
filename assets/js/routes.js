@@ -35,6 +35,10 @@ import EditProfile from './components/pages/users/EditProfile';
 
 import Languages from './components/pages/languages/Index';
 
+// Tags
+
+import Tags from './components/pages/tags/Index';
+
 // Settings
 
 import Preferences from './components/pages/settings/Preferences';
@@ -94,6 +98,14 @@ export default [
 		name: 'languages',
 		path: '/languages',
 		component: Languages,
+		meta: {
+			requiresAuth: true,
+			requiresAdmin: true,
+		},
+	},   {
+		name: 'tags',
+		path: '/tags',
+		component: Tags,
 		meta: {
 			requiresAuth: true,
 			requiresAdmin: true,

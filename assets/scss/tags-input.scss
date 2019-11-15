@@ -1,0 +1,12 @@
+.tags-input {
+	input,
+	input:hover,
+	input:focus {
+		outline: none;
+		color: $white;
+	}
+
+	+ .typeahead {
+		margin: 0.25rem 0px 0px 0px;
+	}
+}

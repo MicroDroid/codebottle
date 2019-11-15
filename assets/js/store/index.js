@@ -6,6 +6,7 @@ import users from './modules/users';
 import toasts from './modules/toasts';
 import languages from './modules/languages';
 import categories from './modules/categories';
+import tags from './modules/tags';
 
 import actions from './actions';
 import mutations from './mutations';
@@ -26,8 +27,9 @@ export function createStore() {
 			toasts,
 			languages,
 			categories,
+			tags,
 		},
 
-		strict: debugging
+		strict: debugging,
 	});
 }

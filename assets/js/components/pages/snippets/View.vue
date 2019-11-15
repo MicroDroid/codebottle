@@ -76,10 +76,52 @@
 			</div>
 		</div>
 
+		<div class="tags mt-2">
+			<template v-if="!editingTags">
+				<template v-if="snippet.tags.length > 0">
+					<span v-for="tag in snippet.tags"
+						:key="tag.id"
+						class="tag"
+					>
+						{{ tag.name }}
+					</span>
+				</template>
+
+				<a v-if="currentUsername === snippet.username"
+					href="javascript:undefined"
+					:class="{ 'ml-1': snippet.tags.length > 0 }"
+					class="text-muted text-sm"
+					@click="editTags"
+				>
+					{{ snippet.tags.length > 0 ? 'edit tags' : 'add tags' }}
+				</a>
+			</template>
+
+			<div class="row" v-if="editingTags">
+				<div class="col">
+					<tags-input v-model="tags"
+						element-id="tags"
+						:existing-tags="availableTags"
+						:typeahead="true"
+						:typeahead-max-results="10"
+						:typeahead-activation-threshold="0"
+						input-class="form-control"
+						only-existing-tags
+					/>
+				</div>
+
+				<div class="col-auto">
+					<button class="btn btn-primary" @click="saveTags">
+						Save
+					</button>
+				</div>
+			</div>
+		</div>
+
 		<pre><code :style="{'tab-size': preferences.indentationSize}"
 			:class="hljsLanguageById(snippet.language.id)"
 			itemprop="text"
-			class="p-3 mt-4">{{ computedCode }}</code></pre>
+			class="p-3 mt-3">{{ computedCode }}</code></pre>
 
 		<div v-if="snippet.description" class="card description">
 			<div class="card-body">
@@ -111,6 +153,7 @@
 <script type="text/javascript">
 	import striptags from 'striptags';
 	import { mapGetters, mapState } from 'vuex';
+	import TagsInput from '@voerro/vue-tagsinput';
 
 	import { apiUrl, getAbsoluteUrl, extractError, hljsLanguageById, highlightCode } from '../../../helpers';
 	import Modal from '../../bootstrap/Modal';
@@ -119,12 +162,17 @@
 	export default {
 		components: {
 			Modal,
+			TagsInput,
 		},
 
 		data() {
 			return {
 				flagModalShown: false,
 				deleteModalShown: false,
+				tags: [],
+
+				editingTags: false,
+				savingTags: false,
 			};
 		},
 
@@ -133,6 +181,10 @@
 				isAuthenticated: 'auth/isAuthenticated',
 				preferences: 'auth/preferences',
 				snippetById: 'snippets/getById',
+			}),
+
+			...mapState('tags', {
+				availableTags: state => state.tags.reduce((object, tag) => ({...object, [tag.id]: tag.name}), {}),
 			}),
 
 			...mapState({
@@ -244,19 +296,46 @@
 				});
 			},
 
+			editTags() {
+				// honestly no idea
+				this.tags = this.snippet.tags.map(t => t.id).join(',');
+				this.editingTags = true;
+			},
+
+			saveTags() {
+				this.savingTags = true;
+
+				axios.put(apiUrl(`/snippets/${this.$route.params.id}/tags`), {
+					tags: Object.values(this.tags),
+				}).then(() => {
+					return this.$store.dispatch('snippets/fetch', this.$route.params.id);
+				}).then(() => {
+					this.editingTags = false;
+				}).catch(error => {
+					this.$store.dispatch('toasts/addToast', {
+						content: extractError(error),
+						duration: 3000,
+					});
+				}).finally(() => {
+					this.savingTags = false;
+				});
+			},
+
 			marked,
 			moment: moment.utc,
 			hljsLanguageById,
 		},
 
 		asyncData: function(store, route) {
-			return store.dispatch('snippets/fetch', route.params.id)
-				.catch(error => {
-					if (error.response && error.response.status === 404)
-						throw { status: 404 };
-					else
-						throw error;
-				});
+			return Promise.all([
+				store.dispatch('snippets/fetch', route.params.id),
+				store.dispatch('tags/fetchAll'),
+			]).catch(error => {
+				if (error.response && error.response.status === 404)
+					throw { status: 404 };
+				else
+					throw error;
+			});
 		},
 
 		meta: function() {
@@ -310,5 +389,17 @@
 		display: block;
 		font-size: 2.5rem;
 		line-height: 1;
+	}
+
+	.tags {
+		.tag {
+			color: $white;
+			border: 1px dotted rgba($white, 0.7);
+			border-radius: 0.25rem;
+			font-size: 0.75rem;
+			padding: 0.125rem 0.25rem;
+			display: inline-block;
+			margin-right: 0.5rem;
+		}
 	}
 </style>

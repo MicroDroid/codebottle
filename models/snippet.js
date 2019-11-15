@@ -10,41 +10,41 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.INTEGER.UNSIGNED,
 			allowNull: false,
 			primaryKey: true,
-			autoIncrement: true
+			autoIncrement: true,
 		},
 		public_id: {
 			type: DataTypes.STRING(10),
 			allowNull: false,
-			unique: true
+			unique: true,
 		},
 		user_id: {
 			type: DataTypes.INTEGER.UNSIGNED,
-			allowNull: false
+			allowNull: false,
 		},
 		category_id: {
 			type: DataTypes.INTEGER.UNSIGNED,
-			allowNull: false
+			allowNull: false,
 		},
 		language_id: {
 			type: DataTypes.INTEGER.UNSIGNED,
-			allowNull: false
+			allowNull: false,
 		},
 		title: {
 			type: DataTypes.STRING(70),
-			allowNull: false
+			allowNull: false,
 		},
 		code: {
 			type: DataTypes.TEXT,
-			allowNull: false
+			allowNull: false,
 		},
 		description: {
 			type: DataTypes.TEXT,
-			allowNull: true
+			allowNull: true,
 		},
 		views: {
 			type: DataTypes.INTEGER.UNSIGNED,
 			allowNull: false,
-			defaultValue: 0
+			defaultValue: 0,
 		},
 		deleted_at: {
 			type: TIMESTAMP,
@@ -54,12 +54,12 @@ module.exports = (sequelize, DataTypes) => {
 		created_at: {
 			type: TIMESTAMP,
 			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-			allowNull: false
+			allowNull: false,
 		},
 		updated_at: {
 			type: TIMESTAMP,
 			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-			allowNull: false
+			allowNull: false,
 		},
 	}, {
 		paranoid: true,
@@ -69,12 +69,18 @@ module.exports = (sequelize, DataTypes) => {
 		snippet.belongsTo(models.user);
 		snippet.belongsTo(models.language);
 		snippet.belongsTo(models.category);
+
+		snippet.belongsToMany(models.tag, {
+			through: 'snippet_tags',
+			foreignKey: 'snippet_id',
+		});
+
 		snippet.hasMany(models.vote);
 		snippet.hasMany(models.flag, {
 			foreignKey: 'flaggable_id',
 			scope: {
 				flaggable_type: 'snippet',
-			}
+			},
 		});
 		snippet.hasMany(models.snippetRevision);
 	};
@@ -94,9 +100,10 @@ module.exports = (sequelize, DataTypes) => {
 			name: snippet.category.name,
 		},
 		votes: snippet.votes.reduce((p, c) => p + c.vote, 0),
-		...snippet.snippetRevisions && {revisions: snippet.snippetRevisions.length},
-		...snippet.user && {username: snippet.user.username},
-		...typeof(currentVote) !== 'undefined' && {currentVote},
+		...snippet.snippetRevisions && { revisions: snippet.snippetRevisions.length },
+		...snippet.user && { username: snippet.user.username },
+		...typeof(currentVote) !== 'undefined' && { currentVote },
+		...snippet.tags && { tags: snippet.tags.map(sequelize.models.tag.transform) },
 		createdAt: snippet.created_at,
 		updatedAt: snippet.updated_at,
 	});
@@ -112,7 +119,7 @@ module.exports = (sequelize, DataTypes) => {
 			language_id: snippet.language_id,
 		}).catch(e => {
 			Logger.err('Could not create snippet revision after creation!');
-			Logger.err(e);	
+			Logger.err(e);
 		});
 	});
 
