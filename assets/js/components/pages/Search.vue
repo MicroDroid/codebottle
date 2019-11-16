@@ -63,9 +63,9 @@
 		},
 
 		computed: {
-			...mapState([
-				'languages',
-			]),
+			...mapState('languages', {
+				languages: state => state.languages,
+			}),
 
 			...mapGetters('snippets', {
 				getResults: 'getSearchResults',
