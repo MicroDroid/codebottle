@@ -44,10 +44,10 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			defaultValue: false
 		},
-		deleted_at: {
+		created_at: {
 			type: TIMESTAMP,
-			defaultValue: null,
-			allowNull: true,
+			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+			allowNull: false
 		},
 		updated_at: {
 			type: TIMESTAMP,
