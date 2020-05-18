@@ -62,13 +62,13 @@
 					<button v-clipboard="computedCode" class="btn btn-info btn-sm" @click="showCopiedToast">
 						<span class="far fa-copy" /> Copy
 					</button>
-					<router-link v-if="currentUsername === snippet.username"
+					<router-link v-if="self.admin || snippet.username === self.username"
 						:to="{name: 'edit-snippet', params: {id: snippet.id}}"
 						tag="button" class="btn btn-warning btn-sm"
 					>
 						<span class="far fa-pencil" /> Edit
 					</router-link>
-					<button v-if="currentUsername === snippet.username" class="btn btn-danger btn-sm"
+					<button v-if="self.admin || snippet.username === self.username" class="btn btn-danger btn-sm"
 						@click="deleteSnippet">
 						<span class="far fa-trash" /> Delete
 					</button>
@@ -188,7 +188,7 @@
 			}),
 
 			...mapState({
-				currentUsername: state => state.users.self.username,
+				self: state => state.users.self,
 			}),
 
 			snippet() {

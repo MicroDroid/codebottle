@@ -1,6 +1,8 @@
 import * as types from '../mutation-types';
 import root from 'window-or-global';
-import {apiUrl} from '../../helpers';
+import {
+	apiUrl
+} from '../../helpers';
 
 const state = () => ({
 	accessToken: null,
@@ -13,7 +15,9 @@ const state = () => ({
 });
 
 const actions = {
-	login: ({commit}, credentials) => {
+	login: ({
+		commit
+	}, credentials) => {
 		return axios.post(apiUrl('/auth/login'), {
 			username: credentials.username,
 			password: credentials.password,
@@ -24,21 +28,25 @@ const actions = {
 				obtainedAt: Date.now(),
 			};
 
-			document.cookie = `auth=${JSON.stringify(auth)}; path=/`;
+			document.cookie = `auth=${JSON.stringify(auth)}; path=/; SameSite=Lax;`;
 			root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
 
 			commit(types.LOGIN, auth);
 		});
 	},
 
-	fetchPreferences: ({commit}) => {
+	fetchPreferences: ({
+		commit
+	}) => {
 		return axios.get(apiUrl('/self/preferences'))
 			.then(response => {
 				commit(types.STORE_PREFERENCES, response.data);
-		});
+			});
 	},
 
-	githubLogin: ({commit}, payload) => {
+	githubLogin: ({
+		commit
+	}, payload) => {
 		return axios.post(apiUrl('/auth/github'), payload)
 			.then(response => {
 				const auth = {
@@ -53,14 +61,16 @@ const actions = {
 				};
 
 
-				document.cookie = `auth=${JSON.stringify(auth)}; path=/`;
+				document.cookie = `auth=${JSON.stringify(auth)}; path=/; SameSite=Lax;`;
 				root.axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
 
 				commit(types.LOGIN, auth);
-		});
+			});
 	},
 
-	logout: ({commit}) => {
+	logout: ({
+		commit
+	}) => {
 		document.cookie = 'auth=; path=/';
 		delete root.axios.defaults.headers.common['Authorization'];
 		commit(types.LOGOUT);
@@ -68,13 +78,13 @@ const actions = {
 };
 
 const mutations = {
-	[types.LOGIN] (state, payload) {
+	[types.LOGIN](state, payload) {
 		state.accessToken = payload.token;
 		state.expiresIn = payload.expiresIn;
 		state.obtainedAt = payload.obtainedAt ? payload.obtainedAt : Date.now();
 	},
 
-	[types.LOGOUT] (state) {
+	[types.LOGOUT](state) {
 		state.accessToken = null;
 		state.expiresIn = 0;
 		state.obtainedAt = 0;
@@ -84,20 +94,22 @@ const mutations = {
 		};
 	},
 
-	[types.STORE_PREFERENCES] (state, prefs) {
+	[types.STORE_PREFERENCES](state, prefs) {
 		state.preferences = prefs;
 	}
 };
 
 const getters = {
-	isAuthenticated: state => state.accessToken ? ((state.obtainedAt + state.expiresIn > Date.now())
-		? true
-		: false)
-	: false,
+	isAuthenticated: state => state.accessToken ? ((state.obtainedAt + state.expiresIn > Date.now()) ?
+		true :
+		false) : false,
 	preferences: state => state.preferences,
 };
 
 export default {
 	namespaced: true,
-	state, mutations, actions, getters
+	state,
+	mutations,
+	actions,
+	getters
 };

@@ -18,7 +18,9 @@
 @import './helpers';
 @import './tags-input';
 
-html, body, #app {
+html,
+body,
+#app {
 	height: 100%;
 }
 
@@ -66,7 +68,9 @@ hr {
 	width: 100%;
 }
 
-a.nostyle, a.nostyle:hover, a.nostyle:visited {
+a.nostyle,
+a.nostyle:hover,
+a.nostyle:visited {
 	text-decoration: none;
 	color: inherit;
 }

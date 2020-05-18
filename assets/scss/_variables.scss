@@ -7,16 +7,14 @@ $danger-color: #BC2C1A; // pls
 $success-color: #9BC53D;
 $info-color: #009688;
 
-$theme-colors: (
-  primary: $primary-color,
-  secondary: #E9ECEF,
-  success: $success-color,
-  info: $info-color,
-  warning: $warning-color,
-  danger: $danger-color,
-  light: $white,
-  dark: $dark
-);
+$theme-colors: (primary: $primary-color,
+	secondary: #E9ECEF,
+	success: $success-color,
+	info: $info-color,
+	warning: $warning-color,
+	danger: $danger-color,
+	light: $white,
+	dark: $dark);
 
 $body-bg: $dark;
 $body-color: $white;
@@ -50,31 +48,31 @@ $card-border-radius: 1px;
 
 $font-size-base: 0.875rem;
 $font-family-sans-serif: 'Ubuntu',
-	-apple-system,
-	BlinkMacSystemFont,
-	'Segoe UI',
-	Roboto,
-	'Helvetica Neue',
-	Arial,
-	'Noto Sans',
-	sans-serif,
-	'Apple Color Emoji',
-	'Segoe UI Emoji',
-	'Segoe UI Symbol',
-	'Noto Color Emoji';
+-apple-system,
+BlinkMacSystemFont,
+'Segoe UI',
+Roboto,
+'Helvetica Neue',
+Arial,
+'Noto Sans',
+sans-serif,
+'Apple Color Emoji',
+'Segoe UI Emoji',
+'Segoe UI Symbol',
+'Noto Color Emoji';
 
 // ******* alerts.scss *******
-$alert-danger-bg:             #2C2222;
-$alert-danger-text:           #EAA;
-$alert-danger-border:         #2A2020;
+$alert-danger-bg: #2C2222;
+$alert-danger-text: #EAA;
+$alert-danger-border: #2A2020;
 
-$alert-warning-bg:            #2C2C22;
-$alert-warning-text:          #EEA;
-$alert-warning-border:        #2A2A20;
+$alert-warning-bg: #2C2C22;
+$alert-warning-text: #EEA;
+$alert-warning-border: #2A2A20;
 
-$alert-success-bg:            #222C22;
-$alert-success-text:          #AEA;
-$alert-success-border:        #202A20;
+$alert-success-bg: #222C22;
+$alert-success-text: #AEA;
+$alert-success-border: #202A20;
 // ******* alerts.scss *******
 
 $link-color: lighten($primary-color, 15%);

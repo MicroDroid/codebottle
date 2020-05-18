@@ -8,13 +8,14 @@ const controller = {
 	index: async (ctx, next) => {
 		if (ctx.query.keywords || ctx.query.language) {
 			return controller.search(ctx, next);
-		}
-		else return controller.getNew(ctx, next);
+		} else return controller.getNew(ctx, next);
 	},
 
 	get: async (ctx, next) => {
 		const snippet = await models.snippet.findOne({
-			where: { public_id: ctx.params.id },
+			where: {
+				public_id: ctx.params.id
+			},
 			include: [
 				models.language,
 				models.category,
@@ -31,7 +32,9 @@ const controller = {
 		const cacheKey = `snippets:${snippet.id}:view.throttle:${ctx.ip}`;
 
 		if (!(await redis.getAsync(cacheKey))) {
-			snippet.increment('views', {silent: true});
+			snippet.increment('views', {
+				silent: true
+			});
 			snippet.views++; // It doesn't get automatically updated when incrementing
 			await redis.setAsync(cacheKey, 1, 'EX', 3600 * 4);
 		}
@@ -40,7 +43,9 @@ const controller = {
 
 		if (ctx.state.user) {
 			currentVote = await ctx.state.user.getVotes({
-				where: {'snippet_id': snippet.id}
+				where: {
+					'snippet_id': snippet.id
+				}
 			});
 
 			currentVote = currentVote[0] ? currentVote[0].vote : 0;
@@ -53,15 +58,16 @@ const controller = {
 
 	async setTags(ctx, next) {
 		const snippet = await models.snippet.findOne({
-			where: { public_id: ctx.params.id },
+			where: {
+				public_id: ctx.params.id
+			},
 			include: [
 				models.tag,
 			],
 		});
 
-		const tagIds = Array.isArray(ctx.request.body.tags)
-			? ctx.request.body.tags
-			: [ctx.request.body.tags];
+		const tagIds = Array.isArray(ctx.request.body.tags) ?
+			ctx.request.body.tags : [ctx.request.body.tags];
 
 		if (!snippet)
 			throw new ApiError(404, 'Not found');
@@ -74,7 +80,9 @@ const controller = {
 
 		const tags = await models.tag.findAll({
 			where: {
-				id: { [Sequelize.Op.in]: tagIds },
+				id: {
+					[Sequelize.Op.in]: tagIds
+				},
 			},
 		});
 
@@ -89,7 +97,9 @@ const controller = {
 
 	edit: async (ctx, next) => {
 		const snippet = await models.snippet.findOne({
-			where: { 'public_id': ctx.params.id },
+			where: {
+				'public_id': ctx.params.id
+			},
 			include: [
 				models.user,
 				models.language,
@@ -102,7 +112,7 @@ const controller = {
 
 		if (!snippet)
 			throw new ApiError(404, 'Not found');
-		if (ctx.state.user.id !== snippet.user.id)
+		if (!ctx.state.user.admin && ctx.state.user.id !== snippet.user.id)
 			throw new ApiError(403, 'You can only edit your snippets');
 
 		const title = ctx.request.body.title;
@@ -120,11 +130,15 @@ const controller = {
 			throw new ApiError(422, 'Code field is required');
 
 		const language = await models.language.findOne({
-			where: { id: ctx.request.body.language },
+			where: {
+				id: ctx.request.body.language
+			},
 		});
 
 		const category = await models.category.findOne({
-			where: { id: ctx.request.body.category },
+			where: {
+				id: ctx.request.body.category
+			},
 		});
 
 		if (!language)
@@ -132,11 +146,11 @@ const controller = {
 		else if (!category)
 			throw new ApiError(422, 'Invalid category selected');
 
-		if (title != snippet.title
-			|| code != snippet.code
-			|| description != snippet.description
-			|| ctx.request.body.language != snippet.language_id
-			|| ctx.request.body.category != snippet.category_id) {
+		if (title != snippet.title ||
+			code != snippet.code ||
+			description != snippet.description ||
+			ctx.request.body.language != snippet.language_id ||
+			ctx.request.body.category != snippet.category_id) {
 			await snippet.update({
 				title,
 				code,
@@ -167,22 +181,33 @@ const controller = {
 	},
 
 	search: async (ctx, next) => {
-		if (typeof(ctx.query.keywords) !== 'string' || !ctx.query.keywords)
+		if (typeof (ctx.query.keywords) !== 'string' || !ctx.query.keywords)
 			throw new ApiError(422, 'Missing keywords');
 
 		if (ctx.query.keywords.length < 3)
 			throw new ApiError(422, 'Keywords too short');
 
 		if (ctx.query.language) {
-			const language = await models.language.findOne({ where: { id: ctx.query.language } });
+			const language = await models.language.findOne({
+				where: {
+					id: ctx.query.language
+				}
+			});
 			if (!language)
 				throw new ApiError(422, 'Invalid language');
 		}
 
 		let where = {
-			[Sequelize.Op.or]: [
-				{ title:       { [Sequelize.Op.like]: '%' + ctx.query.keywords + '%' } },
-				{ description: { [Sequelize.Op.like]: '%' + ctx.query.keywords + '%' } },
+			[Sequelize.Op.or]: [{
+					title: {
+						[Sequelize.Op.like]: '%' + ctx.query.keywords + '%'
+					}
+				},
+				{
+					description: {
+						[Sequelize.Op.like]: '%' + ctx.query.keywords + '%'
+					}
+				},
 			],
 		};
 
@@ -241,11 +266,15 @@ const controller = {
 			throw new ApiError(422, 'Code field is required');
 
 		const language = await models.language.findOne({
-			where: { id: ctx.request.body.language },
+			where: {
+				id: ctx.request.body.language
+			},
 		});
 
 		const category = await models.category.findOne({
-			where: { id: ctx.request.body.category },
+			where: {
+				id: ctx.request.body.category
+			},
 		});
 
 		if (!language)
@@ -256,7 +285,9 @@ const controller = {
 		const snippet = await models.snippet.create({
 			user_id: ctx.state.user.id,
 			public_id: await crypto.randomBytes(5).toString('hex'),
-			title, code, description,
+			title,
+			code,
+			description,
 			language_id: language.id,
 			category_id: category.id,
 		});
@@ -278,7 +309,9 @@ const controller = {
 
 	delete: async (ctx, next) => {
 		const snippet = await models.snippet.findOne({
-			where: { 'public_id': ctx.params.id },
+			where: {
+				'public_id': ctx.params.id
+			},
 			include: [
 				models.language,
 				models.category,
@@ -291,7 +324,7 @@ const controller = {
 		if (!snippet)
 			throw new ApiError(404, 'Not found');
 
-		if (ctx.state.user.id !== snippet.user.id)
+		if (!ctx.state.user.admin && ctx.state.user.id !== snippet.user.id)
 			throw new ApiError(403, 'You can only delete your snippets');
 
 		snippet.destroy();
