@@ -46,11 +46,6 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			defaultValue: 0,
 		},
-		deleted_at: {
-			type: TIMESTAMP,
-			defaultValue: null,
-			allowNull: true,
-		},
 		created_at: {
 			type: TIMESTAMP,
 			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
@@ -61,8 +56,6 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false,
 		},
-	}, {
-		paranoid: true,
 	});
 
 	snippet.associate = models => {
@@ -100,10 +93,18 @@ module.exports = (sequelize, DataTypes) => {
 			name: snippet.category.name,
 		},
 		votes: snippet.votes.reduce((p, c) => p + c.vote, 0),
-		...snippet.snippetRevisions && { revisions: snippet.snippetRevisions.length },
-		...snippet.user && { username: snippet.user.username },
-		...typeof(currentVote) !== 'undefined' && { currentVote },
-		...snippet.tags && { tags: snippet.tags.map(sequelize.models.tag.transform) },
+		...snippet.snippetRevisions && {
+			revisions: snippet.snippetRevisions.length
+		},
+		...snippet.user && {
+			username: snippet.user.username
+		},
+		...typeof (currentVote) !== 'undefined' && {
+			currentVote
+		},
+		...snippet.tags && {
+			tags: snippet.tags.map(sequelize.models.tag.transform)
+		},
 		createdAt: snippet.created_at,
 		updatedAt: snippet.updated_at,
 	});

@@ -25,11 +25,6 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING(191),
 			allowNull: false
 		},
-		deleted_at: {
-			type: TIMESTAMP,
-			defaultValue: null,
-			allowNull: true,
-		},
 		created_at: {
 			type: TIMESTAMP,
 			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
@@ -40,8 +35,6 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
 		},
-	}, {
-		paranoid: true,
 	});
 
 	flag.associate = models => {
