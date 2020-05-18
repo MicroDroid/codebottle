@@ -9,6 +9,6 @@ RUN cd /tmp && npm rebuild bcrypt --build-from-source
 RUN mkdir -p /usr/src/codebottle && cp -a /tmp/node_modules /usr/src/codebottle/node_modules
 COPY . /usr/src/codebottle
 RUN cd /usr/src/codebottle && \
-	npm run assets:prod
+	npm run webapp:prod
 WORKDIR /usr/src/codebottle
 ENTRYPOINT [ "node", "index.js" ]
