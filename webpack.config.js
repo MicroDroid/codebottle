@@ -14,7 +14,8 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const hljsLanguages = ['java', 'cpp', 'cs', 'css', 'python', 'php', 'javascript',
 	'perl', 'ruby', 'powershell', 'lua', 'json', 'bash', 'less', 'markdown', 'scss',
-	'sql', 'html', 'xml', 'yaml', 'crystal', 'dart'];
+	'sql', 'html', 'xml', 'yaml', 'crystal', 'dart'
+];
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -22,52 +23,58 @@ const common = {
 	mode: isProd ? 'production' : 'development',
 	module: {
 		rules: [{
-			test: /\.vue$/,
-			loader: 'vue-loader',
-		},
-		{
-			test: /\.js$/,
-			exclude: /(node_modules)/,
-			use: {
-				loader: 'babel-loader'
+				test: /\.vue$/,
+				loader: 'vue-loader',
 			},
-		},
-		{
-			test: /\.css$/,
-			loaders: ['vue-style-loader', 'css-loader']
-		},
-		// For SCSS in Vue components
-		{
-			test: /\.scss$/,
-			include: [path.join(__dirname, 'assets', 'js')],
-			use: [
-				'vue-style-loader',
-				'css-loader',
-				'sass-loader',
-				{
-					loader: 'sass-resources-loader',
+			{
+				test: /\.js$/,
+				exclude: /(node_modules)/,
+				use: {
+					loader: 'babel-loader'
+				},
+			},
+			{
+				test: /\.css$/,
+				loaders: ['vue-style-loader', 'css-loader']
+			},
+			// For SCSS in Vue components
+			{
+				test: /\.scss$/,
+				include: [path.join(__dirname, 'assets', 'js')],
+				use: [
+					'vue-style-loader',
+					'css-loader',
+					'sass-loader',
+					{
+						loader: 'sass-resources-loader',
+						options: {
+							resources: path.resolve(__dirname, 'assets/scss/_variables.scss'),
+						},
+					},
+				],
+			},
+			// For other SCSS files
+			{
+				test: /\.scss$/,
+				include: [/node_modules/, path.join(__dirname, 'assets', 'scss')],
+				use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+			},
+			{
+				test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
+				use: [
+					'file-loader?name=fonts/[name].[ext]'
+				]
+			},
+			{
+				test: /\.md$/,
+				use: {
+					loader: 'raw-loader',
 					options: {
-						resources: path.resolve(__dirname, 'assets/scss/_variables.scss'),
+						esModule: false,
 					},
 				},
-			],
-		},
-		// For other SCSS files
-		{
-			test: /\.scss$/,
-			include: [/node_modules/, path.join(__dirname, 'assets', 'scss')],
-			use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
-		},
-		{
-			test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
-			use: [
-				'file-loader?name=fonts/[name].[ext]'
-			]
-		},
-		{
-			test: /\.md$/,
-			use: 'raw-loader',
-		}],
+			}
+		],
 	},
 
 	resolve: {
@@ -78,8 +85,7 @@ const common = {
 	}
 };
 
-module.exports = [
-	{
+module.exports = [{
 		entry: [
 			path.join(__dirname, 'assets', 'js', 'entry-client.js'),
 			path.join(__dirname, 'assets', 'scss', 'app.scss'),
