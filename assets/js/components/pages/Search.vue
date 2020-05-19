@@ -107,6 +107,7 @@
 		mounted() {
 			this.keywords = this.$route.query.q ? this.$route.query.q : '';
 			this.$refs.searchbox.focus();
+			this.search();
 		},
 
 		methods: {
