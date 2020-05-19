@@ -58,7 +58,6 @@
 				keywords: '',
 				language: null,
 				axiosSource: null,
-				searchDebounce: null,
 			};
 		},
 
@@ -96,19 +95,11 @@
 			},
 
 			keywords() {
-				if (this.searchDebounce)
-					this.searchDebounce.cancel();
-
-				this.searchDebounce = debounce(this.search, 250);
-				this.searchDebounce();
+				this.search();
 			},
 
 			language() {
-				if (this.searchDebounce)
-					this.searchDebounce.cancel();
-
-				this.searchDebounce = debounce(this.search, 250);
-				this.searchDebounce();
+				this.search();
 			}
 		},
 
@@ -122,7 +113,7 @@
 				this.language = language.id;
 			},
 
-			search() {
+			search: debounce(function() {
 				if (this.$route.query.q !== this.keywords)
 					this.$router.replace({name: 'search', query: {q: this.keywords}});
 
@@ -148,7 +139,7 @@
 						this.error = extractError(error);
 					}
 				});
-			},
+			}),
 
 			shorten, staticUrl, summarize
 		},
