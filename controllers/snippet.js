@@ -318,6 +318,7 @@ const controller = {
 				models.vote,
 				models.user,
 				models.tag,
+				models.snippetRevision,
 			],
 		});
 
@@ -327,7 +328,23 @@ const controller = {
 		if (!ctx.state.user.admin && ctx.state.user.id !== snippet.user.id)
 			throw new ApiError(403, 'You can only delete your snippets');
 
-		snippet.destroy();
+		await models.vote.destroy({
+			where: {
+				snippet_id: {
+					[Sequelize.Op.eq]: snippet.id,
+				},
+			},
+		});
+
+		await models.snippetRevision.destroy({
+			where: {
+				snippet_id: {
+					[Sequelize.Op.eq]: snippet.id,
+				},
+			},
+		});
+
+		await snippet.destroy();
 
 		ctx.status = 204;
 

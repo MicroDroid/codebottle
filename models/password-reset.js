@@ -26,8 +26,17 @@ module.exports = (sequelize, DataTypes) => {
 		updatedAt: false,
 	});
 
+	passwordReset.transform = reset => ({
+		email: reset.email,
+		token: reset.token,
+		created_at: reset.created_at,
+	});
+
 	passwordReset.associate = models => {
-		passwordReset.belongsTo(models.user, {foreignKey: 'email', targetKey: 'email'});
+		passwordReset.belongsTo(models.user, {
+			foreignKey: 'email',
+			targetKey: 'email'
+		});
 	};
 
 	return passwordReset;

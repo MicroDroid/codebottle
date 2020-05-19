@@ -41,6 +41,16 @@ module.exports = (sequelize, DataTypes) => {
 		},
 	});
 
+	socialConnection.transform = connection => ({
+		user_id: connection.user_id,
+		service_id: connection.service_id,
+		service: connection.service,
+		token: connection.token,
+		token_type: connection.token_type,
+		created_at: connection.created_at,
+		updated_at: connection.updated_at,
+	});
+
 	socialConnection.associate = models => {
 		socialConnection.belongsTo(models.user);
 	};

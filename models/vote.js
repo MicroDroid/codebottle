@@ -33,10 +33,18 @@ module.exports = (sequelize, DataTypes) => {
 		},
 	}, {});
 
+	vote.transform = vote => ({
+		user_id: vote.user_id,
+		snippet_id: vote.snippet_id,
+		vote: vote.vote,
+		created_at: vote.created_at,
+		updated_at: vote.updated_at,
+	});
+
 	vote.associations = models => {
 		vote.belongsTo(models.snippet);
 		vote.belongsTo(models.user);
 	};
-	
+
 	return vote;
 };

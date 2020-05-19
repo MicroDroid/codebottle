@@ -42,13 +42,13 @@ import Tags from './components/pages/tags/Index';
 // Settings
 
 import Preferences from './components/pages/settings/Preferences';
+import AccountManagement from './components/pages/settings/AccountManagement';
 
 // API docs
 
 import ApiDocs from './components/pages/api/Template';
 
-export default [
-	{
+export default [{
 		name: 'discover',
 		path: '/',
 		component: Discover,
@@ -94,7 +94,7 @@ export default [
 		meta: {
 			requiresAuth: true,
 		},
-	},  {
+	}, {
 		name: 'languages',
 		path: '/languages',
 		component: Languages,
@@ -102,7 +102,7 @@ export default [
 			requiresAuth: true,
 			requiresAdmin: true,
 		},
-	},   {
+	}, {
 		name: 'tags',
 		path: '/tags',
 		component: Tags,
@@ -151,6 +151,15 @@ export default [
 		component: Preferences,
 		meta: {
 			requiresAuth: true
+		},
+	},
+
+	{
+		name: 'settings.account-management',
+		path: '/settings/account-management',
+		component: AccountManagement,
+		meta: {
+			requiresAuth: true,
 		},
 	},
 

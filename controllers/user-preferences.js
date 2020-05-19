@@ -13,11 +13,11 @@ module.exports = {
 		const convertTabsToSpaces = ctx.request.body.convert_tabs_to_spaces;
 		const indentationSize = ctx.request.body.indentation_size;
 
-		if (typeof(privateEmail) === 'undefined')
+		if (typeof (privateEmail) === 'undefined')
 			throw new ApiError(422, 'Private email state is missing');
-		else if (typeof(convertTabsToSpaces) === 'undefined')
+		else if (typeof (convertTabsToSpaces) === 'undefined')
 			throw new ApiError(422, 'Convert tabs to spaces state is missing');
-		else if (typeof(indentationSize) === 'undefined')
+		else if (typeof (indentationSize) === 'undefined')
 			throw new ApiError(422, 'Indentation size is missing');
 		else if (isNaN(indentationSize))
 			throw new ApiError(422, 'Invalid indentation size');

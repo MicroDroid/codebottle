@@ -22,7 +22,10 @@ const UserPreferencesController = require('./controllers/user-preferences');
 
 const protect = (passthrough = false) => {
 	return compose([
-		jwt({ secret: config.jwt.secret, passthrough }),
+		jwt({
+			secret: config.jwt.secret,
+			passthrough
+		}),
 		auth(passthrough),
 		denyBanned,
 	]);
@@ -53,6 +56,8 @@ module.exports = () => {
 	router.post('/users', throttle(1, 900, true), UserController.create);
 	router.post('/users/email-verifications', throttle(5, 120), UserController.verifyEmail);
 	router.get('/users/:username', throttle(), UserController.get);
+	router.delete('/users/:username', throttle(), protect(), UserController.delete);
+	router.get('/users/:username/data', throttle(), protect(), UserController.collectData);
 	router.get('/users/:username/snippets', throttle(), UserController.getSnippets);
 
 	router.post('/auth/login', throttle(5, 120), AuthController.login);
@@ -60,7 +65,6 @@ module.exports = () => {
 	router.post('/auth/password/reset', throttle(5, 120), AuthController.resetPassword);
 	router.post('/auth/password/change', throttle(5, 120), AuthController.changePassword);
 
-	// Protected end-points
 
 	router.post('/snippets', throttle(5, 900, true), protect(), SnippetController.create);
 	router.delete('/snippets/:id', throttle(), protect(), SnippetController.delete);

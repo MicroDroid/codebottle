@@ -7,7 +7,9 @@ module.exports = (passthrough = false) => async (ctx, next) => {
 	const error = new ApiError(401, 'Authentication token expired');
 	if (ctx.state.user) {
 		const user = await models.user.findOne({
-			where: {id: ctx.state.user.id},
+			where: {
+				id: ctx.state.user.id
+			},
 		});
 
 		if (!user)

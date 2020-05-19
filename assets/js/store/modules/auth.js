@@ -71,7 +71,7 @@ const actions = {
 	logout: ({
 		commit
 	}) => {
-		document.cookie = 'auth=; path=/';
+		document.cookie = 'auth=; path=/; SameSite=Lax;';
 		delete root.axios.defaults.headers.common['Authorization'];
 		commit(types.LOGOUT);
 	}

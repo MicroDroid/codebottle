@@ -36,7 +36,9 @@ const validateEmail = email => {
 module.exports = {
 	get: async (ctx, next) => {
 		const user = await models.user.findOne({
-			where: { username: ctx.params.username },
+			where: {
+				username: ctx.params.username
+			},
 			attributes: ['id', 'username', 'email', 'bio', 'banned', 'created_at'],
 			include: [models.userPreferences],
 		});
@@ -49,14 +51,14 @@ module.exports = {
 
 	getSnippets: async (ctx, next) => {
 		const user = await models.user.findOne({
-			where: {username: ctx.params.username},
+			where: {
+				username: ctx.params.username
+			},
 			attributes: ['username'],
-			include: [
-				{
-					model: models.snippet,
-					include: [models.language, models.category, models.vote]
-				}
-			]
+			include: [{
+				model: models.snippet,
+				include: [models.language, models.category, models.vote]
+			}]
 		});
 
 		if (!user)
@@ -83,9 +85,12 @@ module.exports = {
 
 		const existingUser = await models.user.findOne({
 			where: {
-				[Sequelize.Op.or]: [
-					{username: ctx.request.body.username},
-					{email: ctx.request.body.email},
+				[Sequelize.Op.or]: [{
+						username: ctx.request.body.username
+					},
+					{
+						email: ctx.request.body.email
+					},
 				]
 			}
 		});
@@ -132,8 +137,7 @@ IP address: ${ctx.ip}
 Client: ${ctx.get('User-Agent')}
 Time: ${(new Date()).toISOString()}
 `,
-			html:
-			`<div>
+			html: `<div>
 				<p>
 					Hi,
 				</p>
@@ -174,7 +178,9 @@ Time: ${(new Date()).toISOString()}
 			throw new ApiError(422, 'Token is missing');
 
 		const verification = await models.emailVerification.findOne({
-			where: {token: cryptojs.SHA256(ctx.request.body.token).toString()},
+			where: {
+				token: cryptojs.SHA256(ctx.request.body.token).toString()
+			},
 		});
 
 		if (!verification)
@@ -211,9 +217,12 @@ Time: ${(new Date()).toISOString()}
 
 		const existingUser = await models.user.findOne({
 			where: {
-				[Sequelize.Op.or]: [
-					{username: ctx.request.body.username},
-					{email: ctx.request.body.email},
+				[Sequelize.Op.or]: [{
+						username: ctx.request.body.username
+					},
+					{
+						email: ctx.request.body.email
+					},
 				]
 			}
 		});
@@ -261,8 +270,7 @@ IP address: ${ctx.ip}
 Client: ${ctx.get('User-Agent')}
 Time: ${(new Date()).toISOString()}
 `,
-					html:
-						`<div>
+					html: `<div>
 							<p>
 								Hi,
 							</p>
@@ -303,5 +311,111 @@ Time: ${(new Date()).toISOString()}
 		ctx.status = 204;
 
 		return next();
-	}
+	},
+
+	async delete(ctx) {
+		const user = await models.user.findOne({
+			where: {
+				username: ctx.params.username
+			},
+			include: [
+				models.snippet,
+				models.vote,
+				models.socialConnection,
+				models.emailVerification,
+				models.userPreferences,
+				models.passwordReset,
+				models.flag,
+			],
+		});
+
+		if (!user)
+			throw new ApiError(404, 'Not found');
+
+		if (!ctx.state.user.admin && ctx.state.user.id !== user.id)
+			throw new ApiError(404, 'You can only delete your own account');
+
+		await models.snippet.destroy({
+			where: {
+				user_id: {
+					[Sequelize.Op.eq]: user.id,
+				},
+			},
+		});
+
+		await models.vote.destroy({
+			where: {
+				user_id: {
+					[Sequelize.Op.eq]: user.id,
+				},
+			},
+		});
+
+		await models.socialConnection.destroy({
+			where: {
+				user_id: {
+					[Sequelize.Op.eq]: user.id,
+				},
+			},
+		});
+
+		await models.flag.destroy({
+			where: {
+				user_id: {
+					[Sequelize.Op.eq]: user.id,
+				},
+			},
+		});
+
+		if (user.emailVerification)
+			await user.emailVerification.destroy();
+
+		if (user.passwordReset)
+			await user.passwordReset.destroy();
+
+		if (user.userPreferences)
+			await user.userPreferences.destroy();
+
+		await user.destroy();
+
+		ctx.status = 204;
+	},
+
+	async collectData(ctx) {
+		const user = await models.user.findOne({
+			where: {
+				username: ctx.params.username
+			},
+			include: [{
+					model: models.snippet,
+					include: [models.language, models.category, models.snippetRevision, models.user, models.vote],
+				},
+				models.vote,
+				models.socialConnection,
+				models.emailVerification,
+				models.userPreferences,
+				models.passwordReset,
+				models.flag,
+			],
+		});
+
+		if (!user)
+			throw new ApiError(404, 'Not found');
+
+		if (!ctx.state.user.admin && ctx.state.user.id !== user.id)
+			throw new ApiError(404, 'You can only download data for your own account');
+
+		ctx.body = {
+			user: models.user.transform(user),
+			snippets: user.snippets.map(s => models.snippet.transform(s)),
+			votes: user.votes.map(v => models.vote.transform(v)),
+			socialConnections: user.socialConnections.map(s => models.socialConnection.transform(s)),
+			emailVerification: user.emailVerification ? models.emailVerification.transform(user.emailVerification) : null,
+			userPreferences: models.userPreferences.transform(user.userPreferences),
+			passwordReset: user.passwordReset ? models.passwordReset.transform(user.passwordReset) : null,
+			flags: models.flag.transform(user.flags),
+		};
+
+		ctx.status = 200;
+	},
 };

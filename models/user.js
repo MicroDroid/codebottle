@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
 			foreignKey: 'flaggable_id',
 			scope: {
 				flaggable_type: 'user',
-			}
+			},
 		});
 	};
 
@@ -87,7 +87,7 @@ module.exports = (sequelize, DataTypes) => {
 			profileImage: gravatar.url(user.email, {
 				s: 512,
 				d: 'mm',
-				r: 'g'
+				r: 'g',
 			}, true),
 			banned: user.banned,
 			admin: user.admin,

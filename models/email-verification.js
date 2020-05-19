@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
 	const TIMESTAMP = require('sequelize-mysql-timestamp')(sequelize);
-	
+
 	const emailVerification = sequelize.define('emailVerification', {
 		id: {
 			allowNull: false,
@@ -33,6 +33,14 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 			allowNull: false
 		},
+	});
+
+	emailVerification.transform = verification => ({
+		user_id: verification.user_id,
+		token: verification.token,
+		email: verification.email,
+		created_at: verification.created_at,
+		updated_at: verification.updated_at,
 	});
 
 	emailVerification.associate = models => {

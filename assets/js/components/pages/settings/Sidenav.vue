@@ -5,15 +5,10 @@
 				Preferences
 			</router-link>
 		</li>
-		<!-- <li class="nav-item">
-			<router-link :to="{name: 'settings.oauth2'}" class="nav-link">
-				OAuth 2.0 Applications
+		<li class="nav-item text-center text-md-left">
+			<router-link :to="{name: 'settings.account-management'}" class="nav-link">
+				Account management
 			</router-link>
 		</li>
-		<li class="nav-item">
-			<router-link :to="{name: 'settings.personal-access-tokens'}" class="nav-link">
-				Personal access tokens
-			</router-link>
-		</li> -->
 	</ul>
 </template>
