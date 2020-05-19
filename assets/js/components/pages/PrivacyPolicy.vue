@@ -4,14 +4,17 @@
 		<h2>What we collect and store</h2>
 		<h3>Personal data you provide</h3>
 		<p>
-			We collect some of your personally identifiable information when you sign up to use our services. When you create an account, you share with us your email, nickname, and sometimes you link us to your profiles on other third-party services, which could provides us with a broader range of information about you.
+			We collect some of your personally identifiable information when you sign up to use our services. When you create an account, you share with us your email, nickname, and sometimes you link us to your profiles on other third-party services, which could provide us with a broader range of information about you.
+		</p>
+		<p>
+			Other data we collect include snippets, snippet votes, snippet flags; These are collected upon your decision of submission.
 		</p>
 		<h3>Data we automatically collect and store</h3>
 		<p>
-			We collect some information that is not personally identifiable. We store and log your requests to our services, along with properties such as IP address, browser type and language, and the timestamp we received your request. We do not collect any information that tracks your location deeper than city-level.
+			We collect some information that is not personally identifiable. We <em>temporarily</em> store and log your requests to our services, along with other properties such as IP address, browser type and language, and the timestamp we received your request. We do not collect any information that tracks your location deeper than city-level (if at all).
 		</p>
 		<p>
-			We occasionally store some data on your browser's local storage, purely for service functionality. We delete the data we store as soon as it is un-needed.
+			We occasionally store some data on your browser's local storage, purely for service functionality. We delete the data we store as soon as it is no longer required.
 		</p>
 		<p>
 			We use cookies to empower our services. We use Cloudflare to protect our systems against security threats, which you may want to read <a href="https://www.cloudflare.com/security-policy/">their own privacy policy.</a> We also use Google Analytics to get analytics on how you use our services to help improve our decisions to provide a better service. You may also want to read <a href="https://www.google.com/policies/privacy/">their privacy policy.</a> Both of these services store cookies on every request you make to our website, and both of these services do not sell, rent, or share personal information with third parties for their marketing purposes.
@@ -25,6 +28,22 @@
 		</p>
 		<p>
 			The data we store on your browser is mandatory for service functionality and security, as well as collecting the analytical data as stated above. You can entirely disable cookies and other storage mechanisms in your browser settings, but you should be aware that this may break or alter the functionality of our services, so you should expect some features to not work as expected.
+		</p>
+		<h2>
+			Managing data
+		</h2>
+		<p>
+			We respect the right to allow users to download all of the data that's associated with their account. Thus, the option is available in: Settings > Account Management > Download data
+		</p>
+		<p>
+			We respect the right to be forgotten permanently. Thus, an option to delete a user's data in its entirety can be found in: Settings > Account Management > Delete account
+		</p>
+		<hr>
+		<p>
+			For inquiries please contact:
+			<a href="mailto:support@codebottle.io">
+				support@codebottle.io
+			</a>
 		</p>
 	</div>
 </template>

@@ -36,6 +36,14 @@
 				<button :disabled="loading" class="btn btn-primary" type="button" @click="deleteAccount">
 					Delete account
 				</button>
+
+				<div class="alert alert-success mt-5">
+					You can always reach out to
+					<a href="mailto:support@codebottle.io">
+						support@codebottle.io
+					</a>
+					if you need more assistance with managing your data.
+				</div>
 				
 				<loader v-if="loading" class="mt-5" />
 				<div v-if="message" class="alert alert-success text-center mt-5">{{ message }}</div>
