@@ -95,7 +95,8 @@
 			},
 
 			keywords() {
-				this.search();
+				if (this.$route.query.q !== this.keywords)
+					this.$router.replace({name: 'search', query: {q: this.keywords}});
 			},
 
 			language() {
@@ -114,9 +115,6 @@
 			},
 
 			search: debounce(function() {
-				if (this.$route.query.q !== this.keywords)
-					this.$router.replace({name: 'search', query: {q: this.keywords}});
-
 				this.error = false;
 				this.loading = true;
 
@@ -139,7 +137,7 @@
 						this.error = extractError(error);
 					}
 				});
-			}),
+			}, 250),
 
 			shorten, staticUrl, summarize
 		},
