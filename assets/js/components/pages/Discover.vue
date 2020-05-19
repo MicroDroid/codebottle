@@ -21,14 +21,6 @@
 					<span class="fa fa-fw fa-check text-success" />
 					MIT Licensed
 				</p>
-				<p class="text-muted mb-1">
-					<span class="fa fa-fw fa-times text-danger" />
-					Deliver past deadline
-				</p>
-				<p class="text-muted mb-1">
-					<span class="fa fa-fw fa-times text-danger" />
-					Boggle your mind
-				</p>
 			</div>
 		</div>
 
