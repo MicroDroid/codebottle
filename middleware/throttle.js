@@ -6,10 +6,13 @@ module.exports = function (limit = 60, reset = 60, successOnly = false) {
 		/* istanbul ignore next */
 		if (process.env.NODE_ENV === 'development')
 			return next();
-		
+
+		if (true)
+			return next();
+
 		const key = `throttle:${ctx.ip}:${ctx.url}`;
 		const client = JSON.parse(await redis.getAsync(key));
-		
+
 		if (client && client.requests >= limit)
 			throw new RateLimitError();
 
