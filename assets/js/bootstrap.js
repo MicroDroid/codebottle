@@ -15,7 +15,7 @@ root.hljs = hljs;
 
 const hljsLanguages = ['java', 'cpp', 'cs', 'css', 'python', 'php', 'javascript',
 	'perl', 'ruby', 'powershell', 'lua', 'json', 'bash', 'less', 'markdown', 'scss',
-	'sql', 'html', 'xml', 'yaml', 'crystal', 'dart', 'swift',
+	'sql', 'xml', 'yaml', 'crystal', 'dart', 'swift',
 ];
 
 hljsLanguages.forEach(langName => {
