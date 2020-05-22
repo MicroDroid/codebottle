@@ -19,7 +19,7 @@
 				</p>
 				<p class="text-muted mb-1">
 					<span class="fa fa-fw fa-check text-success" />
-					MIT Licensed
+					Unlicensed (do whatever you want)
 				</p>
 			</div>
 		</div>
