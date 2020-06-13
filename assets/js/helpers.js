@@ -105,6 +105,12 @@ export function hljsLanguageById(id) {
 		return 'crystal';
 	case 12:
 		return 'dart';
+	case 13:
+		return 'bash';
+	case 14:
+		return 'swift';
+	case 15:
+		return 'typescript';
 	default:
 		return '';
 	}
