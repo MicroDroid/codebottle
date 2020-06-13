@@ -14,7 +14,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const hljsLanguages = ['java', 'cpp', 'cs', 'css', 'python', 'php', 'javascript',
 	'perl', 'ruby', 'powershell', 'lua', 'json', 'bash', 'less', 'markdown', 'scss',
-	'sql', 'xml', 'yaml', 'crystal', 'dart', 'swift',
+	'sql', 'xml', 'yaml', 'crystal', 'dart', 'swift', 'typescript',
 ];
 
 const isProd = process.env.NODE_ENV === 'production';
